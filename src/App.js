@@ -1,6 +1,8 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
 import Papa from 'papaparse';
+import FetchData from 'fetch_data/FetchData.js';
+
 class App extends React.Component {
   constructor(){  
     super();  
@@ -15,33 +17,33 @@ class App extends React.Component {
 
   
 
-  componentDidMount() {
+//   componentDidMount() {
 
-    let body_details = {
-      'grant_type': 'client_credentials',
-      'scope': 'tase'
-  };
+//     let body_details = {
+//       'grant_type': 'client_credentials',
+//       'scope': 'tase'
+//   };
 
-  let formBody = [];
-  for (let property in body_details) {
-      let encodedKey = encodeURIComponent(property);
-      let encodedValue = encodeURIComponent(body_details[property]);
-      formBody.push(encodedKey + "=" + encodedValue);
-  }
-  formBody = formBody.join("&");
+//   let formBody = [];
+//   for (let property in body_details) {
+//       let encodedKey = encodeURIComponent(property);
+//       let encodedValue = encodeURIComponent(body_details[property]);
+//       formBody.push(encodedKey + "=" + encodedValue);
+//   }
+//   formBody = formBody.join("&");
 
-    const requestOptions = {
-        method: 'POST',
-        headers: {
-        "Authorization":"Basic NjViMGRjZjNiN2VjNDIyMDgwYzIwMTU0MmI1ZWE0ODU6MzlmMzVlM2MyYmEzNmJiMjA3ODA3ODkxNjQ5N2ZkYTI",
-      "Content-Type": "application/x-www-form-urlencoded" },
-        body: formBody
-    };
-    fetch("https://openapigw.tase.co.il/tase/prod/oauth/oauth2/token",requestOptions)
-        .then(response => response.json())
-        .then(data => console.log(data)
-        );
-}
+//     const requestOptions = {
+//         method: 'POST',
+//         headers: {
+//         "Authorization":"Basic NjViMGRjZjNiN2VjNDIyMDgwYzIwMTU0MmI1ZWE0ODU6MzlmMzVlM2MyYmEzNmJiMjA3ODA3ODkxNjQ5N2ZkYTI",
+//       "Content-Type": "application/x-www-form-urlencoded" },
+//         body: formBody
+//     };
+//     fetch("https://openapigw.tase.co.il/tase/prod/oauth/oauth2/token",requestOptions)
+//         .then(response => response.json())
+//         .then(data => console.log(data)
+//         );
+// }
 
 
     // read_csv(){
