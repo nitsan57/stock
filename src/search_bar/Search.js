@@ -1,90 +1,57 @@
 import React from 'react';
 import Plot from 'react-plotly.js';
-
+import Graph from '../graph/Graph'
 
 class Search extends React.Component {
 
     constructor(props) {
         super(props)
-        this.state = {  
-
-          is_data_loaded: false
+        this.state = { 
+          temp_search_keyword: "",
+          search_keyword : "",
+          is_data_loaded: false,
+          is_button_pressed: false,
       };
-    }
-   
-    get_options(url) {
-        var options = { 
-          method: 'GET',
-          url: url,
-          headers: { 
-            accept: 'application/json',
-            'accept-language': 'he-IL',
-            authorization: "Bearer " + this.props.token_data.access_token
-          } 
-        };
-        return options
-    }
-    // TODO avoid code reuse
-    get_indices_list() { // Unlimited api  
-        var request = require("request");
-        var options = this.get_options("https://openapigw.tase.co.il/tase/prod/api/v1/basic-indices/indices-list")
-      
-        console.log("get_indices_list options:", options)
-        request(options, function (error, response, body) {
-            if (error) return console.error('get_indices_list Failed: %s', error.message);
-            console.log('get_indices_list Success: ', body);
-        });
+      this.handleInputChange = this.handleInputChange.bind(this);
+      this.searchButton = this.searchButton.bind(this);
+      this.graphHandler = this.graphHandler.bind(this)
     }
 
-    get_securities_types = () => { // 100 calls per hour
-      var request = require("request");
-      var options = this.get_options("https://openapigw.tase.co.il/tase/prod/api/v1/basic-securities/securities-types")
-    
-      console.log("get_securities_types options:", options)
-      request(options, function (error, response, body) {
-          if (error) return console.error('get_securities_types Failed: %s', error.message);
-          console.log('get_securities_types Success: ', body);
-      });
+    searchButton() {  
+
+      this.setState({ search_keyword: this.state.temp_search_keyword });
+      this.setState({ is_button_pressed: true });
+  }
+
+    handleInputChange(e) {
+      const content = e.target.value;
+      this.setState({ temp_search_keyword: content });
+      console.log(content)
     }
 
-    get_companies_list = () => { // 100 calls per hour
-      var request = require("request");
-      var options = this.get_options("https://openapigw.tase.co.il/tase/prod/api/v1/basic-securities/companies-list")
-    
-      console.log("get_companies_list options:", options)
-      request(options, function (error, response, body) {
-          if (error) return console.error('get_companies_list Failed: %s', error.message);
-          console.log('get_companies_list Success: ', body);
-      });
-    } 
-
-    trade_securities_list = (month, year, day) => { // 100 calls per hour
-      var request = require("request");
-      var options = this.get_options("https://openapigw.tase.co.il/tase/prod/api/v1/basic-securities/trade-securities-list/"+year+"/"+month+"/"+day)
-      console.log("trade_securities_list options:", options)
-      request(options, function (error, response, body) {
-          if (error) return console.error('get_companies_list Failed: %s', error.message);
-          console.log('trade_securities_list Success: ', body);
-      });
-    }
-
-    delisted_securities_list = (month, year, day) => { // 100 calls per hour
-      var request = require("request");
-      var options = this.get_options("https://openapigw.tase.co.il/tase/prod/api/v1/basic-securities/delisted-securities-list/"+year+"/"+month+"/"+day)
-      console.log("delisted_securities_list options:", options)
-      request(options, function (error, response, body) {
-          if (error) return console.error('get_companies_list Failed: %s', error.message);
-          console.log('delisted_securities_list Success: ', body);
-      });
+    graphHandler() {
+      this.setState({is_button_pressed: false})
     }
 
     render() {
-      console.log("rnder token_data:",this.props.token_data)
-      this.get_indices_list()
-      this.get_securities_types()
-      this.get_companies_list()
+
+      var first_date = "23/04/2020"
+      var last_date = "23/09/2020"
+      var instrument_id = "1148949"
+
       return (
-      <h1>Search</h1>
+      <div>
+          <form>
+          <input
+            placeholder="Search for..."
+            value={this.state.query}
+            onChange={this.handleInputChange}
+          />
+        </form>
+        <button onClick={this.searchButton}>plot!</button>
+        <h1>Search</h1>
+        <Graph first_date={first_date} last_date={last_date} instrument_id={this.state.search_keyword} graphHandler={this.graphHandler} is_button_pressed={this.state.is_button_pressed}/>
+      </div>
       );
     }
 }
