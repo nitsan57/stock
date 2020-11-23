@@ -15,20 +15,21 @@ class Search extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this);
     this.clearSearch = this.clearSearch.bind(this);
     this.addSearch = this.addSearch.bind(this);
-    this.graphHandler = this.graphHandler.bind(this)
+    this.graphHandler = this.graphHandler.bind(this)  
+
   }
 
-  clearSearch() {  
+    clearSearch() {  
 
-    this.setState({ search_keyword: this.state.temp_search_keyword });
-    this.setState({ is_button_pressed: true });
+      this.setState({ search_keyword: this.state.temp_search_keyword });
+      this.setState({ is_button_pressed: true });
   }
 
-  addSearch() {  
+    addSearch() {  
 
-    this.setState({ search_keyword: this.state.temp_search_keyword });
-    this.setState({ is_button_pressed: true });
-    this.setState({ to_add_plot: true });
+      this.setState({ search_keyword: this.state.temp_search_keyword });
+      this.setState({ is_button_pressed: true });
+      this.setState({ to_add_plot: true });
 
   }
 
@@ -40,7 +41,9 @@ class Search extends React.Component {
     graphHandler() {
       this.setState({ is_button_pressed: false})
       this.setState({ to_add_plot: false });
-
+      setTimeout(function() { //Start the timer
+        this.setState({render: true}) //After 1 second, set render to true  //TODO: LAME
+    }.bind(this), 200)
     }
 
     render() {
