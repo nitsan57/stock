@@ -11,13 +11,7 @@ class Graph extends React.Component {
   constructor(props){  
     super(props);  
     this.state = {  
-        data: [{
-          "x": [1,2,3,4],
-          "y": [1,2,3,4],
-          type: 'scatter',
-          mode: 'lines+markers',
-          "name": "init zain",
-        }],
+        data: [],
         is_data_loaded : false,
     };
     this.create_graph_data = this.create_graph_data.bind(this);
