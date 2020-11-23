@@ -1,12 +1,23 @@
 import React from 'react';
-import Plot from 'react-plotly.js';
+// import Plotly  from 'react-plotly.js';
+// import Plot from "react-plotly.js";
+import Plotly from "plotly.js-basic-dist";
+
+import createPlotlyComponent from "react-plotly.js/factory";
+const Plot = createPlotlyComponent(Plotly);
 
 class Graph extends React.Component {
 
   constructor(props){  
     super(props);  
     this.state = {  
-        data: [],
+        data: [{
+          "x": [1,2,3,4],
+          "y": [1,2,3,4],
+          type: 'scatter',
+          mode: 'lines+markers',
+          "name": "init zain",
+        }],
         is_data_loaded : false,
     };
     this.create_graph_data = this.create_graph_data.bind(this);
