@@ -1,7 +1,5 @@
 import React from 'react';
-import Plot from 'react-plotly.js';
 import Search from './search_bar/Search'
-// import Graph from './graph/Graph'
 
 
 class App extends React.Component {
@@ -36,7 +34,7 @@ class App extends React.Component {
         <div>
         <Search/>  
          <h1>Hello {this.state.message}!</h1>  
-         <button onClick={this.updateMessage}>Click me!</button>  
+         <button onClick={this.updateMessage}>Click me!</button>
        </div>    
       );
     return (

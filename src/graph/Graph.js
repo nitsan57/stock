@@ -6,27 +6,33 @@ class Graph extends React.Component {
   constructor(props){  
     super(props);  
     this.state = {  
-        data: {x: [1,2,3,4], y : [1,2,3,4]},
+        data: [],
         is_data_loaded : false,
     };
-    // this.get_intrument_data = this.get_intrument_data.bind(this);
+    this.create_graph_data = this.create_graph_data.bind(this);
 
+  }
+
+  create_graph_data(x, y, name){
+    return {
+      "x": x,
+      "y": y,
+      type: 'scatter',
+      mode: 'lines+markers',
+      "name": name,
+    }
   }
 
   componentDidMount() {
 
-  //   let body_details = {
-  //     'grant_type': 'client_credentials',
-  //     'scope': 'tase'
-  // };
   }
-  
 
-  get_intrument_data(first_date, last_date, instrument_id){
 
+  get_intrument_data(first_date, last_date, instrument_id, to_add_plot){
     var i;
     var x = []
     var y = []
+    var name = "zain"
 
   const requestOptions = {
     method: 'GET',
@@ -40,53 +46,57 @@ class Graph extends React.Component {
     .then((jsonData) => {
     // jsonData is parsed json object received from url
     var points_for_chart = jsonData["PointsForHistoryChart"]
+    // console.log(instrument_id)
+    // name = "zain"
     var y_0 = points_for_chart[0]["ClosingRate"]
     for (i = 0; i < points_for_chart.length; i++) {
       var my_data = points_for_chart[i]["ClosingRate"] / y_0;
       y.push(my_data)
       x.push(i)
     }
-    this.setState({data : {"x": x, "y": y}})
+    // this.setState({data : {"x": x, "y": y}})
     
     })
     .catch((error) => {
     // handle your errors here
     console.error(error)
     })
-    this.setState({data : {"x": x, "y": y}})
+    var temp_data = this.create_graph_data(x,y, name)
+    
+    if (to_add_plot){
+      this.setState({ data: [...this.state.data, temp_data] })
+    }
+    else{
+      this.setState({ data: [temp_data] })
+    }
+    // console.log(this.state.data)
     
     this.setState({is_data_loaded : true})
   }
 
-  render() {
-    console.log(this.props)
-    if (this.props.is_button_pressed){
-      this.setState({is_data_loaded : false})
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.is_button_pressed !== prevProps.is_button_pressed) {
+      if (this.props.is_button_pressed){
+        this.setState({is_data_loaded : false})
         var first_date = this.props.first_date
         var last_date = this.props.last_date
         var instrument_id = this.props.instrument_id
-        this.get_intrument_data(first_date,last_date,instrument_id);
+        var to_add_plot = this.props.to_add_plot
+        this.get_intrument_data(first_date,last_date,instrument_id, to_add_plot);
         this.props.graphHandler();
   }
+    }
+
+  }
+
+  render() {
+
   if ((this.state.is_data_loaded)){
+    console.log(this.state.data)
     return (
       <Plot
-        data={[
-          {
-            x: this.state.data.x,
-            y: this.state.data.y,
-            type: 'scatter',
-            mode: 'lines+markers',
-            marker: {color: 'red'},
-          },
-          // {
-          //   x: this.state.data.x,
-          //   y: this.state.data.y,
-          //   type: 'scatter',
-          //   mode: 'lines+markers',
-          //   marker: {color: 'yellow'},
-          // },
-        ]}
+        data={this.state.data}
         layout={ {width: 800, height: 600, title: 'A Crazy Plot'} }
       />
     );
