@@ -38,6 +38,7 @@ class Graph extends React.Component {
     var x = []
     var y = []
     var name = "zain"
+    
 
   const requestOptions = {
     method: 'GET',
@@ -59,7 +60,6 @@ class Graph extends React.Component {
       y.push(my_data)
       x.push(i)
     }
-    // this.setState({data : {"x": x, "y": y}})
     
     })
     .catch((error) => {
@@ -74,7 +74,6 @@ class Graph extends React.Component {
     else{
       this.setState({ data: [temp_data] })
     }
-    // console.log(this.state.data)
     
     this.setState({is_data_loaded : true})
   }
@@ -98,11 +97,10 @@ class Graph extends React.Component {
   render() {
 
   if ((this.state.is_data_loaded)){
-    console.log(this.state.data)
     return (
       <Plot
         data={this.state.data}
-        layout={ {width: 800, height: 600, title: 'A Crazy Plot'} }
+        layout={{width: 800, height: 600, title: 'A Crazy Plot'}}
       />
     );
       }
