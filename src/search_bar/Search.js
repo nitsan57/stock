@@ -43,7 +43,7 @@ class Search extends React.Component {
       this.setState({ to_add_plot: false });
       setTimeout(function() { //Start the timer
         this.setState({render: true}) //After 1 second, set render to true  //TODO: LAME
-    }.bind(this), 400)
+    }.bind(this), 500)
     }
 
     render() {

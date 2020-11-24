@@ -32,6 +32,14 @@ class Graph extends React.Component {
 
   }
 
+  get_intrument_list(first_date, last_date, instrument_list){
+    var i = 0
+    for (i = 0; i < instrument_list.length; i++) {
+      this.get_intrument_data(first_date, last_date, instrument_list[i], true)
+    }
+    
+  }
+
 
   get_intrument_data(first_date, last_date, instrument_id, to_add_plot){
     var i;
@@ -87,7 +95,12 @@ class Graph extends React.Component {
         var last_date = this.props.last_date
         var instrument_id = this.props.instrument_id
         var to_add_plot = this.props.to_add_plot
-        this.get_intrument_data(first_date,last_date,instrument_id, to_add_plot);
+        //this.get_intrument_data(first_date,last_date,instrument_id, to_add_plot);
+        var temp_list = instrument_id
+        if (!Array.isArray(instrument_id)) {
+          temp_list = [instrument_id]
+        }
+        this.get_intrument_list(first_date,last_date,temp_list, to_add_plot)
         this.props.graphHandler();
   }
     }
