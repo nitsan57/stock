@@ -55,11 +55,12 @@ class Graph extends React.Component {
       "Content-Type" : "application/json",
       "User-Agent"   : "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0" },
 };
-
+    console.log("firste_date, last_date, instrument_id",first_date,last_date, instrument_id  )
     fetch("https://api.tase.co.il/api/ChartData/ChartData/?ct=1&ot=1&lang=1&cf=0&cp=4&cv=0&cl=0&cgt=1&dFrom="+first_date+"&dTo="+last_date+"&oid="+instrument_id, requestOptions).then(response => response.json())
     .then((jsonData) => {
     // jsonData is parsed json object received from url
     var points_for_chart = jsonData["PointsForHistoryChart"]
+    console.log("get_intrument_data points_for_chart", points_for_chart)
     // console.log(instrument_id)
     // name = "zain"
     var y_0 = points_for_chart[0]["ClosingRate"]
