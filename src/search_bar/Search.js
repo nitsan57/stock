@@ -59,6 +59,13 @@ class Search extends React.Component {
 		this.setState({ is_button_pressed: false });
 		this.setState({ to_add_plot: false });
 		console.log('search graph hanlder');
+		setTimeout(
+			function () {
+				//Start the timer
+				this.forceUpdate(); //After 1 second, set render to true
+			}.bind(this),
+			3000
+		);
 	}
 
 	render() {
@@ -78,6 +85,7 @@ class Search extends React.Component {
 				<button onClick={this.clearSearch}>new plot!</button>
 				<button onClick={this.addSearch}> add plot!</button>
 				<h1>Search</h1>
+
 				<Graph
 					first_date={first_date}
 					last_date={last_date}

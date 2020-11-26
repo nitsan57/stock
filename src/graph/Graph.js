@@ -11,7 +11,7 @@ class Graph extends React.Component {
 		super(props);
 		this.state = {
 			data: [],
-			is_data_loaded: false,
+			is_data_loaded: null,
 			// datarevision: 1,
 		};
 		this.create_graph_data = this.create_graph_data.bind(this);
@@ -107,21 +107,30 @@ class Graph extends React.Component {
 				// 	temp_list = [instrument_id];
 				// }
 				await this.get_intrument_list(first_date, last_date, funds, to_add_plot);
-				this.setState({ is_data_loaded: true });
 				this.props.graphHandler();
 				// this.setState({ datarevision: this.state.datarevision + 1 });
+				setTimeout(
+					function () {
+						this.setState({ is_data_loaded: true });
+					}.bind(this),
+					3000
+				);
 			}
 		}
 	}
 
 	render() {
+		if (this.state.is_data_loaded == null) {
+			return <h1>Hi search something :)</h1>;
+		}
 		if (this.state.is_data_loaded) {
 			// console.log('data is lodaded to render');
 			// console.log(this.state.datarevision);
 
 			return <Plot data={this.state.data} layout={{ autosize: true, title: 'A Crazy Plot' }} />;
+		} else {
+			return <h1>Loading...</h1>;
 		}
-		return <h1>Loading...</h1>;
 	}
 }
 export default Graph;
