@@ -11,7 +11,7 @@ class Search extends React.Component {
 			is_button_pressed: false,
 			to_add_plot: false,
 			result: [],
-			ids: [],
+			funds: [],
 			data: Information,
 		};
 		this.handleInputChange = this.handleInputChange.bind(this);
@@ -28,11 +28,13 @@ class Search extends React.Component {
 		this.setState({
 			result: filteredData,
 		});
-		var ids = [];
+		var funds = [];
+		var temp_fund = null;
 		filteredData.forEach((item) => {
-			ids.push(item["מס' קרן"]);
+			temp_fund = { name: item['שם הקרן'], id: item["מס' קרן"] };
+			funds.push(temp_fund);
 		});
-		this.setState({ ids: ids });
+		this.setState({ funds: funds });
 	}
 
 	clearSearch() {
@@ -57,7 +59,6 @@ class Search extends React.Component {
 		this.setState({ is_button_pressed: false });
 		this.setState({ to_add_plot: false });
 		console.log('search graph hanlder');
-		this.forceUpdate();
 	}
 
 	render() {
@@ -80,7 +81,7 @@ class Search extends React.Component {
 				<Graph
 					first_date={first_date}
 					last_date={last_date}
-					instrument_id={this.state.ids}
+					funds={this.state.funds}
 					graphHandler={this.graphHandler}
 					is_button_pressed={this.state.is_button_pressed}
 					to_add_plot={this.state.to_add_plot}

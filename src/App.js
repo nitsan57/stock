@@ -1,46 +1,20 @@
 import React from 'react';
-import Search from './search_bar/Search'
-
+import Search from './search_bar/Search';
 
 class App extends React.Component {
-  constructor(){  
-    super();  
-    this.state = {  
-        message: "Click me!",
-        data: {x: [1,2,3,4], y : [1,2,3,4]},
-        is_token_loaded: false
-    };
-    this.updateMessage = this.updateMessage.bind(this);
+	constructor() {
+		super();
+	}
 
-    // this.read_csv();
-  }
+	componentDidMount() {}
 
-  componentDidMount() {
-
+	render() {
+		return (
+			<div>
+				<Search />
+			</div>
+		);
+	}
 }
 
-    updateMessage() {  
-
-      this.setState({  
-          message: "dick"  
-      });
-  }
-   
-
-  render() {
-
-
-      return (
-        <div>
-        <Search/>  
-         <h1>Hello {this.state.message}!</h1>  
-         <button onClick={this.updateMessage}>Click me!</button>
-       </div>    
-      );
-    return (
-        <h1> Loading... </h1>  
-    )
-  }
-}
-    
 export default App;

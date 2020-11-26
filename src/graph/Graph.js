@@ -12,6 +12,7 @@ class Graph extends React.Component {
 		this.state = {
 			data: [],
 			is_data_loaded: false,
+			// datarevision: 1,
 		};
 		this.create_graph_data = this.create_graph_data.bind(this);
 		this.setStateAsync = this.setStateAsync.bind(this);
@@ -45,12 +46,13 @@ class Graph extends React.Component {
 		});
 	}
 
-	async get_intrument_data(first_date, last_date, instrument_id) {
+	async get_intrument_data(first_date, last_date, instrument) {
 		var i;
 		var x = [];
 		var y = [];
-		var name = 'zain';
-
+		var name = instrument['name'];
+		var instrument_id = instrument['id'];
+		// console.log(instrument_id);
 		const requestOptions = {
 			method: 'GET',
 			headers: {
@@ -72,8 +74,6 @@ class Graph extends React.Component {
 			.then((jsonData) => {
 				// jsonData is parsed json object received from url
 				var points_for_chart = jsonData['PointsForHistoryChart'];
-				// console.log(points_for_chart)
-				// name = "zain"
 				var y_0 = points_for_chart[0]['ClosingRate'];
 				for (i = 0; i < points_for_chart.length; i++) {
 					var my_data = points_for_chart[i]['ClosingRate'] / y_0;
@@ -90,39 +90,36 @@ class Graph extends React.Component {
 	}
 
 	async componentDidUpdate(prevProps) {
+		// console.log('graph comp mount');
 		// Typical usage (don't forget to compare props):
 		if (this.props.is_button_pressed !== prevProps.is_button_pressed) {
 			if (this.props.is_button_pressed) {
-				console.log('button presed in graph detected');
+				// console.log('button presed in graph detected');
+				// console.log(this.props);
 				this.setState({ is_data_loaded: false });
 				var first_date = this.props.first_date;
 				var last_date = this.props.last_date;
-				var instrument_id = this.props.instrument_id;
+				var funds = this.props.funds;
 				var to_add_plot = this.props.to_add_plot;
 				//this.get_intrument_data(first_date,last_date,instrument_id, to_add_plot);
-				var temp_list = instrument_id;
 
-				if (!Array.isArray(instrument_id)) {
-					temp_list = [instrument_id];
-				}
-				await this.get_intrument_list(first_date, last_date, temp_list, to_add_plot);
+				// if (!Array.isArray(instrument_id)) {
+				// 	temp_list = [instrument_id];
+				// }
+				await this.get_intrument_list(first_date, last_date, funds, to_add_plot);
 				this.setState({ is_data_loaded: true });
 				this.props.graphHandler();
-				this.setState({ revision: this.state.revision + 1 });
+				// this.setState({ datarevision: this.state.datarevision + 1 });
 			}
 		}
 	}
 
 	render() {
 		if (this.state.is_data_loaded) {
-			console.log('data is lodaded to render');
-			console.log(this.state.data);
-			return (
-				<Plot
-					data={this.state.data}
-					layout={{ width: 800, height: 600, title: 'A Crazy Plot', datarevision: 0 }}
-				/>
-			);
+			// console.log('data is lodaded to render');
+			// console.log(this.state.datarevision);
+
+			return <Plot data={this.state.data} layout={{ autosize: true, title: 'A Crazy Plot' }} />;
 		}
 		return <h1>Loading...</h1>;
 	}
