@@ -74,11 +74,11 @@ class Graph extends React.Component {
 			.then((jsonData) => {
 				// jsonData is parsed json object received from url
 				var points_for_chart = jsonData['PointsForHistoryChart'];
-				var y_0 = points_for_chart[0]['ClosingRate'];
-				for (i = 0; i < points_for_chart.length; i++) {
+				var y_0 = points_for_chart[points_for_chart.length - 1]['ClosingRate'];
+				for (i = points_for_chart.length - 1; i > -1; i--) {
 					var my_data = points_for_chart[i]['ClosingRate'] / y_0;
 					y.push(my_data);
-					x.push(i);
+					x.push(points_for_chart[i]['TradeDate']);
 				}
 			})
 			.catch((error) => {
@@ -125,7 +125,6 @@ class Graph extends React.Component {
 		}
 		if (this.state.is_data_loaded) {
 			// console.log('data is lodaded to render');
-			// console.log(this.state.datarevision);
 
 			return <Plot data={this.state.data} layout={{ autosize: true, title: 'A Crazy Plot' }} />;
 		} else {
