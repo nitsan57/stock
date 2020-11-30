@@ -19,11 +19,14 @@ class Graph extends React.Component {
 	}
 
 	create_graph_data(x, y, name) {
+		// mode={'lines+markers'}
+		// marker={{ size: 10 }}
+		// line={{ shape: 'spline' }}
 		return {
 			x: x,
 			y: y,
 			type: 'scatter',
-			mode: 'lines+markers',
+			mode: 'lines',
 			name: name,
 		};
 	}
@@ -126,7 +129,17 @@ class Graph extends React.Component {
 		if (this.state.is_data_loaded) {
 			// console.log('data is lodaded to render');
 
-			return <Plot data={this.state.data} layout={{ autosize: true, title: 'A Crazy Plot' }} />;
+			return (
+				<Plot
+					data={this.state.data}
+					layout={{
+						width: 940,
+						height: 640,
+						autosize: true,
+						title: 'A Crazy Plot',
+					}}
+				/>
+			);
 		} else {
 			return <h1>Loading...</h1>;
 		}
