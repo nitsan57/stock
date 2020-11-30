@@ -22,7 +22,9 @@ class Search extends React.Component {
 
 	search() {
 		const filteredData = this.state.data.filter((item) => {
-			var res = Object.keys(item).some((key) => item[key].toLowerCase().includes(this.state.search_keyword));
+			var res = Object.keys(item).some((key) =>
+				String(item[key]).toLowerCase().includes(this.state.search_keyword)
+			);
 			return res;
 		});
 		this.setState({
@@ -31,7 +33,7 @@ class Search extends React.Component {
 		var funds = [];
 		var temp_fund = null;
 		filteredData.forEach((item) => {
-			temp_fund = { name: item['שם הקרן'], id: item["מס' קרן"] };
+			temp_fund = { name: item['שם'], id: item['מס\' ני"ע'] };
 			funds.push(temp_fund);
 		});
 		this.setState({ funds: funds });

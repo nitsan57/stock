@@ -1,6 +1,5 @@
 ﻿import react,{Component} from "react";
 const Information = [
-    [
         {
           "שם": "אושן גמישה",
           "מעמד מס*": "פטורה",
@@ -21937,5 +21936,5 @@ const Information = [
           "קרן קפ\"מ אומדן תשואה שנתית": "",
           "קרן קפ\"מ תאריך נכונות****": ""
         }
-       ]];
+		];
 export default Information;
