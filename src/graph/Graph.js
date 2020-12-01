@@ -59,29 +59,25 @@ class Graph extends React.Component {
 		const requestOptions = {
 			method: 'GET',
 			headers: {
-				Accept: 'application/json',
 				'Content-Type': 'application/json',
-				'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0',
+				'User-Agent':
+					'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.193 Mobile Safari/537.36',
 			},
 		};
 		fetch(
-			'https://api.tase.co.il/api/ChartData/ChartData/?ct=1&ot=1&lang=1&cf=0&cp=4&cv=0&cl=0&cgt=1&dFrom=' +
-				first_date +
-				'&dTo=' +
-				last_date +
-				'&oid=' +
+			'https://cors-anywhere.herokuapp.com/https://www.bizportal.co.il/forex/quote/ajaxrequests/paperdatagraphjson?period=fiveyearly&paperID=' +
 				instrument_id,
 			requestOptions
 		)
 			.then((response) => response.json())
 			.then((jsonData) => {
 				// jsonData is parsed json object received from url
-				var points_for_chart = jsonData['PointsForHistoryChart'];
-				var y_0 = points_for_chart[points_for_chart.length - 1]['ClosingRate'];
+				var points_for_chart = jsonData['points'];
+				var y_0 = points_for_chart[points_for_chart.length - 1]['C_p'];
 				for (i = points_for_chart.length - 1; i > -1; i--) {
-					var my_data = points_for_chart[i]['ClosingRate'] / y_0;
+					var my_data = points_for_chart[i]['C_p'] / y_0;
 					y.push(my_data);
-					x.push(points_for_chart[i]['TradeDate']);
+					x.push(points_for_chart[i]['D_p']);
 				}
 			})
 			.catch((error) => {
