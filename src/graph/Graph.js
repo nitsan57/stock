@@ -52,7 +52,7 @@ class Graph extends React.Component {
 		var i = 0;
 		for (i = 0; i < raw_data.length; i++) {
 			points_for_chart = raw_data[i]['points'];
-			var d_length = points_for_chart[points_for_chart.length - 1].length;
+			var d_length = points_for_chart.length;
 			if (min_data_length > d_length) {
 				min_data_length = d_length;
 			}
@@ -70,6 +70,7 @@ class Graph extends React.Component {
 			x = [];
 			y = [];
 			for (j = min_data_length - 1; j > -1; j--) {
+				console.log(points_for_chart);
 				y_0 = points_for_chart[min_data_length - 1]['C_p'];
 				my_data = points_for_chart[j]['C_p'] / y_0;
 				y.push(my_data);
