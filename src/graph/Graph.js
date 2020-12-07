@@ -45,13 +45,14 @@ class Graph extends React.Component {
 	}
 
 	async get_graph_data(raw_data) {
-		// jsonData is parsed json object received from url
-
-		var points_for_chart = raw_data[0]['points'];
+		var firstKey = Object.keys(raw_data[0])[0];
+		var points_for_chart = raw_data[0][firstKey];
+		// console.log(points_for_chart);
 		var min_data_length = points_for_chart.length;
-		var i = 0;
+		var i;
 		for (i = 0; i < raw_data.length; i++) {
-			points_for_chart = raw_data[i]['points'];
+			firstKey = Object.keys(raw_data[i])[0];
+			points_for_chart = raw_data[i][firstKey];
 			var d_length = points_for_chart.length;
 			if (min_data_length > d_length) {
 				min_data_length = d_length;
@@ -63,18 +64,23 @@ class Graph extends React.Component {
 		var y_0;
 		var my_data;
 		var res = [];
-		var j = 0;
+		var j;
 		for (i = 0; i < raw_data.length; i++) {
-			name = raw_data[i]['paperName'];
-			points_for_chart = raw_data[i]['points'];
+			name = 'alla'; //raw_data[i]['paperName'];
+			firstKey = Object.keys(raw_data[i])[0];
+			points_for_chart = raw_data[i][firstKey];
 			x = [];
 			y = [];
+			var rate;
 			for (j = min_data_length - 1; j > -1; j--) {
-				console.log(points_for_chart);
-				y_0 = points_for_chart[min_data_length - 1]['C_p'];
-				my_data = points_for_chart[j]['C_p'] / y_0;
+				rate = 'ClosingRate';
+				if (firstKey === 'Table') {
+					rate = 'PurchasePrice';
+				}
+				y_0 = points_for_chart[min_data_length - 1][rate];
+				my_data = points_for_chart[j][rate] / y_0;
 				y.push(my_data);
-				x.push(points_for_chart[j]['D_p']);
+				x.push(points_for_chart[j]['TradeDate']);
 			}
 			var temp_data = this.create_graph_data(x, y, name);
 			res.push(temp_data);
@@ -83,29 +89,69 @@ class Graph extends React.Component {
 		this.setState({ data: res });
 	}
 
+	async fetch_data(method, url, data, type) {
+		return new Promise(function (resolve, reject) {
+			let xhr = new XMLHttpRequest();
+			xhr.open(method, url);
+			xhr.setRequestHeader('Cache-Control', 'no-cache');
+			xhr.setRequestHeader('X-Maya-With', 'allow');
+			xhr.setRequestHeader('Accept-Language', 'heb-IL');
+			xhr.setRequestHeader('Content-Type', type);
+			xhr.onload = function () {
+				if (this.status >= 200 && this.status < 300) {
+					resolve(xhr.response);
+					// console.log(xhr.responseText);
+				} else {
+					reject({
+						status: this.status,
+						statusText: xhr.statusText,
+					});
+				}
+			};
+			xhr.onerror = function () {
+				reject({
+					status: this.status,
+					statusText: xhr.statusText,
+				});
+			};
+			xhr.send(data);
+		});
+	}
+
+	async fetch_fund(first_date, last_date, instrument_id, raw_data) {
+		var url = 'https://mayaapi.tase.co.il/api/fund/history';
+		var data = 'DateFrom=2017-12-31&DateTo=2020-12-07&FundId=' + instrument_id + '&Page=1&Period=0';
+
+		let res = await this.fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
+		raw_data.push(JSON.parse(res));
+	}
+
+	async fetch_security(first_date, last_date, instrument_id, raw_data) {
+		var url = 'https://api.tase.co.il/api/security/historyeod';
+		var data = {
+			dFrom: '2017-12-31',
+			dTo: '2020-12-07',
+			oId: instrument_id,
+			pageNum: 1,
+			pType: '8',
+			TotalRec: 1,
+			lang: '1',
+		};
+		let res = await this.fetch_data('POST', url, JSON.stringify(data), 'application/json');
+		raw_data.push(JSON.parse(res));
+	}
+
 	async get_intruments_data(first_date, last_date, instruments, raw_data) {
 		var instrument;
 		var i;
+
 		for (i = 0; i < instruments.length; i++) {
 			instrument = instruments[i];
 			var instrument_id = instrument['id'];
-			const requestOptions = {
-				method: 'GET',
-				headers: {
-					'User-Agent':
-						'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.193 Mobile Safari/537.36',
-				},
-			};
-			try {
-				let response = await fetch(
-					'https://cors-anywhere.herokuapp.com/https://www.bizportal.co.il/forex/quote/ajaxrequests/paperdatagraphjson?period=fiveyearly&paperID=' +
-						instrument_id,
-					requestOptions
-				);
-				let jsonData = await response.json();
-				raw_data.push(jsonData);
-			} catch (err) {
-				console.log('Erorr in fetch');
+			if (String(instrument_id)[0] === '1') {
+				await this.fetch_security(first_date, last_date, instrument_id, raw_data);
+			} else {
+				await this.fetch_fund(first_date, last_date, instrument_id, raw_data);
 			}
 		}
 		await this.get_graph_data(raw_data);
