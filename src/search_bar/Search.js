@@ -1,6 +1,7 @@
 import React from 'react';
 import Graph from '../graph/Graph';
 import Information from '../info-json';
+import Info from '../Info/Info'
 
 class Search extends React.Component {
 	constructor(props) {
@@ -74,7 +75,7 @@ class Search extends React.Component {
 		var first_date = '23/04/2020';
 		var last_date = '23/09/2020';
 		console.log('render was called in search');
-
+		const vals = this.state.funds
 		return (
 			<div>
 				<form>
@@ -96,6 +97,10 @@ class Search extends React.Component {
 					is_button_pressed={this.state.is_button_pressed}
 					to_add_plot={this.state.to_add_plot}
 				/>
+				<Info
+				    funds={this.state.funds}
+				/>
+
 			</div>
 		);
 	}
