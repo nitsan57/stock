@@ -66,7 +66,7 @@ class Graph extends React.Component {
 		var res = [];
 		var j;
 		for (i = 0; i < raw_data.length; i++) {
-			name = 'alla'; //raw_data[i]['paperName'];
+			name = raw_data[i]['name'];
 			firstKey = Object.keys(raw_data[i])[0];
 			points_for_chart = raw_data[i][firstKey];
 			x = [];
@@ -118,15 +118,21 @@ class Graph extends React.Component {
 		});
 	}
 
-	async fetch_fund(first_date, last_date, instrument_id, raw_data) {
+	async fetch_fund(first_date, last_date, instrument, raw_data) {
+		var instrument_id = instrument['id'];
+		var instrument_name = instrument['name'];
 		var url = 'https://mayaapi.tase.co.il/api/fund/history';
 		var data = 'DateFrom=2017-12-31&DateTo=2020-12-07&FundId=' + instrument_id + '&Page=1&Period=0';
 
 		let res = await this.fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
-		raw_data.push(JSON.parse(res));
+		let json_res = JSON.parse(res);
+		json_res.name = instrument_name;
+		raw_data.push(json_res);
 	}
 
-	async fetch_security(first_date, last_date, instrument_id, raw_data) {
+	async fetch_security(first_date, last_date, instrument, raw_data) {
+		var instrument_id = instrument['id'];
+		var instrument_name = instrument['name'];
 		var url = 'https://api.tase.co.il/api/security/historyeod';
 		var data = {
 			dFrom: '2017-12-31',
@@ -138,7 +144,9 @@ class Graph extends React.Component {
 			lang: '1',
 		};
 		let res = await this.fetch_data('POST', url, JSON.stringify(data), 'application/json');
-		raw_data.push(JSON.parse(res));
+		let json_res = JSON.parse(res);
+		json_res.name = instrument_name;
+		raw_data.push(json_res);
 	}
 
 	async get_intruments_data(first_date, last_date, instruments, raw_data) {
@@ -149,9 +157,9 @@ class Graph extends React.Component {
 			instrument = instruments[i];
 			var instrument_id = instrument['id'];
 			if (String(instrument_id)[0] === '1') {
-				await this.fetch_security(first_date, last_date, instrument_id, raw_data);
+				await this.fetch_security(first_date, last_date, instrument, raw_data);
 			} else {
-				await this.fetch_fund(first_date, last_date, instrument_id, raw_data);
+				await this.fetch_fund(first_date, last_date, instrument, raw_data);
 			}
 		}
 		await this.get_graph_data(raw_data);
