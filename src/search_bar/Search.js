@@ -73,7 +73,6 @@ class Search extends React.Component {
 	render() {
 		var first_date = '23/04/2020';
 		var last_date = '23/09/2020';
-		console.log('render was called in search');
 
 		return (
 			<div>

@@ -82,7 +82,7 @@ class Graph extends React.Component {
 				y = [];
 				var rate;
 				for (j = min_data_length - 1; j > -1; j--) {
-					rate = 'ClosingRate';
+					rate = 'CloseRate';
 					if (firstKey === 'Table') {
 						rate = 'PurchasePrice';
 					}
@@ -192,7 +192,7 @@ class Graph extends React.Component {
 			return <h1>Hi search something :)</h1>;
 		}
 		if (this.state.is_data_loaded) {
-			console.log(this.state.data);
+			// console.log(this.state.data);
 			return (
 				<Plot
 					data={this.state.data}
