@@ -37,9 +37,8 @@ class Graph extends React.Component {
 			raw_data = [];
 			await this.setStateAsync({ raw_data: [] });
 		}
-
-		await this.get_intruments_data(first_date, last_date, instrument_list, raw_data);
 		let total_inst = this.state.instruments.concat(instrument_list);
+		await this.get_intruments_data(first_date, last_date, total_inst, raw_data);
 		this.setState({ instruments: total_inst });
 	}
 
@@ -83,7 +82,7 @@ class Graph extends React.Component {
 	}
 
 	async get_graph_data(raw_data_input, instruments) {
-		Promise.allSettled(raw_data_input).then(async (raw_data) => {
+		await Promise.allSettled(raw_data_input).then(async (raw_data) => {
 			var data_y_point;
 			var value;
 			let data_array = await this.prepare_data(raw_data);
@@ -109,7 +108,6 @@ class Graph extends React.Component {
 			var month;
 			var day;
 			for (i = 0; i < data_array.length; i++) {
-				// console.log(i);
 				value = data_array[i];
 				name = instruments[i]['name'];
 				y = [];
@@ -215,8 +213,9 @@ class Graph extends React.Component {
 	async get_intruments_data(first_date, last_date, instruments, raw_data) {
 		var instrument;
 		var i;
+		let add_len = raw_data.length;
 
-		for (i = 0; i < instruments.length; i++) {
+		for (i = add_len; i < instruments.length; i++) {
 			instrument = instruments[i];
 			var instrument_id = instrument['id'];
 			if (String(instrument_id)[0] === '1') {
@@ -225,6 +224,7 @@ class Graph extends React.Component {
 				this.fetch_fund(first_date, last_date, instrument, raw_data);
 			}
 		}
+		this.setState({ raw_data: raw_data });
 		await this.get_graph_data(raw_data, instruments);
 	}
 
@@ -239,6 +239,7 @@ class Graph extends React.Component {
 				var funds = this.props.funds;
 				var to_add_plot = this.props.to_add_plot;
 				await this.get_intrument_list(first_date, last_date, funds, to_add_plot);
+
 				this.props.graphHandler();
 				this.setState({ is_data_loaded: true });
 			}
