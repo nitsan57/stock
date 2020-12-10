@@ -41,26 +41,50 @@ class Graph extends React.Component {
 		});
 	}
 
-	async get_graph_data(raw_data_input, instruments) {
-		Promise.allSettled(raw_data_input).then((raw_data) => {
-			var value = raw_data[0]['value'];
-			value = JSON.parse(value);
-			var firstKey = Object.keys(value)[0];
-
-			var points_for_chart = value[firstKey];
-			var min_data_length = points_for_chart.length;
-			var i;
-			var status;
-			for (i = 0; i < raw_data.length; i++) {
-				status = raw_data['status'];
-				if (status !== 'fulfilled') {
-					continue;
-				}
-				value = raw_data[i]['value'];
+	async prepare_data(raw_data) {
+		var instrument_array_promise;
+		var z;
+		var k;
+		var len;
+		var status;
+		var value;
+		let all_instruments_array = [];
+		let instrument_data_array = [];
+		var instrument_raw_array;
+		let firstKey;
+		for (k = 0; k < raw_data.length; k++) {
+			instrument_array_promise = raw_data[k]['value'];
+			len = instrument_array_promise.length;
+			instrument_raw_array = await Promise.allSettled(instrument_array_promise);
+			for (z = 0; z < len; z++) {
+				status = instrument_raw_array[z]['status'];
+				value = instrument_raw_array[z]['value'];
 				value = JSON.parse(value);
-				firstKey = Object.keys(raw_data[i]['value'])[0];
-				points_for_chart = value[firstKey];
-				var d_length = points_for_chart.length;
+				firstKey = Object.keys(value)[0];
+
+				if (status !== 'fulfilled' || value[firstKey].length === 0) {
+					break;
+				}
+				instrument_data_array = instrument_data_array.concat(value[firstKey]);
+			}
+			all_instruments_array.push(instrument_data_array);
+
+			instrument_data_array = [];
+		}
+		return all_instruments_array;
+	}
+
+	async get_graph_data(raw_data_input, instruments) {
+		Promise.allSettled(raw_data_input).then(async (raw_data) => {
+			var data_y_point;
+			var value;
+			let data_array = await this.prepare_data(raw_data);
+			var min_data_length = 100000;
+			var i;
+
+			for (i = 0; i < data_array.length; i++) {
+				value = data_array[i];
+				var d_length = value.length;
 				if (min_data_length > d_length) {
 					min_data_length = d_length;
 				}
@@ -72,24 +96,36 @@ class Graph extends React.Component {
 			var my_data;
 			var res = [];
 			var j;
-			for (i = 0; i < raw_data.length; i++) {
-				value = raw_data[i]['value'];
-				value = JSON.parse(value);
+			var date;
+			var year;
+			var month;
+			var day;
+			for (i = 0; i < data_array.length; i++) {
+				value = data_array[i];
 				name = instruments[i]['name'];
-				firstKey = Object.keys(value)[0];
-				points_for_chart = value[firstKey];
 				x = [];
 				y = [];
 				var rate;
+
 				for (j = min_data_length - 1; j > -1; j--) {
+					data_y_point = value[j]['CloseRate'];
 					rate = 'CloseRate';
-					if (firstKey === 'Table') {
+					if (data_y_point === undefined) {
+						data_y_point = value[j]['PurchasePrice'];
 						rate = 'PurchasePrice';
 					}
-					y_0 = points_for_chart[min_data_length - 1][rate];
-					my_data = points_for_chart[j][rate] / y_0;
+					y_0 = value[min_data_length - 1][rate];
+					my_data = data_y_point / y_0;
 					y.push(my_data);
-					x.push(points_for_chart[j]['TradeDate']);
+					date = value[j]['TradeDate'].substring(0, 10).split('-');
+					if (date.length === 1) {
+						x.push(date[0]);
+					} else {
+						year = date[0];
+						month = date[1];
+						day = date[2];
+						x.push(day + '/' + month + '/' + year);
+					}
 				}
 				var temp_data = this.create_graph_data(x, y, name);
 				res.push(temp_data);
@@ -100,6 +136,8 @@ class Graph extends React.Component {
 	}
 
 	async fetch_data(method, url, data, type) {
+		// url =
+		// 	'https://www.bizportal.co.il/forex/quote/ajaxrequests/paperdatagraphjson?period=fiveyearly&paperID=5124490';
 		return new Promise(function (resolve, reject) {
 			let xhr = new XMLHttpRequest();
 			xhr.open(method, url);
@@ -129,28 +167,41 @@ class Graph extends React.Component {
 	}
 
 	fetch_fund(first_date, last_date, instrument, raw_data) {
-		var instrument_id = instrument['id'];
-		var url = 'https://mayaapi.tase.co.il/api/fund/history';
-		var data = 'DateFrom=2017-12-31&DateTo=2020-12-07&FundId=' + instrument_id + '&Page=1&Period=0';
+		var temp_res = [];
 
-		let res = this.fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
-		raw_data.push(res);
+		var i;
+		for (i = 1; i < 30; i++) {
+			var instrument_id = instrument['id'];
+			var url = 'https://mayaapi.tase.co.il/api/fund/history';
+
+			var data =
+				'DateFrom=2015-12-1&DateTo=2020-12-09&FundId=' + instrument_id + '&Page=' + String(i) + '&Period=0';
+
+			let res = this.fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
+			temp_res.push(res);
+		}
+		raw_data.push(temp_res);
 	}
 
 	fetch_security(first_date, last_date, instrument, raw_data) {
-		var instrument_id = instrument['id'];
-		var url = 'https://api.tase.co.il/api/security/historyeod';
-		var data = {
-			dFrom: '2017-12-31',
-			dTo: '2020-12-07',
-			oId: instrument_id,
-			pageNum: 1,
-			pType: '8',
-			TotalRec: 1,
-			lang: '1',
-		};
-		let res = this.fetch_data('POST', url, JSON.stringify(data), 'application/json');
-		raw_data.push(res);
+		var temp_res = [];
+		var i;
+		for (i = 1; i < 30; i++) {
+			var instrument_id = instrument['id'];
+			var url = 'https://api.tase.co.il/api/security/historyeod';
+			var data = {
+				dFrom: '2015-12-1',
+				dTo: '2020-12-09',
+				oId: instrument_id,
+				pageNum: i,
+				pType: '8',
+				TotalRec: 1,
+				lang: '1',
+			};
+			let res = this.fetch_data('POST', url, JSON.stringify(data), 'application/json');
+			temp_res.push(res);
+		}
+		raw_data.push(temp_res);
 	}
 
 	async get_intruments_data(first_date, last_date, instruments, raw_data) {
