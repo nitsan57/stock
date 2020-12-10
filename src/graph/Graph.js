@@ -8,6 +8,8 @@ class Graph extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			raw_data: [],
+			instruments: [],
 			data: [],
 			is_data_loaded: null,
 		};
@@ -28,11 +30,17 @@ class Graph extends React.Component {
 	componentDidMount() {}
 
 	async get_intrument_list(first_date, last_date, instrument_list, to_add_plot) {
-		var raw_data = [];
+		var raw_data = this.state.raw_data;
 		if (!to_add_plot) {
 			await this.setStateAsync({ data: [] });
+			await this.setStateAsync({ instruments: [] });
+			raw_data = [];
+			await this.setStateAsync({ raw_data: [] });
 		}
+
 		await this.get_intruments_data(first_date, last_date, instrument_list, raw_data);
+		let total_inst = this.state.instruments.concat(instrument_list);
+		this.setState({ instruments: total_inst });
 	}
 
 	setStateAsync(state) {
@@ -101,9 +109,9 @@ class Graph extends React.Component {
 			var month;
 			var day;
 			for (i = 0; i < data_array.length; i++) {
+				// console.log(i);
 				value = data_array[i];
 				name = instruments[i]['name'];
-				x = [];
 				y = [];
 				var rate;
 
@@ -117,14 +125,16 @@ class Graph extends React.Component {
 					y_0 = value[min_data_length - 1][rate];
 					my_data = data_y_point / y_0;
 					y.push(my_data);
-					date = value[j]['TradeDate'].substring(0, 10).split('-');
-					if (date.length === 1) {
-						x.push(date[0]);
-					} else {
-						year = date[0];
-						month = date[1];
-						day = date[2];
-						x.push(day + '/' + month + '/' + year);
+					if (i === 0) {
+						date = value[j]['TradeDate'].substring(0, 10).split('-');
+						if (date.length === 1) {
+							x.push(date[0]);
+						} else {
+							year = date[0];
+							month = date[1];
+							day = date[2];
+							x.push(day + '/' + month + '/' + year);
+						}
 					}
 				}
 				var temp_data = this.create_graph_data(x, y, name);
@@ -136,8 +146,6 @@ class Graph extends React.Component {
 	}
 
 	async fetch_data(method, url, data, type) {
-		// url =
-		// 	'https://www.bizportal.co.il/forex/quote/ajaxrequests/paperdatagraphjson?period=fiveyearly&paperID=5124490';
 		return new Promise(function (resolve, reject) {
 			let xhr = new XMLHttpRequest();
 			xhr.open(method, url);
@@ -230,7 +238,6 @@ class Graph extends React.Component {
 				var last_date = this.props.last_date;
 				var funds = this.props.funds;
 				var to_add_plot = this.props.to_add_plot;
-
 				await this.get_intrument_list(first_date, last_date, funds, to_add_plot);
 				this.props.graphHandler();
 				this.setState({ is_data_loaded: true });
