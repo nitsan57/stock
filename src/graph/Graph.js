@@ -237,9 +237,13 @@ class Graph extends React.Component {
 				var first_date = this.props.first_date;
 				var last_date = this.props.last_date;
 				var funds = this.props.funds;
+				if (funds.length === 0) {
+					this.setState({ is_data_loaded: null });
+					this.props.graphHandler();
+					return;
+				}
 				var to_add_plot = this.props.to_add_plot;
 				await this.get_intrument_list(first_date, last_date, funds, to_add_plot);
-
 				this.props.graphHandler();
 				this.setState({ is_data_loaded: true });
 			}

@@ -13,6 +13,7 @@ class Search extends React.Component {
 			result: [],
 			funds: [],
 			data: Information,
+			search_message: 'Search',
 		};
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.clearSearch = this.clearSearch.bind(this);
@@ -36,6 +37,11 @@ class Search extends React.Component {
 			temp_fund = { name: item['שם'], id: item['מס\' ני"ע'] };
 			funds.push(temp_fund);
 		});
+		if (funds.length === 0) {
+			this.setState({ search_message: 'No funds found try other keyword' });
+		} else {
+			this.setState({ search_message: 'Search results:' });
+		}
 		this.setState({ funds: funds });
 	}
 
@@ -46,7 +52,6 @@ class Search extends React.Component {
 	}
 
 	addSearch() {
-		console.log('addSearch: ', this.state.search_keyword);
 		this.setState({ to_add_plot: true });
 		this.search();
 		this.setState({ is_button_pressed: true });
@@ -85,7 +90,7 @@ class Search extends React.Component {
 				</form>
 				<button onClick={this.clearSearch}>new plot!</button>
 				<button onClick={this.addSearch}> add plot!</button>
-				<h1>Search</h1>
+				<h1>{this.state.search_message}</h1>
 
 				<Graph
 					first_date={first_date}
