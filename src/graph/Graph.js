@@ -24,6 +24,7 @@ class Graph extends React.Component {
 			type: 'scatter',
 			mode: 'lines',
 			name: name,
+			showlegend: true,
 		};
 	}
 
@@ -122,7 +123,7 @@ class Graph extends React.Component {
 					}
 					y_0 = value[min_data_length - 1][rate];
 					my_data = data_y_point / y_0;
-					y.push(my_data);
+					y.push(my_data - 1);
 					if (i === 0) {
 						date = value[j]['TradeDate'].substring(0, 10).split('-');
 						if (date.length === 1) {
@@ -264,6 +265,7 @@ class Graph extends React.Component {
 						height: 640,
 						autosize: true,
 						title: 'A Crazy Plot',
+						yaxis: { tickformat: ',.0%' },
 					}}
 				/>
 			);
