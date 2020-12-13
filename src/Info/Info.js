@@ -1,52 +1,61 @@
 import React from 'react';
-
-
-
-const requestOptions = {
-    method: 'GET',
-    headers: {
-        'User-Agent':
-            'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.193 Mobile Safari/537.36',
-        'X-Maya-With': 'allow',
-    },
-};
-
-try {
-    let response = await fetch(fetch_string, requestOptions);
-    let jsonData = await response.json();
-    raw_data.push(jsonData);
-} catch (err) {
-    console.log('Erorr in fetch');
-}
+import {fetch_data} from '../Utils'
 
 class Info extends React.Component {
 
-    async fetch_fund(instrument) {
-		var instrument_id = instrument['id'];
-		var instrument_name = instrument['name'];
-        var etf_url = 'https://mayaapi.tase.co.il/api/fund/details?fundId=5122007';
-        var fund_url = 'https://api.tase.co.il/api/security/majordata?secId=1145978&compId=114&lang=1';
-		var data = 'DateFrom=2017-12-31&DateTo=2020-12-07&FundId=' + instrument_id + '&Page=1&Period=0';
-
-		let res = await this.fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
-		let json_res = JSON.parse(res);
-		json_res.name = instrument_name;
-		raw_data.push(json_res);
+	constructor(props) {
+		super(props)
+		this.state = {
+			data: [],
+			is_data_loaded: false,
+		};
 	}
 
+    async fetch_fund() {
+		var url      = ''
+        var etf_url  = 'https://mayaapi.tase.co.il/api/fund/details?fundId=';
+		var fund_url = 'https://api.tase.co.il/api/security/majordata?secId=';
+		var fund_id  = ''
+		var result;
 
-    
-	constructor(props) {
-        super(props)
+		let k; for (k = 0; k < this.props.funds.length; k++) {
+			console.log("!!!!!!!!", this.props.funds, k)
+            fund_id = String(this.props.funds[k]["id"])
+		    if (fund_id[0] == "5") {
+                url = etf_url + fund_id 
+			} else {
+                url = fund_url + fund_id + "&compId="+fund_id.substr(0,3)+"&lang=1"
+			}
+            console.log("fetch_fund: url:", url)
+			result = await fetch_data("GET", url, "", 'application/x-www-form-urlencoded')
+			console.log("fetch fund result:", result);
+			this.setState({is_data_loaded:true})
+
+		}	
+	}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.funds !== prevProps.funds) {
+			this.fetch_fund()
+		}
 	}
 
 	render() {
-	    console.log("Funds info:", this.props.funds)
-		return (
-		    <div>
-                <h2> Hey </h2>
-			</div>
-		);
+		console.log("Funds info:", this.props.funds)
+		if (this.state.is_data_loaded) {
+		    return (
+		        <div>
+                    <h2> Loaded </h2>
+			    </div>
+		    );
+		} else {
+			return (
+			    <div>
+			        <h2> Not loaded </h2>
+		        </div>
+			);
+		} 
 	}
 }
+
 export default Info;

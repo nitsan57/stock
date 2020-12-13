@@ -1,6 +1,6 @@
 import React from 'react';
 import Plotly from 'plotly.js-basic-dist';
-
+import {fetch_data} from '../Utils'
 import createPlotlyComponent from 'react-plotly.js/factory';
 const Plot = createPlotlyComponent(Plotly);
 
@@ -144,34 +144,7 @@ class Graph extends React.Component {
 		});
 	}
 
-	async fetch_data(method, url, data, type) {
-		return new Promise(function (resolve, reject) {
-			let xhr = new XMLHttpRequest();
-			xhr.open(method, url);
-			xhr.setRequestHeader('Cache-Control', 'no-cache');
-			xhr.setRequestHeader('X-Maya-With', 'allow');
-			xhr.setRequestHeader('Accept-Language', 'heb-IL');
-			xhr.setRequestHeader('Content-Type', type);
-			xhr.onload = function () {
-				if (this.status >= 200 && this.status < 300) {
-					resolve(xhr.response);
-					// console.log(xhr.responseText);
-				} else {
-					reject({
-						status: this.status,
-						statusText: xhr.statusText,
-					});
-				}
-			};
-			xhr.onerror = function () {
-				reject({
-					status: this.status,
-					statusText: xhr.statusText,
-				});
-			};
-			xhr.send(data);
-		});
-	}
+
 
 	fetch_fund(first_date, last_date, instrument, raw_data) {
 		var temp_res = [];
@@ -184,7 +157,7 @@ class Graph extends React.Component {
 			var data =
 				'DateFrom=2015-12-1&DateTo=2020-12-09&FundId=' + instrument_id + '&Page=' + String(i) + '&Period=0';
 
-			let res = this.fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
+			let res = fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
 			temp_res.push(res);
 		}
 		raw_data.push(temp_res);
@@ -205,7 +178,7 @@ class Graph extends React.Component {
 				TotalRec: 1,
 				lang: '1',
 			};
-			let res = this.fetch_data('POST', url, JSON.stringify(data), 'application/json');
+			let res = fetch_data('POST', url, JSON.stringify(data), 'application/json');
 			temp_res.push(res);
 		}
 		raw_data.push(temp_res);
