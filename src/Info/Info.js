@@ -52,7 +52,7 @@ class Info extends React.Component {
 				var_fee = etf_data['FundDetails']['VariableFee'];
 				truste_fee = etf_data['FundDetails']['TrusteeFee'];
 			}
-			relevant_info = { "name": this.props.funds[k]["name"], "id": this.props.funds[k]['id'], "managment_fee":managment_fee, "var_fee":var_fee, "truste_fee":truste_fee}
+			relevant_info = { "name": this.props.funds[k]['name'], "id": this.props.funds[k]['id'], "managment_fee":managment_fee, "var_fee":var_fee, "truste_fee":truste_fee}
 			console.log(managment_fee, var_fee, truste_fee);
 			this.setState(prevState => ({
 				info: [...prevState.info, relevant_info]
@@ -72,17 +72,19 @@ class Info extends React.Component {
 		if (this.state.is_data_loaded) {
 			return (
 				<div>
-                    {this.state.info.map(fund => (
+                    {/* {this.state.info.map(fund => (
                     <div key={fund["id"]}> 
 					    <Fund_Display
-						    name          = {fund["name"]}
 							id            = {fund["id"]}
 							managment_fee = {fund["managment_fee"]}
 				            var_fee       = {fund["var_fee"]}
 				            truste_fee    = {fund["truste_fee"]}
 						/>
 					</div>
-                    ))}
+                    ))} */}
+					<Fund_Display
+					    info = {this.state.info}
+					/>
 				</div>
 			);
 		} else {
