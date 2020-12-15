@@ -45,10 +45,13 @@ class Search extends React.Component {
 		});
 		if (funds.length === 0) {
 			this.setState({ search_message: 'No funds found try other keyword' });
-		} else {
-			this.setState({ search_message: 'Search results:' });
+		} else if(funds.length > 15 ) {
+			this.setState({ search_message: 'Too many funds found please search more specifically' });
 		}
-		this.setState({ funds: funds });
+		else {
+			this.setState({ search_message: 'Search results:' });
+			this.setState({ funds: funds });
+		}
 		console.log("Funds:", funds)
 	}
 
