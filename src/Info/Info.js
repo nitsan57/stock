@@ -1,22 +1,22 @@
-import React            from 'react';
-import { fetch_data }   from '../Utils';
-import  Fund_Display  from '../Fund_Display/Fund_Display';
+import React from 'react';
+import { fetch_data } from '../Utils';
+import Fund_Display from '../Fund_Display/Fund_Display';
 
 class Info extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data:            []    ,
-			is_data_loaded:  false ,
-			info:            []
+			data: [],
+			is_data_loaded: false,
+			info: [],
 		};
 	}
 
 	async fetch_fund() {
-		var url       = '';
-		var fund_url  = 'https://mayaapi.tase.co.il/api/fund/details?fundId=';
-		var etf_url   = 'https://mayaapi.tase.co.il/api/etf/details?fundId=';
-		var fund_id   = '';
+		var url = '';
+		var fund_url = 'https://mayaapi.tase.co.il/api/fund/details?fundId=';
+		var etf_url = 'https://mayaapi.tase.co.il/api/etf/details?fundId=';
+		var fund_id = '';
 
 		let k;
 		let all_results = [];
@@ -40,7 +40,7 @@ class Info extends React.Component {
 		let truste_fee;
 
 		for (k = 0; k < all_results.length; k++) {
-			let relevant_info = {}
+			let relevant_info = {};
 			fund_data = JSON.parse(all_results[k]['value']);
 			etf_data = fund_data['ETFDetails'];
 			if (etf_data === undefined) {
@@ -52,19 +52,26 @@ class Info extends React.Component {
 				var_fee = etf_data['FundDetails']['VariableFee'];
 				truste_fee = etf_data['FundDetails']['TrusteeFee'];
 			}
-			relevant_info = { "name": this.props.funds[k]['name'], "id": this.props.funds[k]['id'], "managment_fee":managment_fee, "var_fee":var_fee, "truste_fee":truste_fee}
-			console.log(managment_fee, var_fee, truste_fee);
-			this.setState(prevState => ({
-				info: [...prevState.info, relevant_info]
-			  }))
+			relevant_info = {
+				name: this.props.funds[k]['name'],
+				id: this.props.funds[k]['id'],
+				managment_fee: managment_fee,
+				var_fee: var_fee,
+				truste_fee: truste_fee,
+			};
+			//console.log(managment_fee, var_fee, truste_fee);
+			this.setState((prevState) => ({
+				info: [...prevState.info, relevant_info],
+			}));
 		}
-		console.log("fetch fund all relevant info:", this.state.info)
+		//console.log('fetch fund all relevant info:', this.state.info);
 		this.setState({ is_data_loaded: true });
 	}
 
 	componentDidUpdate(prevProps) {
 		if (this.props.funds !== prevProps.funds) {
 			this.fetch_fund();
+			this.props.tableHandler();
 		}
 	}
 
@@ -72,27 +79,11 @@ class Info extends React.Component {
 		if (this.state.is_data_loaded) {
 			return (
 				<div>
-                    {/* {this.state.info.map(fund => (
-                    <div key={fund["id"]}> 
-					    <Fund_Display
-							id            = {fund["id"]}
-							managment_fee = {fund["managment_fee"]}
-				            var_fee       = {fund["var_fee"]}
-				            truste_fee    = {fund["truste_fee"]}
-						/>
-					</div>
-                    ))} */}
-					<Fund_Display
-					    info = {this.state.info}
-					/>
+					<Fund_Display info={this.state.info} />
 				</div>
 			);
 		} else {
-			return (
-				<div>
-					<h2> Not loaded </h2>
-				</div>
-			);
+			return <div></div>;
 		}
 	}
 }

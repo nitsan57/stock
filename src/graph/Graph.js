@@ -1,6 +1,6 @@
 import React from 'react';
 import Plotly from 'plotly.js-basic-dist';
-import {fetch_data} from '../Utils'
+import { fetch_data } from '../Utils';
 import createPlotlyComponent from 'react-plotly.js/factory';
 const Plot = createPlotlyComponent(Plotly);
 
@@ -144,8 +144,6 @@ class Graph extends React.Component {
 		});
 	}
 
-
-
 	fetch_fund(first_date, last_date, instrument, raw_data) {
 		var temp_res = [];
 
@@ -226,7 +224,7 @@ class Graph extends React.Component {
 
 	render() {
 		if (this.state.is_data_loaded == null) {
-			return <h1>Hi search something :)</h1>;
+			return null;
 		}
 		if (this.state.is_data_loaded) {
 			// console.log(this.state.data);
@@ -243,7 +241,7 @@ class Graph extends React.Component {
 				/>
 			);
 		} else {
-			return <h1>Loading...</h1>;
+			return null;
 		}
 	}
 }
