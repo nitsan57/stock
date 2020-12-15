@@ -8,6 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 
 const columns = [
 	{
@@ -52,9 +53,12 @@ const useStyles = makeStyles({
 	},
 });
 
+
 export default function Fund_Display(props) {
-	const rows = [];
-	let i;
+    const [currentrows, setRows] = React.useState([]);
+    const rows = [];
+    useDeepCompareEffect( () => {
+    let i;
 	for (i = 0; i < props.info.length; i++) {
 		rows.push(
 			createData(
@@ -64,9 +68,13 @@ export default function Fund_Display(props) {
 				props.info[i]['var_fee'],
 				props.info[i]['truste_fee']
 			)
-		);
+        );
 	}
+    setRows(rows)
+    }, props.info
+    )
 
+    console.log("!!!!!!!!!!!!!!!!!!!!!!!11")
 	const classes = useStyles();
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -94,7 +102,7 @@ export default function Fund_Display(props) {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+						{currentrows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
 							return (
 								<TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
 									{columns.map((column) => {
@@ -116,7 +124,7 @@ export default function Fund_Display(props) {
 			<TablePagination
 				rowsPerPageOptions={[10, 25, 100]}
 				component="div"
-				count={rows.length}
+				count={currentrows.length}
 				rowsPerPage={rowsPerPage}
 				page={page}
 				onChangePage={handleChangePage}
