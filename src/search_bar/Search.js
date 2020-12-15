@@ -49,6 +49,7 @@ class Search extends React.Component {
 			this.setState({ search_message: 'Search results:' });
 		}
 		this.setState({ funds: funds });
+		console.log("Funds:", funds)
 	}
 
 	clearSearch() {

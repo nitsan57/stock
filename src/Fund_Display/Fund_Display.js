@@ -55,10 +55,20 @@ const useStyles = makeStyles({
 
 
 export default function Fund_Display(props) {
+    
+	const classes = useStyles();
+	const [page, setPage] = React.useState(0);
+	const [rowsPerPage, setRowsPerPage] = React.useState(10);
     const [currentrows, setRows] = React.useState([]);
-    const rows = [];
+    
     useDeepCompareEffect( () => {
+        setRows(0)
     let i;
+    console.log("info", props.info)
+    console.log("page",page)
+    console.log("rowperpage", rowsPerPage)
+    console.log("currentrows", currentrows)
+    const rows = [];
 	for (i = 0; i < props.info.length; i++) {
 		rows.push(
 			createData(
@@ -74,16 +84,12 @@ export default function Fund_Display(props) {
     }, props.info
     )
 
-    console.log("!!!!!!!!!!!!!!!!!!!!!!!11")
-	const classes = useStyles();
-	const [page, setPage] = React.useState(0);
-	const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
 	};
 
 	const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(0)
 		setRowsPerPage(+event.target.value);
 		setPage(0);
 	};

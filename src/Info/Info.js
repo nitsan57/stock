@@ -60,9 +60,13 @@ class Info extends React.Component {
 				truste_fee: truste_fee,
 			};
 			//console.log(managment_fee, var_fee, truste_fee);
-			this.setState((prevState) => ({
-				info: [...prevState.info, relevant_info],
-			}));
+			if(this.state.info.some(e => e.id == relevant_info["id"])) {
+				continue
+			} else {
+				this.setState((prevState) => ({
+					info: [...prevState.info, relevant_info],
+				}));
+			}
 		}
 		//console.log('fetch fund all relevant info:', this.state.info);
 		this.setState({ is_data_loaded: true });
