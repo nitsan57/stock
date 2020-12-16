@@ -52,13 +52,18 @@ const useStyles = makeStyles({
 		maxHeight: 440,
 	},
 });
+let prev_props;
 
 export default function Fund_Display(props) {
+	prev_props = props;
 	const classes = useStyles();
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
 	const [currentrows, setRows] = React.useState([]);
-
+	console.log('info', props.info);
+	console.log('page', page);
+	console.log('rowperpage', rowsPerPage);
+	console.log('currentrows', currentrows);
 	useDeepCompareEffect(() => {
 		setRows(0);
 		let i;
