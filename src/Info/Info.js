@@ -59,7 +59,6 @@ class Info extends React.Component {
 				var_fee: var_fee,
 				truste_fee: truste_fee,
 			};
-			//console.log(managment_fee, var_fee, truste_fee);
 			if(this.state.info.some(e => e.id == relevant_info["id"])) {
 				continue
 			} else {
@@ -68,7 +67,6 @@ class Info extends React.Component {
 				}));
 			}
 		}
-		//console.log('fetch fund all relevant info:', this.state.info);
 		this.setState({ is_data_loaded: true });
 	}
 
@@ -76,6 +74,11 @@ class Info extends React.Component {
 		if (this.props.funds !== prevProps.funds) {
 			this.fetch_fund();
 			this.props.tableHandler();
+		}
+		if (this.props.is_button_pressed !== prevProps.is_button_pressed) {
+			if (this.props.is_button_pressed) {
+			this.setState({info:[]})
+			}
 		}
 	}
 

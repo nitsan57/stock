@@ -129,7 +129,7 @@ class Search extends React.Component {
 						is_button_pressed={this.state.is_button_pressed}
 						to_add_plot={this.state.to_add_plot}
 					/>
-					<Info funds={this.state.fund_list} tableHandler={this.tableHandler} />
+					<Info funds={this.state.fund_list} tableHandler={this.tableHandler} is_button_pressed={this.state.is_button_pressed} />
 				</div>
 			</div>
 		);
