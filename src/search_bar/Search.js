@@ -45,8 +45,8 @@ class Search extends React.Component {
 			temp_fund = { name: item['שם'], id: item['מס\' ני"ע'] };
 			this.state.fund_set.add(JSON.stringify(temp_fund));
 		});
-		console.log('!!!!!!!!!!!!');
-		console.log(this.state.fund_set.size);
+		// console.log('!!!!!!!!!!!!');
+		// console.log(this.state.fund_set.size);
 		if (filteredData.length === 0) {
 			this.setState({ search_message: 'No funds found try other keyword' });
 		} else if (filteredData.length > 15) {
