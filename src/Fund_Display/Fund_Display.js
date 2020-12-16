@@ -62,10 +62,10 @@ export default function Fund_Display(props) {
 	useDeepCompareEffect(() => {
 		setRows(0);
 		let i;
-		// console.log('info', props.info);
-		// console.log('page', page);
-		// console.log('rowperpage', rowsPerPage);
-		// console.log('currentrows', currentrows);
+		console.log('info', props.info);
+		console.log('page', page);
+		console.log('rowperpage', rowsPerPage);
+		console.log('currentrows', currentrows);
 		const rows = [];
 		for (i = 0; i < props.info.length; i++) {
 			rows.push(
