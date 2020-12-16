@@ -65,18 +65,8 @@ class Fund_Display extends React.Component {
 			is_data_loaded: null,
 		};
     }
-    
-	// prev_props = props;
-	// const classes = useStyles();
-	// const [page, setPage] = React.useState(0);
-	// const [rowsPerPage, setRowsPerPage] = React.useState(10);
-	// const [currentrows, setRows] = React.useState([]);
-	// console.log('info', props.info);
-	// console.log('page', page);
-	// console.log('rowperpage', rowsPerPage);
-	// console.log('currentrows', currentrows);
+
 	componentDidMount(){
-        // setRows(0);
         this.setState({currentrows:[]})
 		let i;
 		console.log('info',        this.props.info);
@@ -95,12 +85,10 @@ class Fund_Display extends React.Component {
 				)
 			);
 		}
-        // setRows(rows);
         this.setState({currentrows: rows})
     }
     
     componentDidUpdate(prevProps){
-        // setRows(0);
         if (this.props.info !== prevProps.info) {
         this.setState({currentrows:[]})
 		let i;
@@ -146,7 +134,6 @@ class Fund_Display extends React.Component {
             // setRows(rows);
             this.setState({currentrows: rows})
             }
-
 	}
 
 	handleChangePage = (event, newPage) => {
@@ -168,6 +155,7 @@ class Fund_Display extends React.Component {
                 maxHeight: 440,
             },
         });
+        if(this.props.info.length != 0) {
         return (
             <Paper className={classes.root}>
                 <TableContainer className={classes.container}>
@@ -212,6 +200,9 @@ class Fund_Display extends React.Component {
                 />
             </Paper>
         );
+                        } else{
+                            return <h1></h1>
+                        }
     }
 }
 export default Fund_Display;
