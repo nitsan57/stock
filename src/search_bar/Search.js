@@ -64,8 +64,7 @@ class Search extends React.Component {
 
 	clearSearch() {
 		this.setState({ fund_set: new Set() });
-		//this.setState({ fund_list: this.state.fund_list.splice(0, 0) });
-		this.state.fund_list.length = 0;
+		this.state.fund_list.splice(0, this.state.fund_list.length);
 		this.setState({ to_add_plot: false });
 		this.search();
 	}
