@@ -53,43 +53,40 @@ const useStyles = makeStyles({
 	},
 });
 
-
 export default function Fund_Display(props) {
-    
 	const classes = useStyles();
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [currentrows, setRows] = React.useState([]);
-    
-    useDeepCompareEffect( () => {
-        setRows(0)
-    let i;
-    console.log("info", props.info)
-    console.log("page",page)
-    console.log("rowperpage", rowsPerPage)
-    console.log("currentrows", currentrows)
-    const rows = [];
-	for (i = 0; i < props.info.length; i++) {
-		rows.push(
-			createData(
-				props.info[i]['name'],
-				props.info[i]['id'],
-				props.info[i]['managment_fee'],
-				props.info[i]['var_fee'],
-				props.info[i]['truste_fee']
-			)
-        );
-	}
-    setRows(rows)
-    }, props.info
-    )
+	const [currentrows, setRows] = React.useState([]);
+
+	useDeepCompareEffect(() => {
+		setRows(0);
+		let i;
+		// console.log('info', props.info);
+		// console.log('page', page);
+		// console.log('rowperpage', rowsPerPage);
+		// console.log('currentrows', currentrows);
+		const rows = [];
+		for (i = 0; i < props.info.length; i++) {
+			rows.push(
+				createData(
+					props.info[i]['name'],
+					props.info[i]['id'],
+					props.info[i]['managment_fee'],
+					props.info[i]['var_fee'],
+					props.info[i]['truste_fee']
+				)
+			);
+		}
+		setRows(rows);
+	}, props.info);
 
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
 	};
 
 	const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(0)
+		setRowsPerPage(0);
 		setRowsPerPage(+event.target.value);
 		setPage(0);
 	};

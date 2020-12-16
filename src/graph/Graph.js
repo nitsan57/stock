@@ -38,7 +38,12 @@ class Graph extends React.Component {
 			raw_data = [];
 			await this.setStateAsync({ raw_data: [] });
 		}
-		let total_inst = this.state.instruments.concat(instrument_list);
+		let current_len = this.state.instruments.length;
+		let diff_len = instrument_list.length - this.state.instruments.length;
+		// console.log(current_len, diff_len);
+		// console.log(instrument_list.slice(current_len, current_len + diff_len));
+		let total_inst = this.state.instruments.concat(instrument_list.slice(current_len, current_len + diff_len));
+
 		await this.get_intruments_data(first_date, last_date, total_inst, raw_data);
 		this.setState({ instruments: total_inst });
 	}

@@ -13,7 +13,8 @@ class Search extends React.Component {
 			is_button_pressed: false,
 			to_add_plot: false,
 			result: [],
-			funds: [],
+			fund_set: new Set(), //[],
+			fund_list: [],
 			data: Information,
 			search_message: 'Search Fund:',
 		};
@@ -37,25 +38,32 @@ class Search extends React.Component {
 		this.setState({
 			result: filteredData,
 		});
-		var funds = [];
+		//var funds = new Set(); //[];  //if (a.indexOf(value)==-1) a.push(value);
 		var temp_fund = null;
+		let funds_arr = [];
 		filteredData.forEach((item) => {
 			temp_fund = { name: item['שם'], id: item['מס\' ני"ע'] };
-			funds.push(temp_fund);
+			this.state.fund_set.add(JSON.stringify(temp_fund));
 		});
-		if (funds.length === 0) {
+		console.log('!!!!!!!!!!!!');
+		console.log(this.state.fund_set.size);
+		if (filteredData.length === 0) {
 			this.setState({ search_message: 'No funds found try other keyword' });
-		} else if(funds.length > 15 ) {
+		} else if (filteredData.length > 15) {
 			this.setState({ search_message: 'Too many funds found please search more specifically' });
-		}
-		else {
+		} else {
 			this.setState({ search_message: 'Search results:' });
-			this.setState({ funds: funds });
+
+			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
+				funds_arr.push(JSON.parse(val));
+			}
+			this.setState({ fund_list: funds_arr });
 		}
-		console.log("Funds:", funds)
+		console.log('Funds:', this.state.fund_list);
 	}
 
 	clearSearch() {
+		this.setState({ fund_set: new Set() });
 		this.setState({ to_add_plot: false });
 		this.search();
 	}
@@ -83,6 +91,8 @@ class Search extends React.Component {
 	render() {
 		var first_date = '23/04/2020';
 		var last_date = '23/09/2020';
+		console.log('Funds:', this.state.fund_list);
+
 		let loading = (
 			<form>
 				<h1>Loading...</h1>
@@ -113,12 +123,12 @@ class Search extends React.Component {
 					<Graph
 						first_date={first_date}
 						last_date={last_date}
-						funds={this.state.funds}
+						funds={this.state.fund_list}
 						graphHandler={this.graphHandler}
 						is_button_pressed={this.state.is_button_pressed}
 						to_add_plot={this.state.to_add_plot}
 					/>
-					<Info funds={this.state.funds} tableHandler={this.tableHandler} />
+					<Info funds={this.state.fund_list} tableHandler={this.tableHandler} />
 				</div>
 			</div>
 		);
