@@ -121,8 +121,10 @@ class Graph extends React.Component {
 			var day;
 			let start_date = 0;
 			if (date_range[1] !== 0) {
-				min_data_length = date_range[1];
-				start_date = date_range[0];
+				start_date = min_data_length - date_range[1];
+
+				min_data_length = min_data_length - date_range[0];
+				console.log(min_data_length, start_date);
 			}
 			for (i = 0; i < data_array.length; i++) {
 				value = data_array[i];
