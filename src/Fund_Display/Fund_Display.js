@@ -68,10 +68,6 @@ class Fund_Display extends React.Component {
 	componentDidMount() {
 		this.setState({ currentrows: [] });
 		let i;
-		// console.log('info',        this.props.info);
-		// console.log('page',        this.state.page);
-		// console.log('rowperpage',  this.state.rowsPerPage);
-		// console.log('currentrows', this.state.currentrows);
 		const rows = [];
 		for (i = 0; i < this.props.info.length; i++) {
 			rows.push(
@@ -91,10 +87,6 @@ class Fund_Display extends React.Component {
 		if (this.props.info !== prevProps.info) {
 			this.setState({ currentrows: [] });
 			let i;
-			// console.log('info',        this.props.info);
-			// console.log('page',        this.state.page);
-			// console.log('rowperpage',  this.state.rowsPerPage);
-			// console.log('currentrows', this.state.currentrows);
 			const rows = [];
 			for (i = 0; i < this.props.info.length; i++) {
 				rows.push(
@@ -107,17 +99,12 @@ class Fund_Display extends React.Component {
 					)
 				);
 			}
-			// setRows(rows);
 			this.setState({ currentrows: rows });
 		}
 
 		if (this.props.info !== prevProps.info) {
 			this.setState({ currentrows: [] });
 			let i;
-			// console.log('info', this.props.info);
-			// console.log('page', this.state.page);
-			// console.log('rowperpage', this.state.rowsPerPage);
-			// console.log('currentrows', this.state.currentrows);
 			const rows = [];
 			for (i = 0; i < this.props.info.length; i++) {
 				rows.push(
@@ -130,7 +117,6 @@ class Fund_Display extends React.Component {
 					)
 				);
 			}
-			// setRows(rows);
 			this.setState({ currentrows: rows });
 		}
 	}
