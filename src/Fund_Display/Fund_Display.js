@@ -55,8 +55,7 @@ function createData(name, code, population, size, density) {
 let prev_props;
 
 class Fund_Display extends React.Component {
-
-    constructor(props) {
+	constructor(props) {
 		super(props);
 		this.state = {
 			page: 0,
@@ -64,15 +63,15 @@ class Fund_Display extends React.Component {
 			currentrows: [],
 			is_data_loaded: null,
 		};
-    }
+	}
 
-	componentDidMount(){
-        this.setState({currentrows:[]})
+	componentDidMount() {
+		this.setState({ currentrows: [] });
 		let i;
-		console.log('info',        this.props.info);
-		console.log('page',        this.state.page);
-		console.log('rowperpage',  this.state.rowsPerPage);
-		console.log('currentrows', this.state.currentrows);
+		// console.log('info',        this.props.info);
+		// console.log('page',        this.state.page);
+		// console.log('rowperpage',  this.state.rowsPerPage);
+		// console.log('currentrows', this.state.currentrows);
 		const rows = [];
 		for (i = 0; i < this.props.info.length; i++) {
 			rows.push(
@@ -85,124 +84,133 @@ class Fund_Display extends React.Component {
 				)
 			);
 		}
-        this.setState({currentrows: rows})
-    }
-    
-    componentDidUpdate(prevProps){
-        if (this.props.info !== prevProps.info) {
-        this.setState({currentrows:[]})
-		let i;
-		console.log('info',        this.props.info);
-		console.log('page',        this.state.page);
-		console.log('rowperpage',  this.state.rowsPerPage);
-		console.log('currentrows', this.state.currentrows);
-		const rows = [];
-		for (i = 0; i < this.props.info.length; i++) {
-			rows.push(
-				createData(
-					this.props.info[i]['name'],
-					this.props.info[i]['id'],
-					this.props.info[i]['managment_fee'],
-					this.props.info[i]['var_fee'],
-					this.props.info[i]['truste_fee']
-				)
-			);
-		}
-        // setRows(rows);
-        this.setState({currentrows: rows})
-        }
+		this.setState({ currentrows: rows });
+	}
 
-        if (this.props.info !== prevProps.info) {
-            this.setState({currentrows:[]})
-            let i;
-            console.log('info',        this.props.info);
-            console.log('page',        this.state.page);
-            console.log('rowperpage',  this.state.rowsPerPage);
-            console.log('currentrows', this.state.currentrows);
-            const rows = [];
-            for (i = 0; i < this.props.info.length; i++) {
-                rows.push(
-                    createData(
-                        this.props.info[i]['name'],
-                        this.props.info[i]['id'],
-                        this.props.info[i]['managment_fee'],
-                        this.props.info[i]['var_fee'],
-                        this.props.info[i]['truste_fee']
-                    )
-                );
-            }
-            // setRows(rows);
-            this.setState({currentrows: rows})
-            }
+	componentDidUpdate(prevProps) {
+		if (this.props.info !== prevProps.info) {
+			this.setState({ currentrows: [] });
+			let i;
+			// console.log('info',        this.props.info);
+			// console.log('page',        this.state.page);
+			// console.log('rowperpage',  this.state.rowsPerPage);
+			// console.log('currentrows', this.state.currentrows);
+			const rows = [];
+			for (i = 0; i < this.props.info.length; i++) {
+				rows.push(
+					createData(
+						this.props.info[i]['name'],
+						this.props.info[i]['id'],
+						this.props.info[i]['managment_fee'],
+						this.props.info[i]['var_fee'],
+						this.props.info[i]['truste_fee']
+					)
+				);
+			}
+			// setRows(rows);
+			this.setState({ currentrows: rows });
+		}
+
+		if (this.props.info !== prevProps.info) {
+			this.setState({ currentrows: [] });
+			let i;
+			// console.log('info', this.props.info);
+			// console.log('page', this.state.page);
+			// console.log('rowperpage', this.state.rowsPerPage);
+			// console.log('currentrows', this.state.currentrows);
+			const rows = [];
+			for (i = 0; i < this.props.info.length; i++) {
+				rows.push(
+					createData(
+						this.props.info[i]['name'],
+						this.props.info[i]['id'],
+						this.props.info[i]['managment_fee'],
+						this.props.info[i]['var_fee'],
+						this.props.info[i]['truste_fee']
+					)
+				);
+			}
+			// setRows(rows);
+			this.setState({ currentrows: rows });
+		}
 	}
 
 	handleChangePage = (event, newPage) => {
-        this.setState({page: newPage})
+		this.setState({ page: newPage });
 	};
 
 	handleChangeRowsPerPage = (event) => {
-        this.setState({rowsPerPage: 0})
-        this.setState({rowsPerPage: +event.target.value})
-        this.setState({page: 0})
-    };
-    
-    render() {
-        const classes = makeStyles({
-            root: {
-                width: '100%',
-            },
-            container: {
-                maxHeight: 440,
-            },
-        });
-        if(this.props.info.length != 0) {
-        return (
-            <Paper className={classes.root}>
-                <TableContainer className={classes.container}>
-                    <Table stickyHeader aria-label="sticky table">
-                        <TableHead>
-                            <TableRow>
-                                {columns.map((column) => (
-                                    <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
-                                        {column.label}
-                                    </TableCell>
-                                ))}
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {this.state.currentrows.slice(this.state.page * this.state.rowsPerPage, this.state.page * this.state.rowsPerPage + this.state.rowsPerPage).map((row) => {
-                                return (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                                        {columns.map((column) => {
-                                            const value = row[column.id];
-                                            return (
-                                                <TableCell key={column.id} align={column.align}>
-                                                    {column.format && typeof value === 'number'
-                                                        ? column.format(value)
-                                                        : value}
-                                                </TableCell>
-                                            );
-                                        })}
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-                <TablePagination
-                    rowsPerPageOptions={[10, 25, 100]}
-                    component="div"
-                    count={this.state.currentrows.length}
-                    rowsPerPage={this.state.rowsPerPage}
-                    page={this.state.page}
-                    onChangePage={this.handleChangePage}
-                    onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-            </Paper>
-        );
-                        } else{
-                            return <h1></h1>
-                        }
-    }
+		this.setState({ rowsPerPage: 0 });
+		this.setState({ rowsPerPage: +event.target.value });
+		this.setState({ page: 0 });
+	};
+
+	render() {
+		const classes = makeStyles({
+			root: {
+				width: '100%',
+			},
+			container: {
+				maxHeight: 440,
+			},
+		});
+		if (this.props.info.length != 0) {
+			return (
+				<Paper className={classes.root}>
+					<TableContainer className={classes.container}>
+						<Table stickyHeader aria-label="sticky table">
+							<TableHead>
+								<TableRow>
+									{columns.map((column) => (
+										<TableCell
+											key={column.id}
+											align={column.align}
+											style={{ minWidth: column.minWidth }}
+										>
+											{column.label}
+										</TableCell>
+									))}
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{this.state.currentrows
+									.slice(
+										this.state.page * this.state.rowsPerPage,
+										this.state.page * this.state.rowsPerPage + this.state.rowsPerPage
+									)
+									.map((row) => {
+										return (
+											<TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+												{columns.map((column) => {
+													const value = row[column.id];
+													return (
+														<TableCell key={column.id} align={column.align}>
+															{column.format && typeof value === 'number'
+																? column.format(value)
+																: value}
+														</TableCell>
+													);
+												})}
+											</TableRow>
+										);
+									})}
+							</TableBody>
+						</Table>
+					</TableContainer>
+					<TablePagination
+						rowsPerPageOptions={[10, 25, 100]}
+						component="div"
+						count={this.state.currentrows.length}
+						rowsPerPage={this.state.rowsPerPage}
+						page={this.state.page}
+						onChangePage={this.handleChangePage}
+						onChangeRowsPerPage={this.handleChangeRowsPerPage}
+					/>
+				</Paper>
+			);
+		} else {
+			return <h1></h1>;
+		}
+	}
 }
 export default Fund_Display;

@@ -59,7 +59,7 @@ class Search extends React.Component {
 			}
 			this.setState({ fund_list: funds_arr });
 		}
-		console.log('Funds:', this.state.fund_list);
+		// console.log('Funds:', this.state.fund_list);
 	}
 
 	clearSearch() {
@@ -92,7 +92,7 @@ class Search extends React.Component {
 	render() {
 		var first_date = '23/04/2020';
 		var last_date = '23/09/2020';
-		console.log('Funds:', this.state.fund_list);
+		// console.log('Funds:', this.state.fund_list);
 
 		let loading = (
 			<form>
@@ -104,6 +104,7 @@ class Search extends React.Component {
 		if (this.state.num_child_loaded === 2 || !this.state.is_button_pressed) {
 			loading = null;
 		}
+
 		return (
 			<div
 			// style={{
@@ -129,7 +130,11 @@ class Search extends React.Component {
 						is_button_pressed={this.state.is_button_pressed}
 						to_add_plot={this.state.to_add_plot}
 					/>
-					<Info funds={this.state.fund_list} tableHandler={this.tableHandler} is_button_pressed={this.state.is_button_pressed} />
+					<Info
+						funds={this.state.fund_list}
+						tableHandler={this.tableHandler}
+						is_button_pressed={this.state.is_button_pressed}
+					/>
 				</div>
 			</div>
 		);

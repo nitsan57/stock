@@ -2,6 +2,10 @@ import React from 'react';
 import Plotly from 'plotly.js-basic-dist';
 import { fetch_data } from '../Utils';
 import createPlotlyComponent from 'react-plotly.js/factory';
+
+import 'rc-slider/assets/index.css';
+import { Range } from 'rc-slider';
+
 const Plot = createPlotlyComponent(Plotly);
 
 class Graph extends React.Component {
@@ -11,10 +15,12 @@ class Graph extends React.Component {
 			raw_data: [],
 			instruments: [],
 			data: [],
+			dates: [],
 			is_data_loaded: null,
 		};
 		this.create_graph_data = this.create_graph_data.bind(this);
 		this.setStateAsync = this.setStateAsync.bind(this);
+		this.range_change = this.range_change.bind(this);
 	}
 
 	create_graph_data(x, y, name) {
@@ -87,7 +93,7 @@ class Graph extends React.Component {
 		return all_instruments_array;
 	}
 
-	async get_graph_data(raw_data_input, instruments) {
+	async get_graph_data(raw_data_input, instruments, date_range) {
 		await Promise.allSettled(raw_data_input).then(async (raw_data) => {
 			var data_y_point;
 			var value;
@@ -113,13 +119,18 @@ class Graph extends React.Component {
 			var year;
 			var month;
 			var day;
+			let start_date = 0;
+			if (date_range[1] !== 0) {
+				min_data_length = date_range[1];
+				start_date = date_range[0];
+			}
 			for (i = 0; i < data_array.length; i++) {
 				value = data_array[i];
 				name = instruments[i]['name'];
 				y = [];
 				var rate;
 
-				for (j = min_data_length - 1; j > -1; j--) {
+				for (j = min_data_length - 1; j >= start_date; j--) {
 					data_y_point = value[j]['CloseRate'];
 					rate = 'CloseRate';
 					if (data_y_point === undefined) {
@@ -146,6 +157,9 @@ class Graph extends React.Component {
 			}
 
 			this.setState({ data: res });
+			if (date_range[1] === 0) {
+				this.setState({ dates: x });
+			}
 		});
 	}
 
@@ -202,7 +216,7 @@ class Graph extends React.Component {
 			}
 		}
 		this.setState({ raw_data: raw_data });
-		await this.get_graph_data(raw_data, instruments);
+		await this.get_graph_data(raw_data, instruments, [0, 0]);
 	}
 
 	async componentDidUpdate(prevProps) {
@@ -227,23 +241,52 @@ class Graph extends React.Component {
 		}
 	}
 
+	range_change(value) {
+		let raw_data = this.state.raw_data;
+		this.get_graph_data(raw_data, this.state.instruments, value);
+	}
+
+	range_params(x_axis) {
+		let final_index = x_axis.length - 1;
+		let mid_index = Math.floor(x_axis.length / 2);
+		return {
+			min: 0,
+			max: x_axis.length,
+			defaultValue: [0, final_index],
+			marks: { 0: x_axis[0], [mid_index]: x_axis[mid_index], [final_index]: x_axis[final_index] },
+		};
+	}
+
 	render() {
 		if (this.state.is_data_loaded == null) {
 			return null;
 		}
 		if (this.state.is_data_loaded) {
 			// console.log(this.state.data);
+			let width = 940;
+			let height = 640;
+			let range_params = this.range_params(this.state.dates);
 			return (
-				<Plot
-					data={this.state.data}
-					layout={{
-						width: 940,
-						height: 640,
-						autosize: true,
-						title: 'A Crazy Plot',
-						yaxis: { tickformat: ',.0%' },
-					}}
-				/>
+				<div style={{ width: width, margin: 50 }}>
+					<Plot
+						data={this.state.data}
+						layout={{
+							width: width,
+							height: height,
+							autosize: true,
+							title: 'A Crazy Plot',
+							yaxis: { tickformat: ',.0%' },
+						}}
+					/>
+					<h4>Date Range</h4>
+					<Range
+						min={range_params.min}
+						max={range_params.max}
+						defaultValue={range_params.defaultValue}
+						marks={range_params.marks}
+						onChange={this.range_change}
+					/>
+				</div>
 			);
 		} else {
 			return null;
