@@ -1,6 +1,6 @@
-import React from 'react';
-import { fetch_data } from '../Utils';
-import Fund_Display from '../Fund_Display/Fund_Display';
+import React           from 'react';
+import { fetch_data }  from '../Utils';
+import Fund_Display    from '../Fund_Display/Fund_Display';
 
 class Info extends React.Component {
 	constructor(props) {

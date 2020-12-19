@@ -1,8 +1,9 @@
-import React from 'react';
-import Graph from '../graph/Graph';
-import Information from '../info-json';
-import Info from '../Info/Info';
-import Loader from 'react-loader-spinner';
+import React           from 'react';
+import Graph           from '../graph/Graph';
+import Information     from '../info-json';
+import Info            from '../Info/Info';
+import Loader          from 'react-loader-spinner';
+import CheckBox        from '../Check_Box/Check_Box';
 
 class Search extends React.Component {
 	constructor(props) {
@@ -17,6 +18,10 @@ class Search extends React.Component {
 			fund_list: [],
 			data: Information,
 			search_message: 'Search Fund:',
+			search_checkbox: [
+				{ id: 1, value: "קרן מחקה", isChecked: true},
+			    { id: 2, value: "אסטרטגית", isChecked: true}
+			  ]
 		};
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.clearSearch = this.clearSearch.bind(this);
@@ -89,6 +94,21 @@ class Search extends React.Component {
 		this.setState({ num_child_loaded: this.state.num_child_loaded + 1 });
 	}
 
+	checkBoxHandleAllChecked = (event) => {
+		let options = this.state.search_checkbox
+		options.forEach(option => option.isChecked = event.target.checked) 
+		this.setState({search_checkbox: options})
+	}
+
+	handleCheckChieldElement = (event) => {
+		let options = this.state.search_checkbox
+		options.forEach(option => {
+		   if (option.value === event.target.value)
+		   option.isChecked =  event.target.checked
+		})
+		this.setState({search_checkbox: options})
+	}
+
 	render() {
 		var first_date = '23/04/2020';
 		var last_date = '23/09/2020';
@@ -115,10 +135,21 @@ class Search extends React.Component {
 			>
 				<form>
 					<h4>{this.state.search_message}</h4>
+					<input type="checkbox"  onClick={this.checkBoxHandleAllChecked} value="checkedall" /> בחר \ הסר הכל
+                    <ul>
+                    {
+                        this.state.search_checkbox.map((option) => {
+                        return (<CheckBox handleCheckChieldElement={this.handleCheckChieldElement}  {...option} />)
+                        })
+                    }
+                    </ul>
 					<input value={this.state.search_keyword} onChange={this.handleInputChange} />
 				</form>
 				<button onClick={this.clearSearch}>new plot!</button>
 				<button onClick={this.addSearch}> add plot!</button>
+
+				<FastSearch // todo: add styling. 
+				/>
 
 				{loading}
 				<div>
