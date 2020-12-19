@@ -35,11 +35,13 @@ class Search extends React.Component {
 			var res = Object.keys(item).some((key) =>
 				String(item[key]).toLowerCase().includes(this.state.search_keyword)
 			);
+
 			this.setState({ is_button_pressed: true });
 			this.setState({ num_child_loaded: 0 });
 
 			return res;
 		});
+		console.log("Check box:",filteredData)
 		this.setState({
 			result: filteredData,
 		});
@@ -57,6 +59,7 @@ class Search extends React.Component {
 		} else if (filteredData.length > 15) {
 			this.setState({ search_message: 'Too many funds found please search more specifically' });
 		} else {
+
 			this.setState({ search_message: 'Search results:' });
 
 			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
@@ -148,8 +151,8 @@ class Search extends React.Component {
 				<button onClick={this.clearSearch}>new plot!</button>
 				<button onClick={this.addSearch}> add plot!</button>
 
-				<FastSearch // todo: add styling. 
-				/>
+				{/* <FastSearch // todo: add styling. 
+				/> */}
 
 				{loading}
 				<div>
