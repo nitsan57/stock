@@ -1,6 +1,6 @@
-import React           from 'react';
-import { fetch_data }  from '../Utils';
-import Fund_Display    from '../Fund_Display/Fund_Display';
+import React from 'react';
+import { fetch_data } from '../Utils';
+import Fund_Display from '../Fund_Display/Fund_Display';
 
 class Info extends React.Component {
 	constructor(props) {
@@ -22,7 +22,7 @@ class Info extends React.Component {
 		let all_results = [];
 		for (k = 0; k < this.props.funds.length; k++) {
 			fund_id = String(this.props.funds[k]['id']);
-			if (fund_id[0] == '5') {
+			if (fund_id[0] === '5') {
 				url = fund_url + fund_id;
 			} else {
 				url = etf_url + fund_id;
@@ -31,7 +31,6 @@ class Info extends React.Component {
 			all_results.push(fetch_data('GET', url, '', 'application/x-www-form-urlencoded'));
 		}
 		all_results = await Promise.allSettled(all_results); // to wait one time only
-
 		let fund_data;
 		let etf_data;
 
@@ -59,8 +58,8 @@ class Info extends React.Component {
 				var_fee: var_fee,
 				truste_fee: truste_fee,
 			};
-			if(this.state.info.some(e => e.id == relevant_info["id"])) {
-				continue
+			if (this.state.info.some((e) => e.id == relevant_info['id'])) {
+				continue;
 			} else {
 				this.setState((prevState) => ({
 					info: [...prevState.info, relevant_info],
@@ -76,8 +75,8 @@ class Info extends React.Component {
 			this.props.tableHandler();
 		}
 		if (this.props.is_button_pressed !== prevProps.is_button_pressed) {
-			if ((this.props.is_button_pressed) && (this.props.funds.length  == 0)) {
-			this.setState({info:[]})
+			if (this.props.is_button_pressed && this.props.funds.length == 0) {
+				this.setState({ info: [] });
 			}
 		}
 	}

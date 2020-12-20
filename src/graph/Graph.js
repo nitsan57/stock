@@ -36,7 +36,7 @@ class Graph extends React.Component {
 
 	componentDidMount() {}
 
-	async get_intrument_list(first_date, last_date, instrument_list, to_add_plot) {
+	async get_intrument_list(today, instrument_list, to_add_plot) {
 		var raw_data = this.state.raw_data;
 		if (!to_add_plot) {
 			await this.setStateAsync({ data: [] });
@@ -46,11 +46,9 @@ class Graph extends React.Component {
 		}
 		let current_len = this.state.instruments.length;
 		let diff_len = instrument_list.length - this.state.instruments.length;
-		// console.log(current_len, diff_len);
-		// console.log(instrument_list.slice(current_len, current_len + diff_len));
 		let total_inst = this.state.instruments.concat(instrument_list.slice(current_len, current_len + diff_len));
 
-		await this.get_intruments_data(first_date, last_date, total_inst, raw_data);
+		await this.get_intruments_data(today, total_inst, raw_data);
 		this.setState({ instruments: total_inst });
 	}
 
@@ -122,9 +120,7 @@ class Graph extends React.Component {
 			let start_date = 0;
 			if (date_range[1] !== 0) {
 				start_date = min_data_length - date_range[1];
-
 				min_data_length = min_data_length - date_range[0];
-				console.log(min_data_length, start_date);
 			}
 			for (i = 0; i < data_array.length; i++) {
 				value = data_array[i];
@@ -165,16 +161,25 @@ class Graph extends React.Component {
 		});
 	}
 
-	fetch_fund(first_date, last_date, instrument, raw_data) {
+	fetch_fund(today, instrument, raw_data) {
 		var temp_res = [];
-
+		let year = today.split('-')[0];
+		let before_5 = today.replace(year, year - 5);
 		var i;
-		for (i = 1; i < 30; i++) {
+		for (i = 1; i < 42; i++) {
 			var instrument_id = instrument['id'];
 			var url = 'https://mayaapi.tase.co.il/api/fund/history';
 
 			var data =
-				'DateFrom=2015-12-1&DateTo=2020-12-09&FundId=' + instrument_id + '&Page=' + String(i) + '&Period=0';
+				'DateFrom=' +
+				before_5 +
+				'&DateTo=' +
+				today +
+				'&FundId=' +
+				instrument_id +
+				'&Page=' +
+				String(i) +
+				'&Period=0';
 
 			let res = fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
 			temp_res.push(res);
@@ -182,15 +187,17 @@ class Graph extends React.Component {
 		raw_data.push(temp_res);
 	}
 
-	fetch_security(first_date, last_date, instrument, raw_data) {
+	fetch_security(today, instrument, raw_data) {
 		var temp_res = [];
 		var i;
-		for (i = 1; i < 30; i++) {
+		let year = today.split('-')[0];
+		let before_5 = today.replace(year, year - 5);
+		for (i = 1; i < 45; i++) {
 			var instrument_id = instrument['id'];
 			var url = 'https://api.tase.co.il/api/security/historyeod';
 			var data = {
-				dFrom: '2015-12-1',
-				dTo: '2020-12-09',
+				dFrom: before_5,
+				dTo: today,
 				oId: instrument_id,
 				pageNum: i,
 				pType: '8',
@@ -203,7 +210,7 @@ class Graph extends React.Component {
 		raw_data.push(temp_res);
 	}
 
-	async get_intruments_data(first_date, last_date, instruments, raw_data) {
+	async get_intruments_data(today, instruments, raw_data) {
 		var instrument;
 		var i;
 		let add_len = raw_data.length;
@@ -212,9 +219,9 @@ class Graph extends React.Component {
 			instrument = instruments[i];
 			var instrument_id = instrument['id'];
 			if (String(instrument_id)[0] === '1') {
-				this.fetch_security(first_date, last_date, instrument, raw_data);
+				this.fetch_security(today, instrument, raw_data);
 			} else {
-				this.fetch_fund(first_date, last_date, instrument, raw_data);
+				this.fetch_fund(today, instrument, raw_data);
 			}
 		}
 		this.setState({ raw_data: raw_data });
@@ -227,8 +234,7 @@ class Graph extends React.Component {
 		if (this.props.is_button_pressed !== prevProps.is_button_pressed) {
 			if (this.props.is_button_pressed) {
 				this.setState({ is_data_loaded: false });
-				var first_date = this.props.first_date;
-				var last_date = this.props.last_date;
+				var today = this.props.today;
 				var funds = this.props.funds;
 				if (funds.length === 0) {
 					this.setState({ is_data_loaded: null });
@@ -236,7 +242,7 @@ class Graph extends React.Component {
 					return;
 				}
 				var to_add_plot = this.props.to_add_plot;
-				await this.get_intrument_list(first_date, last_date, funds, to_add_plot);
+				await this.get_intrument_list(today, funds, to_add_plot);
 				this.props.graphHandler();
 				this.setState({ is_data_loaded: true });
 			}
@@ -264,21 +270,19 @@ class Graph extends React.Component {
 			return null;
 		}
 		if (this.state.is_data_loaded) {
-			// console.log(this.state.data);
-			let width = 940;
-			let height = 640;
 			let range_params = this.range_params(this.state.dates);
 			return (
-				<div style={{ width: width, margin: 50 }}>
+				<div style={{ margin: 50 }}>
 					<Plot
 						data={this.state.data}
 						layout={{
-							width: width,
-							height: height,
 							autosize: true,
-							title: 'A Crazy Plot',
+							title: 'Stock graph',
 							yaxis: { tickformat: ',.0%' },
+							responsive: true,
 						}}
+						useResizeHandler={true}
+						style={{ width: '100%', height: '100%' }}
 					/>
 					<h4>Date Range</h4>
 					<Range

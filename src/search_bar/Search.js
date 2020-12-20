@@ -1,9 +1,11 @@
-import React           from 'react';
-import Graph           from '../graph/Graph';
-import Information     from '../info-json';
-import Info            from '../Info/Info';
-import Loader          from 'react-loader-spinner';
-import CheckBox        from '../Check_Box/Check_Box';
+import React from 'react';
+import Graph from '../graph/Graph';
+import Information from '../info-json';
+import Info from '../Info/Info';
+import Loader from 'react-loader-spinner';
+import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import CheckBox from '../Check_Box/Check_Box';
 
 class Search extends React.Component {
 	constructor(props) {
@@ -14,20 +16,31 @@ class Search extends React.Component {
 			is_button_pressed: false,
 			to_add_plot: false,
 			result: [],
-			fund_set: new Set(), //[],
+			fund_set: new Set(),
 			fund_list: [],
 			data: Information,
 			search_message: 'Search Fund:',
+			today: this.get_today(),
 			search_checkbox: [
-				{ id: 1, value: "קרן מחקה", isChecked: true},
-			    { id: 2, value: "אסטרטגית", isChecked: true}
-			  ]
+				{ id: 1, value: 'קרן מחקה', isChecked: true },
+				{ id: 2, value: 'אסטרטגית', isChecked: true },
+			],
 		};
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.clearSearch = this.clearSearch.bind(this);
 		this.addSearch = this.addSearch.bind(this);
 		this.graphHandler = this.graphHandler.bind(this);
 		this.tableHandler = this.tableHandler.bind(this);
+	}
+
+	get_today() {
+		var today = new Date();
+		var dd = String(today.getDate()).padStart(2, '0');
+		var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+		var yyyy = today.getFullYear();
+
+		today = yyyy + '-' + mm + '-' + dd;
+		return today;
 	}
 
 	search() {
@@ -41,25 +54,21 @@ class Search extends React.Component {
 
 			return res;
 		});
-		console.log("Check box:",filteredData)
+		console.log('Check box:', filteredData);
 		this.setState({
 			result: filteredData,
 		});
-		//var funds = new Set(); //[];  //if (a.indexOf(value)==-1) a.push(value);
 		var temp_fund = null;
 		let funds_arr = [];
 		filteredData.forEach((item) => {
 			temp_fund = { name: item['שם'], id: item['מס\' ני"ע'] };
 			this.state.fund_set.add(JSON.stringify(temp_fund));
 		});
-		// console.log('!!!!!!!!!!!!');
-		// console.log(this.state.fund_set.size);
 		if (filteredData.length === 0) {
 			this.setState({ search_message: 'No funds found try other keyword' });
-		} else if (filteredData.length > 15) {
+		} else if (filteredData.length > 45) {
 			this.setState({ search_message: 'Too many funds found please search more specifically' });
 		} else {
-
 			this.setState({ search_message: 'Search results:' });
 
 			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
@@ -98,23 +107,20 @@ class Search extends React.Component {
 	}
 
 	checkBoxHandleAllChecked = (event) => {
-		let options = this.state.search_checkbox
-		options.forEach(option => option.isChecked = event.target.checked) 
-		this.setState({search_checkbox: options})
-	}
+		let options = this.state.search_checkbox;
+		options.forEach((option) => (option.isChecked = event.target.checked));
+		this.setState({ search_checkbox: options });
+	};
 
 	handleCheckChieldElement = (event) => {
-		let options = this.state.search_checkbox
-		options.forEach(option => {
-		   if (option.value === event.target.value)
-		   option.isChecked =  event.target.checked
-		})
-		this.setState({search_checkbox: options})
-	}
+		let options = this.state.search_checkbox;
+		options.forEach((option) => {
+			if (option.value === event.target.value) option.isChecked = event.target.checked;
+		});
+		this.setState({ search_checkbox: options });
+	};
 
 	render() {
-		var first_date = '23/04/2020';
-		var last_date = '23/09/2020';
 		// console.log('Funds:', this.state.fund_list);
 
 		let loading = (
@@ -130,46 +136,58 @@ class Search extends React.Component {
 
 		return (
 			<div
-			// style={{
-			// 	display: 'flex',
-			// 	justifyContent: 'center',
-			// 	alignItems: 'center',
-			// }}
+				style={{
+					textAlign: 'center',
+				}}
 			>
-				<form>
+				<form
+					style={{
+						marginLeft: 0,
+						marginRight: 0,
+						marginTop: 10,
+						marginBottom: 10,
+						paddingLeft: 0,
+						paddingRight: 0,
+					}}
+				>
 					<h4>{this.state.search_message}</h4>
-					<input type="checkbox"  onClick={this.checkBoxHandleAllChecked} value="checkedall" /> בחר \ הסר הכל
-                    <ul>
-                    {
-                        this.state.search_checkbox.map((option) => {
-                        return (<CheckBox handleCheckChieldElement={this.handleCheckChieldElement}  {...option} />)
-                        })
-                    }
-                    </ul>
+					<input type="checkbox" onClick={this.checkBoxHandleAllChecked} value="checkedall" /> בחר \ הסר הכל
+					<ul>
+						{this.state.search_checkbox.map((option) => {
+							return <CheckBox handleCheckChieldElement={this.handleCheckChieldElement} {...option} />;
+						})}
+					</ul>
 					<input value={this.state.search_keyword} onChange={this.handleInputChange} />
 				</form>
-				<button onClick={this.clearSearch}>new plot!</button>
-				<button onClick={this.addSearch}> add plot!</button>
-
-				{/* <FastSearch // todo: add styling. 
-				/> */}
-
+				<Button
+					style={{
+						marginLeft: 0,
+						marginRight: 10,
+						paddingLeft: 10,
+						paddingRight: 10,
+					}}
+					variant="primary"
+					size="sm"
+					onClick={this.clearSearch}
+				>
+					New comparison
+				</Button>
+				<Button variant="primary" size="sm" onClick={this.addSearch}>
+					Add to current comparison
+				</Button>
 				{loading}
-				<div>
-					<Graph
-						first_date={first_date}
-						last_date={last_date}
-						funds={this.state.fund_list}
-						graphHandler={this.graphHandler}
-						is_button_pressed={this.state.is_button_pressed}
-						to_add_plot={this.state.to_add_plot}
-					/>
-					<Info
-						funds={this.state.fund_list}
-						tableHandler={this.tableHandler}
-						is_button_pressed={this.state.is_button_pressed}
-					/>
-				</div>
+				<Graph
+					today={this.state.today}
+					funds={this.state.fund_list}
+					graphHandler={this.graphHandler}
+					is_button_pressed={this.state.is_button_pressed}
+					to_add_plot={this.state.to_add_plot}
+				/>
+				<Info
+					funds={this.state.fund_list}
+					tableHandler={this.tableHandler}
+					is_button_pressed={this.state.is_button_pressed}
+				/>
 			</div>
 		);
 	}
