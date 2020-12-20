@@ -25,12 +25,59 @@ class Search extends React.Component {
 				{ id: 1, value: 'קרן מחקה', isChecked: true },
 				{ id: 2, value: 'אסטרטגית', isChecked: true },
 			],
+			search_all: true
 		};
+		
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.clearSearch = this.clearSearch.bind(this);
 		this.addSearch = this.addSearch.bind(this);
 		this.graphHandler = this.graphHandler.bind(this);
 		this.tableHandler = this.tableHandler.bind(this);
+	}
+	
+	contains = (target, patterns) => {
+	// 	let target_values = Object.values(target)
+	// 	console.log("Check data:", target_values, patterns)
+	// 	let k = 0;
+	// 	for (k = 0; k < patterns.length; patterns++)
+	// 	{
+		
+	// 		let i =0;
+	// 		for (i =0; i< target_values.length; i++)
+	// 		{
+    //         console.log("@!#!@#!@#!@", target_values[i], patterns[k])
+	// 		let index_found = String(target_values[i]).indexOf(String(patterns[k]))
+	// 		console.log("#@$#@%$#$%#$%#$%#$%#$ index found", index_found)
+	// 	    if(String(target_values[i]).indexOf(String(patterns[k])) !== -1) {
+	// 			console.log("check ret true!")
+	// 		    return true;
+	// 	  }
+	// 	}
+	// }
+	// 	console.log("check ret false!")
+		return true
+	}
+
+	is_fund_passive = (fund) => {
+		let passive_pattern = ["מח", "מחקה"]
+		return this.contains(fund, passive_pattern)
+	}
+			
+	is_fund_leveraged = (fund) => {
+		let leveraged_pattern = ["ממונפ"]
+		return this.contains(fund, leveraged_pattern)
+	}
+		
+	filterDataByCheckBox = (filteredData) => {
+		let result = []
+		let i;
+		for (i = 0; i < filteredData.length; i++) {
+			if ((this.state.search_checkbox[0].isChecked && this.is_fund_passive(filteredData[i])) || 
+				(this.state.search_checkbox[1].isChecked && this.is_fund_leveraged(filteredData[i]))) {
+		            result.push(filteredData[i])
+				} 
+			}
+				return result;	
 	}
 
 	get_today() {
@@ -55,6 +102,9 @@ class Search extends React.Component {
 			return res;
 		});
 		console.log('Check box:', filteredData);
+		var res = this.filterDataByCheckBox(filteredData)
+		console.log("Check box filter ", res)
+
 		this.setState({
 			result: filteredData,
 		});
@@ -110,6 +160,7 @@ class Search extends React.Component {
 		let options = this.state.search_checkbox;
 		options.forEach((option) => (option.isChecked = event.target.checked));
 		this.setState({ search_checkbox: options });
+		this.setState({search_all: !this.state.search_all})
 	};
 
 	handleCheckChieldElement = (event) => {
@@ -156,6 +207,7 @@ class Search extends React.Component {
 						type="checkbox"
 						onClick={this.checkBoxHandleAllChecked}
 						value="checkedall"
+						checked={this.state.search_all}
 					/>{' '}
 					בחר \ הסר הכל
 					<ul>
@@ -163,7 +215,7 @@ class Search extends React.Component {
 							return <CheckBox handleCheckChieldElement={this.handleCheckChieldElement} {...option} />;
 						})}
 					</ul>
-					<input value={this.state.search_keyword} onChange={this.handleInputChange} />
+					<input value={this.state.search_keyword}  onChange={this.handleInputChange} />
 				</form>
 				<div
 					style={{
