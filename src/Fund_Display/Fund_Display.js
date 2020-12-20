@@ -1,58 +1,37 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import useDeepCompareEffect from 'use-deep-compare-effect';
+import { DataGrid } from '@material-ui/data-grid';
 
 const columns = [
 	{
-		id: 'population',
-		label: 'דמי ניהול',
-		minWidth: 170,
+		field: 'mfee',
+		headerName: 'דמי ניהול',
+		width: 170,
 		align: 'left',
-		format: (value) => value.toLocaleString('en-US'),
 	},
 	{
-		id: 'size',
-		label: 'דמי נאמנות',
-		minWidth: 170,
+		field: 'lfee',
+		headerName: 'דמי נאמנות',
+		width: 170,
 		align: 'left',
-		format: (value) => value.toLocaleString('en-US'),
 	},
 	{
-		id: 'density',
-		label: 'עמלת הפצה',
-		minWidth: 170,
+		field: 'dfee',
+		headerName: 'עמלת הפצה',
+		width: 170,
 		align: 'left',
-		format: (value) => value.toFixed(2),
 	},
-	{ id: 'code', label: 'מספר קרן', minWidth: 100 },
-	{ id: 'name', label: 'שם', align: 'left', minWidth: 170 },
+	{ field: 'fnum', headerName: 'מספר קרן', width: 100 },
+	{ field: 'name', headerName: 'שם', align: 'left', width: 170 },
 ];
 
-function createData(name, code, population, size, density) {
-	if (!code) code = 0;
-	if (!population) population = 0;
-	if (!size) size = 0;
-	if (!density) density = 0;
-	return { name, code, population, size, density };
-}
+function createData(name, fnum, mfee, lfee, dfee, index) {
+	if (!fnum) fnum = 0;
+	if (!mfee) mfee = 0;
+	if (!lfee) lfee = 0;
+	if (!dfee) dfee = 0;
 
-// const useStyles = makeStyles({
-// 	root: {
-// 		width: '100%',
-// 	},
-// 	container: {
-// 		maxHeight: 440,
-// 	},
-// });
-let prev_props;
+	return { name, fnum, mfee, lfee, dfee, id: index + 1 };
+}
 
 class Fund_Display extends React.Component {
 	constructor(props) {
@@ -76,7 +55,8 @@ class Fund_Display extends React.Component {
 					this.props.info[i]['id'],
 					this.props.info[i]['managment_fee'],
 					this.props.info[i]['var_fee'],
-					this.props.info[i]['truste_fee']
+					this.props.info[i]['truste_fee'],
+					i
 				)
 			);
 		}
@@ -95,25 +75,8 @@ class Fund_Display extends React.Component {
 						this.props.info[i]['id'],
 						this.props.info[i]['managment_fee'],
 						this.props.info[i]['var_fee'],
-						this.props.info[i]['truste_fee']
-					)
-				);
-			}
-			this.setState({ currentrows: rows });
-		}
-
-		if (this.props.info !== prevProps.info) {
-			this.setState({ currentrows: [] });
-			let i;
-			const rows = [];
-			for (i = 0; i < this.props.info.length; i++) {
-				rows.push(
-					createData(
-						this.props.info[i]['name'],
-						this.props.info[i]['id'],
-						this.props.info[i]['managment_fee'],
-						this.props.info[i]['var_fee'],
-						this.props.info[i]['truste_fee']
+						this.props.info[i]['truste_fee'],
+						i
 					)
 				);
 			}
@@ -121,81 +84,17 @@ class Fund_Display extends React.Component {
 		}
 	}
 
-	handleChangePage = (event, newPage) => {
-		this.setState({ page: newPage });
-	};
-
-	handleChangeRowsPerPage = (event) => {
-		this.setState({ rowsPerPage: 0 });
-		this.setState({ rowsPerPage: +event.target.value });
-		this.setState({ page: 0 });
-	};
-
 	render() {
-		const classes = makeStyles({
-			root: {
-				width: '100%',
-			},
-			container: {
-				maxHeight: 440,
-			},
-		});
-		if (this.props.info.length != 0) {
+		console.log(this.state.currentrows);
+		console.log(columns);
+		if (this.props.info.length !== 0) {
 			return (
-				<Paper className={classes.root}>
-					<TableContainer className={classes.container}>
-						<Table stickyHeader aria-label="sticky table">
-							<TableHead>
-								<TableRow>
-									{columns.map((column) => (
-										<TableCell
-											key={column.id}
-											align={column.align}
-											style={{ minWidth: column.minWidth }}
-										>
-											{column.label}
-										</TableCell>
-									))}
-								</TableRow>
-							</TableHead>
-							<TableBody>
-								{this.state.currentrows
-									.slice(
-										this.state.page * this.state.rowsPerPage,
-										this.state.page * this.state.rowsPerPage + this.state.rowsPerPage
-									)
-									.map((row) => {
-										return (
-											<TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-												{columns.map((column) => {
-													const value = row[column.id];
-													return (
-														<TableCell key={column.id} align={column.align}>
-															{column.format && typeof value === 'number'
-																? column.format(value)
-																: value}
-														</TableCell>
-													);
-												})}
-											</TableRow>
-										);
-									})}
-							</TableBody>
-						</Table>
-					</TableContainer>
-					<TablePagination
-						rowsPerPageOptions={[10, 25, 100]}
-						component="div"
-						count={this.state.currentrows.length}
-						rowsPerPage={this.state.rowsPerPage}
-						page={this.state.page}
-						onChangePage={this.handleChangePage}
-						onChangeRowsPerPage={this.handleChangeRowsPerPage}
-					/>
-				</Paper>
+				<div style={{ height: 440, width: '100%' }}>
+					<DataGrid checkboxSelection rows={this.state.currentrows} columns={columns} />
+				</div>
 			);
 		} else {
-			return <h1></h1>;
+			return null;
 		}
 	}
 }
