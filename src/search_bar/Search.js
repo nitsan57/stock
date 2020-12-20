@@ -35,27 +35,22 @@ class Search extends React.Component {
 		this.tableHandler = this.tableHandler.bind(this);
 	}
 	
-	contains = (target, patterns) => {
-	// 	let target_values = Object.values(target)
-	// 	console.log("Check data:", target_values, patterns)
-	// 	let k = 0;
-	// 	for (k = 0; k < patterns.length; patterns++)
-	// 	{
-		
-	// 		let i =0;
-	// 		for (i =0; i< target_values.length; i++)
-	// 		{
-    //         console.log("@!#!@#!@#!@", target_values[i], patterns[k])
-	// 		let index_found = String(target_values[i]).indexOf(String(patterns[k]))
-	// 		console.log("#@$#@%$#$%#$%#$%#$%#$ index found", index_found)
-	// 	    if(String(target_values[i]).indexOf(String(patterns[k])) !== -1) {
-	// 			console.log("check ret true!")
-	// 		    return true;
-	// 	  }
-	// 	}
-	// }
-	// 	console.log("check ret false!")
-		return true
+	contains = (target, patterns) => { //TODO need to think how to filter data good 
+		console.log("TARGET", Object.values(target))
+		console.log("Patteren", patterns)
+	let target_array = Object.values(target)
+	let i,k = 0;
+	for (i = 0; i< target_array.length; i++) {
+        for (k = 0; k < patterns.length; k++) {
+            if (String(target_array[i]).includes(String(patterns[i]))) {
+				console.log("TRUEEEEEEEEEEEEEEEEEeee")
+				return true
+			}
+		}
+
+	}	
+	console.log("FALSEEEEEEEEEEEEEEEEEEEEEEEE")
+		return false
 	}
 
 	is_fund_passive = (fund) => {
