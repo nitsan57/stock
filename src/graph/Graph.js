@@ -284,7 +284,7 @@ class Graph extends React.Component {
 						useResizeHandler={true}
 						style={{ width: '100%', height: '100%' }}
 					/>
-					<h10>Date Range</h10>
+					<p>Date Range</p>
 					<Range
 						min={range_params.min}
 						max={range_params.max}

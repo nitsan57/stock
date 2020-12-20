@@ -75,7 +75,7 @@ class Info extends React.Component {
 			this.props.tableHandler();
 		}
 		if (this.props.is_button_pressed !== prevProps.is_button_pressed) {
-			if (this.props.is_button_pressed && this.props.funds.length == 0) {
+			if (this.props.is_button_pressed && (this.props.funds.length === 0 || !this.props.to_add_plot)) {
 				this.setState({ info: [] });
 			}
 		}
