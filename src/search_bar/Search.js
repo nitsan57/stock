@@ -151,7 +151,13 @@ class Search extends React.Component {
 					}}
 				>
 					<h4>{this.state.search_message}</h4>
-					<input type="checkbox" onClick={this.checkBoxHandleAllChecked} value="checkedall" /> בחר \ הסר הכל
+					<input
+						// style={{ display: 'inline-block' }}
+						type="checkbox"
+						onClick={this.checkBoxHandleAllChecked}
+						value="checkedall"
+					/>{' '}
+					בחר \ הסר הכל
 					<ul>
 						{this.state.search_checkbox.map((option) => {
 							return <CheckBox handleCheckChieldElement={this.handleCheckChieldElement} {...option} />;
