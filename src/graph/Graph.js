@@ -270,9 +270,9 @@ class Graph extends React.Component {
 			return null;
 		}
 		if (this.state.is_data_loaded) {
-			let range_params = this.range_params(this.state.dates);
+			let range_params = this.range_params(this.state.dates); //for div , width: '80%'
 			return (
-				<div style={{ margin: 50 }}>
+				<div style={{ width: '80%', margin: 'auto' }}>
 					<Plot
 						data={this.state.data}
 						layout={{
@@ -284,7 +284,6 @@ class Graph extends React.Component {
 						useResizeHandler={true}
 						style={{ width: '100%', height: '100%' }}
 					/>
-					<p>Date Range</p>
 					<Range
 						min={range_params.min}
 						max={range_params.max}

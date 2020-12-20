@@ -165,30 +165,42 @@ class Search extends React.Component {
 					</ul>
 					<input value={this.state.search_keyword} onChange={this.handleInputChange} />
 				</form>
-				<Button
+				<div
 					style={{
-						marginLeft: 0,
-						marginRight: 10,
-						paddingLeft: 10,
-						paddingRight: 10,
+						marginBottom: 10,
 					}}
-					variant="primary"
-					size="sm"
-					onClick={this.clearSearch}
 				>
-					New comparison
-				</Button>
-				<Button variant="primary" size="sm" onClick={this.addSearch}>
-					Add to current comparison
-				</Button>
+					<Button
+						style={{
+							marginLeft: 0,
+							marginRight: 10,
+							paddingLeft: 10,
+							paddingRight: 10,
+						}}
+						variant="primary"
+						size="sm"
+						onClick={this.clearSearch}
+					>
+						New comparison
+					</Button>
+					<Button variant="primary" size="sm" onClick={this.addSearch}>
+						Add to current comparison
+					</Button>
+				</div>
 				{loading}
-				<Graph
-					today={this.state.today}
-					funds={this.state.fund_list}
-					graphHandler={this.graphHandler}
-					is_button_pressed={this.state.is_button_pressed}
-					to_add_plot={this.state.to_add_plot}
-				/>
+				<div
+					style={{
+						marginBottom: 20,
+					}}
+				>
+					<Graph
+						today={this.state.today}
+						funds={this.state.fund_list}
+						graphHandler={this.graphHandler}
+						is_button_pressed={this.state.is_button_pressed}
+						to_add_plot={this.state.to_add_plot}
+					/>
+				</div>
 				<Info
 					funds={this.state.fund_list}
 					tableHandler={this.tableHandler}
