@@ -16,6 +16,7 @@ class Info extends React.Component {
 		var url = '';
 		var fund_url = 'https://mayaapi.tase.co.il/api/fund/details?fundId=';
 		var etf_url = 'https://mayaapi.tase.co.il/api/etf/details?fundId=';
+		var securty_url = 'https://api.tase.co.il/api/company/securitydata?securityId=';
 		var fund_id = '';
 
 		let k;
@@ -24,6 +25,8 @@ class Info extends React.Component {
 			fund_id = String(this.props.funds[k]['id']);
 			if (fund_id[0] === '5') {
 				url = fund_url + fund_id;
+			} else if (fund_id.slice(0, 3) === '115') {
+				url = securty_url + fund_id;
 			} else {
 				url = etf_url + fund_id;
 			}
@@ -45,9 +48,10 @@ class Info extends React.Component {
 
 		for (k = 0; k < all_results.length; k++) {
 			let relevant_info = {};
+			console.log(all_results);
 			fund_data = JSON.parse(all_results[k]['value']);
 			etf_data = fund_data['ETFDetails'];
-			// console.log(fund_data);
+			console.log(fund_data);
 			if (etf_data === undefined) {
 				managment_fee = fund_data['ManagementFee'];
 				mutual_data = fund_data;

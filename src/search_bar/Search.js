@@ -25,55 +25,58 @@ class Search extends React.Component {
 				{ id: 1, value: 'קרן מחקה', isChecked: true },
 				{ id: 2, value: 'אסטרטגית', isChecked: true },
 			],
-			search_all: true
+			search_all: true,
 		};
-		
+
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.clearSearch = this.clearSearch.bind(this);
 		this.addSearch = this.addSearch.bind(this);
 		this.graphHandler = this.graphHandler.bind(this);
 		this.tableHandler = this.tableHandler.bind(this);
 	}
-	
-	contains = (target, patterns) => { //TODO need to think how to filter data good 
-		console.log("TARGET", Object.values(target))
-		console.log("Patteren", patterns)
-	let target_array = Object.values(target)
-	let i,k = 0;
-	for (i = 0; i< target_array.length; i++) {
-        for (k = 0; k < patterns.length; k++) {
-            if (String(target_array[i]).includes(String(patterns[i]))) {
-				console.log("TRUEEEEEEEEEEEEEEEEEeee")
-				return true
+
+	contains = (target, patterns) => {
+		//TODO need to think how to filter data good
+		console.log('TARGET', Object.values(target));
+		console.log('Patteren', patterns);
+		let target_array = Object.values(target);
+		let i,
+			k = 0;
+		for (i = 0; i < target_array.length; i++) {
+			for (k = 0; k < patterns.length; k++) {
+				if (String(target_array[i]).includes(String(patterns[i]))) {
+					console.log('TRUEEEEEEEEEEEEEEEEEeee');
+					return true;
+				}
 			}
 		}
-
-	}	
-	console.log("FALSEEEEEEEEEEEEEEEEEEEEEEEE")
-		return false
-	}
+		console.log('FALSEEEEEEEEEEEEEEEEEEEEEEEE');
+		return false;
+	};
 
 	is_fund_passive = (fund) => {
-		let passive_pattern = ["מח", "מחקה"]
-		return this.contains(fund, passive_pattern)
-	}
-			
+		let passive_pattern = ['מח', 'מחקה'];
+		return this.contains(fund, passive_pattern);
+	};
+
 	is_fund_leveraged = (fund) => {
-		let leveraged_pattern = ["ממונפ"]
-		return this.contains(fund, leveraged_pattern)
-	}
-		
+		let leveraged_pattern = ['ממונפ'];
+		return this.contains(fund, leveraged_pattern);
+	};
+
 	filterDataByCheckBox = (filteredData) => {
-		let result = []
+		let result = [];
 		let i;
 		for (i = 0; i < filteredData.length; i++) {
-			if ((this.state.search_checkbox[0].isChecked && this.is_fund_passive(filteredData[i])) || 
-				(this.state.search_checkbox[1].isChecked && this.is_fund_leveraged(filteredData[i]))) {
-		            result.push(filteredData[i])
-				} 
+			if (
+				(this.state.search_checkbox[0].isChecked && this.is_fund_passive(filteredData[i])) ||
+				(this.state.search_checkbox[1].isChecked && this.is_fund_leveraged(filteredData[i]))
+			) {
+				result.push(filteredData[i]);
 			}
-				return result;	
-	}
+		}
+		return result;
+	};
 
 	get_today() {
 		var today = new Date();
@@ -97,8 +100,8 @@ class Search extends React.Component {
 			return res;
 		});
 		console.log('Check box:', filteredData);
-		var res = this.filterDataByCheckBox(filteredData)
-		console.log("Check box filter ", res)
+		var res = this.filterDataByCheckBox(filteredData);
+		console.log('Check box filter ', res);
 
 		this.setState({
 			result: filteredData,
@@ -106,7 +109,7 @@ class Search extends React.Component {
 		var temp_fund = null;
 		let funds_arr = [];
 		filteredData.forEach((item) => {
-			temp_fund = { name: item['שם'], id: item['מס\' ני"ע'] };
+			temp_fund = { name: item['Name'], id: item['Id'] };
 			this.state.fund_set.add(JSON.stringify(temp_fund));
 		});
 		if (filteredData.length === 0) {
@@ -155,7 +158,7 @@ class Search extends React.Component {
 		let options = this.state.search_checkbox;
 		options.forEach((option) => (option.isChecked = event.target.checked));
 		this.setState({ search_checkbox: options });
-		this.setState({search_all: !this.state.search_all})
+		this.setState({ search_all: !this.state.search_all });
 	};
 
 	handleCheckChieldElement = (event) => {
@@ -210,7 +213,7 @@ class Search extends React.Component {
 							return <CheckBox handleCheckChieldElement={this.handleCheckChieldElement} {...option} />;
 						})}
 					</ul>
-					<input value={this.state.search_keyword}  onChange={this.handleInputChange} />
+					<input value={this.state.search_keyword} onChange={this.handleInputChange} />
 				</form>
 				<div
 					style={{
