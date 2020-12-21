@@ -27,36 +27,53 @@ class Info extends React.Component {
 			} else {
 				url = etf_url + fund_id;
 			}
-			// console.log('fetch_fund: url:', url);
 			all_results.push(fetch_data('GET', url, '', 'application/x-www-form-urlencoded'));
 		}
 		all_results = await Promise.allSettled(all_results); // to wait one time only
 		let fund_data;
 		let etf_data;
+		let mutual_data;
 
 		let managment_fee;
 		let var_fee;
 		let truste_fee;
+		let twelve_months;
+		let year_yield;
+		let daily_yield;
+		let price;
+		let std;
 
 		for (k = 0; k < all_results.length; k++) {
 			let relevant_info = {};
 			fund_data = JSON.parse(all_results[k]['value']);
 			etf_data = fund_data['ETFDetails'];
+			// console.log(fund_data);
 			if (etf_data === undefined) {
 				managment_fee = fund_data['ManagementFee'];
-				var_fee = fund_data['VariableFee'];
-				truste_fee = fund_data['TrusteeFee'];
+				mutual_data = fund_data;
 			} else {
-				managment_fee = etf_data['FundDetails']['ManagementFee'];
-				var_fee = etf_data['FundDetails']['VariableFee'];
-				truste_fee = etf_data['FundDetails']['TrusteeFee'];
+				mutual_data = etf_data['FundDetails'];
 			}
+			managment_fee = mutual_data['ManagementFee'];
+			var_fee = mutual_data['VariableFee'];
+			truste_fee = mutual_data['TrusteeFee'];
+			twelve_months = mutual_data['Last12MonthYield'];
+			year_yield = mutual_data['YearYield'];
+			daily_yield = mutual_data['DayYield'];
+			price = mutual_data['UnitValuePrice'];
+			std = mutual_data['StandardDeviation'];
+
 			relevant_info = {
 				name: this.props.funds[k]['name'],
 				id: this.props.funds[k]['id'],
 				managment_fee: managment_fee,
 				var_fee: var_fee,
 				truste_fee: truste_fee,
+				twelve_months: twelve_months,
+				year_yield: year_yield,
+				daily_yield: daily_yield,
+				price: price,
+				std: std,
 			};
 			if (this.state.info.some((e) => e.id == relevant_info['id'])) {
 				continue;
