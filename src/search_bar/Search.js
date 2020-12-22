@@ -94,6 +94,7 @@ class Search extends React.Component {
 
 			this.setState({ is_button_pressed: true });
 			this.setState({ num_child_loaded: 0 });
+
 			return res;
 		});
 		// Here we will fetch and get the info for each fund / etf 
@@ -121,64 +122,62 @@ class Search extends React.Component {
 			all_results.push(fetch_data('GET', url, '', 'application/x-www-form-urlencoded'));
 		}
 		console.log("111111", all_results)
-		// all_results =  Promise.allSettled(all_results).then(result => {
-			
-		// }); // to wait one time only
+		all_results = await Promise.allSettled(all_results); // to wait one time only
 		
 		console.log("2222", all_results)
-		// let fund_data;
-		// let etf_data;
-		// let mutual_data;
+		let fund_data;
+		let etf_data;
+		let mutual_data;
 
-		// let managment_fee;
-		// let var_fee;
-		// let truste_fee;
-		// let twelve_months;
-		// let year_yield;
-		// let daily_yield;
-		// let price;
-		// let std;
+		let managment_fee;
+		let var_fee;
+		let truste_fee;
+		let twelve_months;
+		let year_yield;
+		let daily_yield;
+		let price;
+		let std;
 
-		// for (k = 0; k < all_results.length; k++) {
-		// 	let relevant_info = {};
-		// 	fund_data = JSON.parse(all_results[k]['value']);
-		// 	etf_data = fund_data['ETFDetails'];
-		// 	if (etf_data === undefined) {
-		// 		managment_fee = fund_data['ManagementFee'];
-		// 		mutual_data = fund_data;
-		// 	} else {
-		// 		mutual_data = etf_data['FundDetails'];
-		// 	}
-		// 	managment_fee = mutual_data['ManagementFee'];
-		// 	var_fee = mutual_data['VariableFee'];
-		// 	truste_fee = mutual_data['TrusteeFee'];
-		// 	twelve_months = mutual_data['Last12MonthYield'];
-		// 	year_yield = mutual_data['YearYield'];
-		// 	daily_yield = mutual_data['DayYield'];
-		// 	price = mutual_data['UnitValuePrice'];
-		// 	std = mutual_data['StandardDeviation'];
+		for (k = 0; k < all_results.length; k++) {
+			let relevant_info = {};
+			fund_data = JSON.parse(all_results[k]['value']);
+			etf_data = fund_data['ETFDetails'];
+			if (etf_data === undefined) {
+				managment_fee = fund_data['ManagementFee'];
+				mutual_data = fund_data;
+			} else {
+				mutual_data = etf_data['FundDetails'];
+			}
+			managment_fee = mutual_data['ManagementFee'];
+			var_fee = mutual_data['VariableFee'];
+			truste_fee = mutual_data['TrusteeFee'];
+			twelve_months = mutual_data['Last12MonthYield'];
+			year_yield = mutual_data['YearYield'];
+			daily_yield = mutual_data['DayYield'];
+			price = mutual_data['UnitValuePrice'];
+			std = mutual_data['StandardDeviation'];
 
-		// 	relevant_info = {
-		// 		name: filteredData[k]['Name'],
-		// 		id: filteredData[k]['Id'],
-		// 		managment_fee: managment_fee,
-		// 		var_fee: var_fee,
-		// 		truste_fee: truste_fee,
-		// 		twelve_months: twelve_months,
-		// 		year_yield: year_yield,
-		// 		daily_yield: daily_yield,
-		// 		price: price,
-		// 		std: std,
-		// 	};
+			relevant_info = {
+				name: filteredData[k]['Name'],
+				id: filteredData[k]['Id'],
+				managment_fee: managment_fee,
+				var_fee: var_fee,
+				truste_fee: truste_fee,
+				twelve_months: twelve_months,
+				year_yield: year_yield,
+				daily_yield: daily_yield,
+				price: price,
+				std: std,
+			};
 
-		// 	if (this.state.info.some((e) => e.id == relevant_info['id'])) {
-		// 		continue;
-		// 	} else {
-		// 		this.setState((prevState) => ({
-		// 			info: [...prevState.info, relevant_info],
-		// 		}));
-		// 	}
-		// }
+			if (this.state.info.some((e) => e.id == relevant_info['id'])) {
+				continue;
+			} else {
+				this.setState((prevState) => ({
+					info: [...prevState.info, relevant_info],
+				}));
+			}
+		}
 		
 	
 
@@ -208,19 +207,18 @@ class Search extends React.Component {
 			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
 				funds_arr.push(JSON.parse(val));
 			}
-			all_results =  Promise.allSettled(all_results).then(result => {
-				this.setState({ fund_list: funds_arr });			
-			});
+			this.setState({ fund_list: funds_arr });
 			console.log("33333",funds_arr )
 		}
-		
+
+		this.setState({ is_button_pressed: true });
 	}
 
-	async clearSearch() {
+	clearSearch() {
 		this.setState({ fund_set: new Set() });
 		this.state.fund_list.splice(0, this.state.fund_list.length);
 		this.setState({ to_add_plot: false });
-	await	this.search();
+		this.search();
 	}
 
 	addSearch() {
