@@ -32,7 +32,9 @@ class Info extends React.Component {
 			}
 			all_results.push(fetch_data('GET', url, '', 'application/x-www-form-urlencoded'));
 		}
+		
 		all_results = await Promise.allSettled(all_results); // to wait one time only
+		console.log("@#############################",all_results)
 		let fund_data;
 		let etf_data;
 		let mutual_data;
