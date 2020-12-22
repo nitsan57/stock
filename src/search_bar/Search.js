@@ -37,20 +37,16 @@ class Search extends React.Component {
 
 	contains = (target, patterns) => {
 		//TODO need to think how to filter data good
-		console.log('TARGET', Object.values(target));
-		console.log('Patteren', patterns);
 		let target_array = Object.values(target);
 		let i,
 			k = 0;
 		for (i = 0; i < target_array.length; i++) {
 			for (k = 0; k < patterns.length; k++) {
 				if (String(target_array[i]).includes(String(patterns[i]))) {
-					console.log('TRUEEEEEEEEEEEEEEEEEeee');
 					return true;
 				}
 			}
 		}
-		console.log('FALSEEEEEEEEEEEEEEEEEEEEEEEE');
 		return false;
 	};
 
