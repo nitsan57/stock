@@ -62,20 +62,6 @@ class Search extends React.Component {
 		return this.contains(fund, leveraged_pattern);
 	};
 
-	filterDataByCheckBox = (filteredData) => {
-		let result = [];
-		let i;
-		for (i = 0; i < filteredData.length; i++) {
-			if (
-				(this.state.search_checkbox[0].isChecked && this.is_fund_passive(filteredData[i])) ||
-				(this.state.search_checkbox[1].isChecked && this.is_fund_leveraged(filteredData[i]))
-			) {
-				result.push(filteredData[i]);
-			}
-		}
-		return result;
-	};
-
 	get_today() {
 		var today = new Date();
 		var dd = String(today.getDate()).padStart(2, '0');
@@ -140,9 +126,6 @@ class Search extends React.Component {
 
 			return res;
 		});
-		// console.log('Check box:', filteredData);
-		var res = this.filterDataByCheckBox(filteredData);
-		// console.log('Check box filter ', res);
 
 		this.setState({
 			result: filteredData,
@@ -165,12 +148,43 @@ class Search extends React.Component {
 			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
 				funds_arr.push(JSON.parse(val));
 			}
+
 			relevant_data = await this.keep_relevant_data(funds_arr);
+
 			let i;
 			for (i = 0; i < relevant_data.length; i++) {
 				funds_l.push(JSON.parse(relevant_data[i].value));
 			}
 
+			console.log("filterDataByCheckBox: info list  :", this.state.info_list)
+			console.log("filterDataByCheckBox: funds_l  :", funds_l)
+			console.log("checkbox  :", this.state.search_checkbox)
+
+			let new_fund_list = []
+			let new_info_list = []
+			let raw_ix        = 0
+			var to_insert     = false
+			for(raw_ix = 0; raw_ix < funds_l.length; raw_ix++) {
+				if(this.state.info_list[raw_ix]["type"] === "1") {
+					if( funds_l[raw_ix]["ETFDetails"]["FundDetails"]["IsImitatingFund"] == this.state.search_checkbox[0]["isChecked"] ||
+					    funds_l[raw_ix]["ETFDetails"]["FundDetails"]["IsLeveragedFund"] == this.state.search_checkbox[1]["isChecked"] ) {
+						new_fund_list.push(funds_l[raw_ix])
+						new_info_list.push(this.state.info_list[raw_ix])
+					}
+				}
+				else if ( this.state.info_list[raw_ix]["type"] === "4") {
+					if ( funds_l[raw_ix]["IsImitatingFund"] == this.state.search_checkbox[0]["isChecked"] ||
+					    funds_l[raw_ix]["IsLeveragedFund"] == this.state.search_checkbox[1]["isChecked"] ) {
+					    new_fund_list.push(funds_l[raw_ix])
+					    new_info_list.push(this.state.info_list[raw_ix])
+				    }
+				}
+			}
+
+			console.log("filterDataByCheckBox: new fund list:", new_fund_list)
+			console.log("filterDataByCheckBox: new info list:", new_info_list)
+			console.log("checkbox:", this.state.search_checkbox)
+			
 			this.setState({ fund_list: funds_l });
 			this.setState({ is_button_pressed: true });
 			this.setState({ num_child_loaded: 0 });
