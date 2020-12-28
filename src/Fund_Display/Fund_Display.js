@@ -1,11 +1,18 @@
 import React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
-const no_data = 'מידע לא זמין';
+const no_data = 'לא זמין';
 const columns = [
 	{
 		field: 'daily_yield',
 		headerName: 'תשואה מיום קודם',
-		width: 140,
+		width: 155,
+		align: 'center',
+		valueFormatter: (params) => (params.value == null ? no_data : params.value + '%'),
+	},
+	{
+		field: 'month_yield',
+		headerName: 'תשואת חודש',
+		width: 110,
 		align: 'center',
 		valueFormatter: (params) => (params.value == null ? no_data : params.value + '%'),
 	},
@@ -26,7 +33,7 @@ const columns = [
 	{
 		field: 'std',
 		headerName: 'שונות',
-		width: 100,
+		width: 75,
 		align: 'center',
 		valueFormatter: (params) => (params.value == null ? no_data : params.value),
 	},
@@ -68,7 +75,7 @@ const columns = [
 	{
 		field: 'price',
 		headerName: 'שער',
-		width: 80,
+		width: 95,
 		align: 'center',
 		valueFormatter: (params) => (params.value == null ? no_data : params.value),
 	},
@@ -82,21 +89,24 @@ const columns = [
 		field: 'name',
 		headerName: 'שם',
 		align: 'right',
-		width: 250,
+		width: 240,
 	},
 ];
 
-function createData(name, fnum, mfee, lfee, dfee, twelve_months, year_yield, daily_yield, price, std, index) {
-	// if (!fnum) fnum = 0;
-	// if (!mfee) mfee = 0;
-	// if (!lfee) lfee = 0;
-	// if (!dfee) dfee = 0;
-	// if (!twelve_months) twelve_months = 'מידע לא זמין';
-	// if (!year_yield) year_yield = 'מידע לא זמין';
-	// if (!daily_yield) daily_yield = 'מידע לא זמין';
-	// if (!price) price = 'מידע לא זמין';
-	// if (!std) std = 'מידע לא זמין';
-
+function createData(
+	name,
+	fnum,
+	mfee,
+	lfee,
+	dfee,
+	twelve_months,
+	year_yield,
+	month_yield,
+	daily_yield,
+	price,
+	std,
+	index
+) {
 	return {
 		name,
 		fnum,
@@ -107,13 +117,14 @@ function createData(name, fnum, mfee, lfee, dfee, twelve_months, year_yield, dai
 		overall: (lfee + mfee).toFixed(2),
 		twelve_months,
 		year_yield,
+		month_yield,
 		daily_yield,
 		price,
 		std,
 	};
 }
 
-class Fund_Display extends React.Component {
+class FundDisplay extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -122,32 +133,10 @@ class Fund_Display extends React.Component {
 		};
 	}
 
-	componentDidMount() {
-		this.setState({ currentrows: [] });
-		let i;
-		const rows = [];
-		for (i = 0; i < this.props.info.length; i++) {
-			rows.push(
-				createData(
-					this.props.info[i]['name'],
-					this.props.info[i]['id'],
-					this.props.info[i]['managment_fee'],
-					this.props.info[i]['truste_fee'],
-					this.props.info[i]['var_fee'],
-					this.props.info[i]['twelve_months'],
-					this.props.info[i]['year_yield'],
-					this.props.info[i]['daily_yield'],
-					this.props.info[i]['price'],
-					this.props.info[i]['std'],
-
-					i
-				)
-			);
-		}
-		this.setState({ currentrows: rows });
-	}
+	componentDidMount() {}
 
 	componentDidUpdate(prevProps) {
+		// console.log(this.props.info);
 		if (this.props.info !== prevProps.info) {
 			this.setState({ currentrows: [] });
 			let i;
@@ -160,7 +149,12 @@ class Fund_Display extends React.Component {
 						this.props.info[i]['managment_fee'],
 						this.props.info[i]['truste_fee'],
 						this.props.info[i]['var_fee'],
-
+						this.props.info[i]['twelve_months'],
+						this.props.info[i]['year_yield'],
+						this.props.info[i]['month_yield'],
+						this.props.info[i]['daily_yield'],
+						this.props.info[i]['price'],
+						this.props.info[i]['std'],
 						i
 					)
 				);
@@ -170,12 +164,11 @@ class Fund_Display extends React.Component {
 	}
 
 	render() {
-		if (this.props.info.length !== 0) {
+		if (this.state.currentrows.length !== 0) {
 			return (
 				<div style={{ height: 440, width: '100%' }}>
 					<DataGrid
 						// checkboxSelection
-
 						showColumnRightBorder={true}
 						showCellRightBorder={true}
 						rtlEnabled={true}
@@ -191,4 +184,4 @@ class Fund_Display extends React.Component {
 		}
 	}
 }
-export default Fund_Display;
+export default FundDisplay;

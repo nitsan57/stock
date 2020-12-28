@@ -6,6 +6,7 @@ import Loader from 'react-loader-spinner';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CheckBox from '../Check_Box/Check_Box';
+import { fetch_data } from '../Utils';
 
 class Search extends React.Component {
 	constructor(props) {
@@ -18,6 +19,7 @@ class Search extends React.Component {
 			result: [],
 			fund_set: new Set(),
 			fund_list: [],
+			info_list: [],
 			data: Information,
 			search_message: 'Search Fund:',
 			today: this.get_today(),
@@ -84,28 +86,72 @@ class Search extends React.Component {
 		return today;
 	}
 
-	search() {
+	async keep_relevant_data(funds) {
+		var url = '';
+		var fund_url = 'https://mayaapi.tase.co.il/api/fund/details?fundId=';
+		var etf_url = 'https://mayaapi.tase.co.il/api/etf/details?fundId=';
+		var securty_url = 'https://api.tase.co.il/api/company/securitydata?securityId=';
+		var comp_url = 'https://api.tase.co.il/api/security/majordata?secId=';
+
+		var fund_id = '';
+		let type;
+		let subtype;
+		let subid;
+		let keep_info = [];
+
+		let k;
+		let all_results = [];
+		for (k = 0; k < funds.length; k++) {
+			type = String(funds[k]['type']);
+			subtype = String(funds[k]['subtype']);
+			subid = String(funds[k]['SubId']);
+			fund_id = String(funds[k]['id']);
+
+			if (type === '5' || type === '7' || subtype === '991') {
+				continue;
+			}
+			if (fund_id[0] === '5') {
+				url = fund_url + fund_id;
+			} else if (subid === '001779' || (type === '1' && subtype === '1')) {
+				url = securty_url + fund_id;
+			} else {
+				url = etf_url + fund_id;
+			}
+
+			keep_info.push({
+				type: type,
+				subtype: subtype,
+				name: funds[k]['name'],
+				id: funds[k]['id'],
+			});
+			all_results.push(fetch_data('GET', url, '', 'application/x-www-form-urlencoded'));
+		}
+		this.setState({ info_list: keep_info });
+		return Promise.allSettled(all_results); // to wait one time only
+	}
+
+	async search() {
+		let relevant_data;
 		const filteredData = this.state.data.filter((item) => {
 			var res = Object.keys(item).some((key) =>
 				String(item[key]).toLowerCase().includes(this.state.search_keyword)
 			);
 
-			this.setState({ is_button_pressed: true });
-			this.setState({ num_child_loaded: 0 });
-
 			return res;
 		});
-		console.log('Check box:', filteredData);
+		// console.log('Check box:', filteredData);
 		var res = this.filterDataByCheckBox(filteredData);
-		console.log('Check box filter ', res);
+		// console.log('Check box filter ', res);
 
 		this.setState({
 			result: filteredData,
 		});
 		var temp_fund = null;
 		let funds_arr = [];
+		let funds_l = [];
+
 		filteredData.forEach((item) => {
-			temp_fund = { name: item['Name'], id: item['Id'] };
+			temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
 			this.state.fund_set.add(JSON.stringify(temp_fund));
 		});
 		if (filteredData.length === 0) {
@@ -118,9 +164,16 @@ class Search extends React.Component {
 			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
 				funds_arr.push(JSON.parse(val));
 			}
-			this.setState({ fund_list: funds_arr });
+			relevant_data = await this.keep_relevant_data(funds_arr);
+			let i;
+			for (i = 0; i < relevant_data.length; i++) {
+				funds_l.push(JSON.parse(relevant_data[i].value));
+			}
+
+			this.setState({ fund_list: funds_l });
+			this.setState({ is_button_pressed: true });
+			this.setState({ num_child_loaded: 0 });
 		}
-		// console.log('Funds:', this.state.fund_list);
 	}
 
 	clearSearch() {
@@ -166,15 +219,12 @@ class Search extends React.Component {
 	};
 
 	render() {
-		// console.log('Funds:', this.state.fund_list);
-
 		let loading = (
 			<form>
 				<h1>Loading...</h1>
 				<Loader type="Oval" color="#00BFFF" height={100} width={100} />
 			</form>
 		);
-		// console.log(this.state.num_child_loaded);
 		if (this.state.num_child_loaded === 2 || !this.state.is_button_pressed) {
 			loading = null;
 		}
@@ -241,7 +291,7 @@ class Search extends React.Component {
 				>
 					<Graph
 						today={this.state.today}
-						funds={this.state.fund_list}
+						funds={this.state.info_list}
 						graphHandler={this.graphHandler}
 						is_button_pressed={this.state.is_button_pressed}
 						to_add_plot={this.state.to_add_plot}
@@ -249,6 +299,7 @@ class Search extends React.Component {
 				</div>
 				<Info
 					funds={this.state.fund_list}
+					info={this.state.info_list}
 					tableHandler={this.tableHandler}
 					is_button_pressed={this.state.is_button_pressed}
 					to_add_plot={this.state.to_add_plot}

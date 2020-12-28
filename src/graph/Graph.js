@@ -218,7 +218,7 @@ class Graph extends React.Component {
 		for (i = add_len; i < instruments.length; i++) {
 			instrument = instruments[i];
 			var instrument_id = instrument['id'];
-			if (String(instrument_id)[0] === '1') {
+			if (String(instrument_id)[0] === '1' || (instrument['type'] === '1' && instrument['subtype'] === '1')) {
 				this.fetch_security(today, instrument, raw_data);
 			} else {
 				this.fetch_fund(today, instrument, raw_data);
