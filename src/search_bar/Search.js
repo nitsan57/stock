@@ -112,11 +112,12 @@ class Search extends React.Component {
 			}
 			if (fund_id[0] === '5') {
 				url = fund_url + fund_id;
-			} else if (subid === '001779' || (type === '1' && subtype === '1')) {
+			} else if (subid === '001779' || (type === '1' && subtype === '1') || subtype === '5') {
 				url = securty_url + fund_id;
 			} else {
 				url = etf_url + fund_id;
 			}
+			// console.log(url, type, subtype, subid);
 
 			keep_info.push({
 				type: type,
