@@ -25,7 +25,9 @@ class Search extends React.Component {
 			today: this.get_today(),
 			search_checkbox: [
 				{ id: 1, value: 'קרן מחקה', isChecked: true },
-				{ id: 2, value: 'אסטרטגית', isChecked: true },
+				{ id: 2, value: 'ממונף',    isChecked: true },
+				{ id: 3, value: 'אגח',      isChecked: true },
+				{ id: 4, value: 'אסטרטגית', isChecked: true },
 			],
 			search_all: true,
 		};
@@ -103,7 +105,6 @@ class Search extends React.Component {
 			} else {
 				url = etf_url + fund_id;
 			}
-			// console.log(url, type, subtype, subid);
 
 			keep_info.push({
 				type: type,
@@ -113,12 +114,17 @@ class Search extends React.Component {
 			});
 			all_results.push(fetch_data('GET', url, '', 'application/x-www-form-urlencoded'));
 		}
-		this.setState({ info_list: keep_info });
-		return Promise.allSettled(all_results); // to wait one time only
+		all_results = await Promise.allSettled(all_results);
+		let fund_l = [];
+		let i 
+		for (i = 0; i < all_results.length; i++) {
+			fund_l.push(JSON.parse(all_results[i].value));
+		}
+		return [fund_l, keep_info] ; // to wait one time only
 	}
 
 	async search() {
-		let relevant_data;
+		let fund_l;
 		const filteredData = this.state.data.filter((item) => {
 			var res = Object.keys(item).some((key) =>
 				String(item[key]).toLowerCase().includes(this.state.search_keyword)
@@ -132,8 +138,7 @@ class Search extends React.Component {
 		});
 		var temp_fund = null;
 		let funds_arr = [];
-		let funds_l = [];
-
+        let keep_info = [];
 		filteredData.forEach((item) => {
 			temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
 			this.state.fund_set.add(JSON.stringify(temp_fund));
@@ -148,46 +153,34 @@ class Search extends React.Component {
 			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
 				funds_arr.push(JSON.parse(val));
 			}
+    
+			[fund_l, keep_info]  = await this.keep_relevant_data(funds_arr);
 
-			relevant_data = await this.keep_relevant_data(funds_arr);
-
-			let i;
-			for (i = 0; i < relevant_data.length; i++) {
-				funds_l.push(JSON.parse(relevant_data[i].value));
-			}
-
-			console.log("filterDataByCheckBox: info list  :", this.state.info_list)
-			console.log("filterDataByCheckBox: funds_l  :", funds_l)
-			console.log("checkbox  :", this.state.search_checkbox)
 
 			let new_fund_list = []
 			let new_info_list = []
 			let raw_ix        = 0
-			var to_insert     = false
-			for(raw_ix = 0; raw_ix < funds_l.length; raw_ix++) {
-				if(this.state.info_list[raw_ix]["type"] === "1") {
-					if( funds_l[raw_ix]["ETFDetails"]["FundDetails"]["IsImitatingFund"] == this.state.search_checkbox[0]["isChecked"] ||
-					    funds_l[raw_ix]["ETFDetails"]["FundDetails"]["IsLeveragedFund"] == this.state.search_checkbox[1]["isChecked"] ) {
-						new_fund_list.push(funds_l[raw_ix])
-						new_info_list.push(this.state.info_list[raw_ix])
+			for(raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
+				if(keep_info[raw_ix]["type"] === "1") {
+					if( fund_l[raw_ix]["ETFDetails"]["FundDetails"]["FundIndicators"][4]["Value"] === this.state.search_checkbox[0]["isChecked"] ||
+					    fund_l[raw_ix]["ETFDetails"]["FundDetails"]["FundIndicators"][3]["Value"] === this.state.search_checkbox[1]["isChecked"] ) {
+						new_fund_list.push(fund_l[raw_ix])
+						new_info_list.push(keep_info[raw_ix])
 					}
 				}
-				else if ( this.state.info_list[raw_ix]["type"] === "4") {
-					if ( funds_l[raw_ix]["IsImitatingFund"] == this.state.search_checkbox[0]["isChecked"] ||
-					    funds_l[raw_ix]["IsLeveragedFund"] == this.state.search_checkbox[1]["isChecked"] ) {
-					    new_fund_list.push(funds_l[raw_ix])
-					    new_info_list.push(this.state.info_list[raw_ix])
+				else if ( keep_info[raw_ix]["type"] === "4") {
+					if ( fund_l[raw_ix]["FundIndicators"][3]["Value"] === this.state.search_checkbox[0]["isChecked"] ||
+					fund_l[raw_ix]["FundIndicators"][4]["Value"] === this.state.search_checkbox[1]["isChecked"] ) {
+					    new_fund_list.push(fund_l[raw_ix])
+					    new_info_list.push(keep_info[raw_ix])
 				    }
 				}
 			}
 
-			console.log("filterDataByCheckBox: new fund list:", new_fund_list)
-			console.log("filterDataByCheckBox: new info list:", new_info_list)
-			console.log("checkbox:", this.state.search_checkbox)
-			
-			this.setState({ fund_list: funds_l });
-			this.setState({ is_button_pressed: true });
-			this.setState({ num_child_loaded: 0 });
+			this.setState({ info_list:   new_info_list });
+			this.setState({ fund_list: new_fund_list   });
+			this.setState({ is_button_pressed: true    });
+			this.setState({ num_child_loaded: 0        });
 		}
 	}
 
