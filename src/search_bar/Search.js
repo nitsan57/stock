@@ -27,7 +27,7 @@ class Search extends React.Component {
 			search_checkbox: [
 				{ id: 1, value: 'קרן מחקה', isChecked: true },
 				{ id: 2, value: 'ממונף', isChecked: true },
-				{ id: 3, value: 'אסטרטגית', isChecked: true },
+				{ id: 3, value: 'קרן חשיפה הפוכה', isChecked: true },
 
 			],
 			search_all: true,
@@ -163,6 +163,7 @@ class Search extends React.Component {
 			let mutual_data;
 			let etf_data;
 			let fund_data;
+			console.log("all",fund_l)
 			for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
 				fund_data = fund_l[raw_ix];
 				if (keep_info[raw_ix]['type'] === '1') {
@@ -177,7 +178,9 @@ class Search extends React.Component {
 						(mutual_data['FundIndicators'][Consts.TASE_TYPES.IMITATING]['Value'] &&
 							this.state.search_checkbox[0]['isChecked']) ||
 						(mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] &&
-							this.state.search_checkbox[1]['isChecked'])
+							this.state.search_checkbox[1]['isChecked']) ||
+						(mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value'] &&
+							this.state.search_checkbox[2]['isChecked'])
 					) {
 						new_fund_list.push(fund_data);
 						new_info_list.push(keep_info[raw_ix]);

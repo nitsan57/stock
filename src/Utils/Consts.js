@@ -7,4 +7,5 @@ export const TYPE_ID = {
 export const TASE_TYPES = {
 	IMITATING: 4,
 	LEVERAGED: 3,
+	SHORT:     5,
 };
