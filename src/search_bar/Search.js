@@ -27,8 +27,8 @@ class Search extends React.Component {
 			search_checkbox: [
 				{ id: 1, value: 'קרן מחקה', isChecked: true },
 				{ id: 2, value: 'ממונף', isChecked: true },
-				{ id: 3, value: 'מניות', isChecked: true },
-				{ id: 4, value: 'אסטרטגית', isChecked: true },
+				{ id: 3, value: 'אסטרטגית', isChecked: true },
+
 			],
 			search_all: true,
 		};
@@ -174,10 +174,10 @@ class Search extends React.Component {
 					}
 
 					if (
-						mutual_data['FundIndicators'][Consts.TASE_TYPES.IMITATING]['Value'] ===
-							this.state.search_checkbox[0]['isChecked'] ||
-						mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] ===
-							this.state.search_checkbox[1]['isChecked']
+						(mutual_data['FundIndicators'][Consts.TASE_TYPES.IMITATING]['Value'] &&
+							this.state.search_checkbox[0]['isChecked']) ||
+						(mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] &&
+							this.state.search_checkbox[1]['isChecked'])
 					) {
 						new_fund_list.push(fund_data);
 						new_info_list.push(keep_info[raw_ix]);
