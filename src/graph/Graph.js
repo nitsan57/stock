@@ -1,6 +1,6 @@
 import React from 'react';
 import Plotly from 'plotly.js-basic-dist';
-import { fetch_data } from '../Utils';
+import { fetch_data } from '../Utils/Utils';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
 import 'rc-slider/assets/index.css';

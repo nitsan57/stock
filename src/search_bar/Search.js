@@ -6,7 +6,8 @@ import Loader from 'react-loader-spinner';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CheckBox from '../Check_Box/Check_Box';
-import { fetch_data } from '../Utils';
+import { fetch_data } from '../Utils/Utils';
+import * as Consts from '../Utils/Consts';
 
 class Search extends React.Component {
 	constructor(props) {
@@ -25,8 +26,8 @@ class Search extends React.Component {
 			today: this.get_today(),
 			search_checkbox: [
 				{ id: 1, value: 'קרן מחקה', isChecked: true },
-				{ id: 2, value: 'ממונף',    isChecked: true },
-				{ id: 3, value: 'אגח',      isChecked: true },
+				{ id: 2, value: 'ממונף', isChecked: true },
+				{ id: 3, value: 'מניות', isChecked: true },
 				{ id: 4, value: 'אסטרטגית', isChecked: true },
 			],
 			search_all: true,
@@ -95,12 +96,12 @@ class Search extends React.Component {
 			subid = String(funds[k]['SubId']);
 			fund_id = String(funds[k]['id']);
 
-			if (type === '5' || type === '7' || subtype === '991') {
+			if (type === '5' || type === '7' || subtype === '991' || subtype === Consts.TYPE_ID.BOND) {
 				continue;
 			}
 			if (fund_id[0] === '5') {
 				url = fund_url + fund_id;
-			} else if (subid === '001779' || (type === '1' && subtype === '1') || subtype === '5') {
+			} else if (subid === '001779' || (type === '1' && subtype === '1')) {
 				url = securty_url + fund_id;
 			} else {
 				url = etf_url + fund_id;
@@ -116,11 +117,11 @@ class Search extends React.Component {
 		}
 		all_results = await Promise.allSettled(all_results);
 		let fund_l = [];
-		let i 
+		let i;
 		for (i = 0; i < all_results.length; i++) {
 			fund_l.push(JSON.parse(all_results[i].value));
 		}
-		return [fund_l, keep_info] ; // to wait one time only
+		return [fund_l, keep_info]; // to wait one time only
 	}
 
 	async search() {
@@ -138,7 +139,7 @@ class Search extends React.Component {
 		});
 		var temp_fund = null;
 		let funds_arr = [];
-        let keep_info = [];
+		let keep_info = [];
 		filteredData.forEach((item) => {
 			temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
 			this.state.fund_set.add(JSON.stringify(temp_fund));
@@ -153,34 +154,41 @@ class Search extends React.Component {
 			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
 				funds_arr.push(JSON.parse(val));
 			}
-    
-			[fund_l, keep_info]  = await this.keep_relevant_data(funds_arr);
 
+			[fund_l, keep_info] = await this.keep_relevant_data(funds_arr);
 
-			let new_fund_list = []
-			let new_info_list = []
-			let raw_ix        = 0
-			for(raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
-				if(keep_info[raw_ix]["type"] === "1") {
-					if( fund_l[raw_ix]["ETFDetails"]["FundDetails"]["FundIndicators"][4]["Value"] === this.state.search_checkbox[0]["isChecked"] ||
-					    fund_l[raw_ix]["ETFDetails"]["FundDetails"]["FundIndicators"][3]["Value"] === this.state.search_checkbox[1]["isChecked"] ) {
-						new_fund_list.push(fund_l[raw_ix])
-						new_info_list.push(keep_info[raw_ix])
+			let new_fund_list = [];
+			let new_info_list = [];
+			let raw_ix = 0;
+			let mutual_data;
+			let etf_data;
+			let fund_data;
+			for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
+				fund_data = fund_l[raw_ix];
+				if (keep_info[raw_ix]['type'] === '1') {
+					etf_data = fund_data['ETFDetails'];
+					if (etf_data === undefined) {
+						mutual_data = fund_data;
+					} else {
+						mutual_data = etf_data['FundDetails'];
 					}
-				}
-				else if ( keep_info[raw_ix]["type"] === "4") {
-					if ( fund_l[raw_ix]["FundIndicators"][3]["Value"] === this.state.search_checkbox[0]["isChecked"] ||
-					fund_l[raw_ix]["FundIndicators"][4]["Value"] === this.state.search_checkbox[1]["isChecked"] ) {
-					    new_fund_list.push(fund_l[raw_ix])
-					    new_info_list.push(keep_info[raw_ix])
-				    }
+
+					if (
+						mutual_data['FundIndicators'][Consts.TASE_TYPES.IMITATING]['Value'] ===
+							this.state.search_checkbox[0]['isChecked'] ||
+						mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] ===
+							this.state.search_checkbox[1]['isChecked']
+					) {
+						new_fund_list.push(fund_data);
+						new_info_list.push(keep_info[raw_ix]);
+					}
 				}
 			}
 
-			this.setState({ info_list:   new_info_list });
-			this.setState({ fund_list: new_fund_list   });
-			this.setState({ is_button_pressed: true    });
-			this.setState({ num_child_loaded: 0        });
+			this.setState({ info_list: new_info_list });
+			this.setState({ fund_list: new_fund_list });
+			this.setState({ is_button_pressed: true });
+			this.setState({ num_child_loaded: 0 });
 		}
 	}
 
