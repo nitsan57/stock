@@ -27,7 +27,6 @@ class Search extends React.Component {
 				{ key: 1, value: 'קרן מחקה', isChecked: true },
 				{ key: 2, value: 'ממונף', isChecked: true },
 				{ key: 3, value: 'קרן חשיפה הפוכה', isChecked: true },
-				{ key: 4, value: 'מניות', isChecked: false },
 			],
 			search_all: true,
 		};
@@ -83,7 +82,7 @@ class Search extends React.Component {
 			subid = String(funds[k]['SubId']);
 			fund_id = String(funds[k]['id']);
 
-			if (type === '5' || type === '7' || subtype === '991' || subtype === Consts.TYPE_ID.BOND) {
+			if (type === '4' || type === '5' || type === '7' || subtype === '991' || subtype === Consts.TYPE_ID.BOND) {
 				continue;
 			}
 			if (fund_id[0] === '5') {
@@ -131,6 +130,7 @@ class Search extends React.Component {
 		if (filteredData.length === 0) {
 			this.setState({ search_message: 'No funds found try other keyword' });
 		} else if (filteredData.length > 45) {
+			console.log(filteredData)
 			this.setState({ search_message: 'Too many funds found please search more specifically' });
 		} else {
 			this.setState({ search_message: 'Search results:' });
