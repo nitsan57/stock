@@ -5,7 +5,7 @@ import Info from '../Info/Info';
 import Loader from 'react-loader-spinner';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import CheckBox from '../Check_Box/Check_Box';
+import CheckBox from '../Check_Box/Check_Box';
 import { fetch_data } from '../Utils/Utils';
 import * as Consts from '../Utils/Consts';
 
@@ -17,12 +17,11 @@ class Search extends React.Component {
 			num_child_loaded: 0,
 			is_button_pressed: false,
 			to_add_plot: false,
-			result: [],
 			fund_set: new Set(),
 			fund_list: [],
 			info_list: [],
 			data: Information,
-			search_message: 'Search Fund:',
+			search_message: 'חפש',
 			today: this.get_today(),
 			search_checkbox: [
 				{ key: 1, value: 'קרן מחקה', isChecked: true },
@@ -55,16 +54,6 @@ class Search extends React.Component {
 		return false;
 	};
 
-	is_fund_passive = (fund) => {
-		let passive_pattern = ['מח', 'מחקה'];
-		return this.contains(fund, passive_pattern);
-	};
-
-	is_fund_leveraged = (fund) => {
-		let leveraged_pattern = ['ממונפ'];
-		return this.contains(fund, leveraged_pattern);
-	};
-
 	get_today() {
 		var today = new Date();
 		var dd = String(today.getDate()).padStart(2, '0');
@@ -80,28 +69,30 @@ class Search extends React.Component {
 		var fund_url = 'https://mayaapi.tase.co.il/api/fund/details?fundId=';
 		var etf_url = 'https://mayaapi.tase.co.il/api/etf/details?fundId=';
 		var securty_url = 'https://api.tase.co.il/api/company/securitydata?securityId=';
-		// var comp_url = 'https://api.tase.co.il/api/security/majordata?secId=';
-
 		var fund_id = '';
 		let type;
 		let subtype;
 		let subid;
 		let keep_info = [];
-
 		let k;
 		let all_results = [];
+
 		for (k = 0; k < funds.length; k++) {
 			type = String(funds[k]['type']);
 			subtype = String(funds[k]['subtype']);
 			subid = String(funds[k]['SubId']);
 			fund_id = String(funds[k]['id']);
 
-			if (type === '5' || type === '7' || subtype === '991' || subtype === Consts.TYPE_ID.BOND) {
+			if (type === '4' || type === '5' || type === '7' || subtype === '991' || subtype === Consts.TYPE_ID.BOND) {
 				continue;
 			}
 			if (fund_id[0] === '5') {
 				url = fund_url + fund_id;
-			} else if (subid === '001779' || (type === '1' && subtype === '1') || subtype === '44') {
+			} else if (
+				subid === '001779' ||
+				(type === '1' && subtype === '1') ||
+				subtype === Consts.SUB_TYPE_ID.ABROAD_FUND
+			) {
 				url = securty_url + fund_id;
 			} else {
 				url = etf_url + fund_id;
@@ -134,9 +125,6 @@ class Search extends React.Component {
 			return res;
 		});
 
-		this.setState({
-			result: filteredData,
-		});
 		var temp_fund = null;
 		let funds_arr = [];
 		let keep_info = [];
@@ -147,6 +135,7 @@ class Search extends React.Component {
 		if (filteredData.length === 0) {
 			this.setState({ search_message: 'No funds found try other keyword' });
 		} else if (filteredData.length > 45) {
+			console.log(filteredData);
 			this.setState({ search_message: 'Too many funds found please search more specifically' });
 		} else {
 			this.setState({ search_message: 'Search results:' });
@@ -166,13 +155,12 @@ class Search extends React.Component {
 			let type;
 			let subtype;
 			// let bond_fund;
-			// console.log('all', fund_l);
-			// console.log('all_info', keep_info);
 			for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
 				fund_data = fund_l[raw_ix];
 				type = keep_info[raw_ix]['type'];
 				subtype = keep_info[raw_ix]['subtype'];
 				// bond_fund = String(fund_data['MagnaFundType']);
+
 				if (
 					(type === Consts.TYPE_ID.SECURITY && subtype !== Consts.SUB_TYPE_ID.STOCK) ||
 					type === Consts.TYPE_ID.FUND // agah filter && bond_fund !== Consts.MAGNA_TYPE.BOND
@@ -182,6 +170,20 @@ class Search extends React.Component {
 						mutual_data = fund_data;
 					} else {
 						mutual_data = etf_data['FundDetails'];
+					}
+
+					if (subtype === Consts.SUB_TYPE_ID.ABROAD_FUND) {
+						mutual_data.FundIndicators = {
+							[Consts.TASE_TYPES.IMITATING]: { Value: true },
+							[Consts.TASE_TYPES.SHORT]: { Value: false },
+							[Consts.TASE_TYPES.LEVERAGED]: { Value: false },
+						};
+						console.log(mutual_data);
+					}
+
+					if (mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value']) {
+						// short behaves differnet since it is leveraged
+						mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] = false;
 					}
 
 					if (
@@ -274,6 +276,7 @@ class Search extends React.Component {
 			<div
 				style={{
 					textAlign: 'center',
+					width: '100%',
 				}}
 			>
 				<form
@@ -287,33 +290,38 @@ class Search extends React.Component {
 					}}
 				>
 					<h4>{this.state.search_message}</h4>
+					בחר \ הסר הכל{' '}
 					<input
-						style={{ display: 'inline-block' }}
+						style={{ display: 'inline-block', textAlign: 'right' }}
 						type="checkbox"
 						checked={this.state.search_all}
 						onClick={this.checkBoxHandleAllChecked}
 						value="checkedall"
 						onChange={(e) => {}}
-					/>{' '}
-					בחר \ הסר הכל
-					<ul>
+					/>
+					<ul
+						style={{
+							textAlign: 'right',
+							paddingRight: '47%',
+							width: '100%',
+							justifyContent: 'space-between',
+						}}
+					>
 						{this.state.search_checkbox.map((option) => {
-							/* return <CheckBox handleCheckChieldElement={this.handleCheckChieldElement} {...option} />; */
 							return (
-								<div key={option.key}>
-									<input
-										onClick={this.handleCheckChieldElement}
-										type="checkbox"
-										checked={option.isChecked}
-										value={option.value}
-										onChange={(e) => {}}
-									/>{' '}
-									{option.value}
-								</div>
+								<CheckBox
+									handleCheckChieldElement={this.handleCheckChieldElement}
+									idkey={option.key}
+									{...option}
+								/>
 							);
 						})}
 					</ul>
-					<input value={this.state.search_keyword} onChange={this.handleInputChange} />
+					<input
+						style={{ textAlign: 'right' }}
+						value={this.state.search_keyword}
+						onChange={this.handleInputChange}
+					/>
 				</form>
 				<div
 					style={{
@@ -331,10 +339,10 @@ class Search extends React.Component {
 						size="sm"
 						onClick={this.clearSearch}
 					>
-						New comparison
+						חיפוש חדש
 					</Button>
 					<Button variant="primary" size="sm" onClick={this.addSearch}>
-						Add to current comparison
+						הוסף לגרף
 					</Button>
 				</div>
 				{loading}
