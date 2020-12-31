@@ -277,7 +277,6 @@ class Graph extends React.Component {
 						data={this.state.data}
 						layout={{
 							autosize: true,
-							title: 'Stock graph',
 							yaxis: { tickformat: ',.0%' },
 							responsive: true,
 						}}

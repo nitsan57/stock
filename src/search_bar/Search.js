@@ -27,6 +27,7 @@ class Search extends React.Component {
 				{ key: 1, value: 'קרן מחקה', isChecked: true },
 				{ key: 2, value: 'ממונף', isChecked: true },
 				{ key: 3, value: 'קרן חשיפה הפוכה', isChecked: true },
+				{ key: 4, value: 'מניות', isChecked: false },
 			],
 			search_all: true,
 		};
@@ -294,7 +295,7 @@ class Search extends React.Component {
 							return <CheckBox  handleCheckChieldElement={this.handleCheckChieldElement} idkey={option.key} {...option} />; 
 						})}
 					</ul>
-					<input value={this.state.search_keyword} onChange={this.handleInputChange} />
+					<input style={{ textAlign: 'right'}} value={this.state.search_keyword} onChange={this.handleInputChange} />
 				</form>
 				<div
 					style={{
@@ -312,10 +313,10 @@ class Search extends React.Component {
 						size="sm"
 						onClick={this.clearSearch}
 					>
-						New comparison
+						חיפוש חדש
 					</Button>
 					<Button variant="primary" size="sm" onClick={this.addSearch}>
-						Add to current comparison
+						הוסף לגרף
 					</Button>
 				</div>
 				{loading}
