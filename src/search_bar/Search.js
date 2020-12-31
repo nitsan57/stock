@@ -101,7 +101,7 @@ class Search extends React.Component {
 			}
 			if (fund_id[0] === '5') {
 				url = fund_url + fund_id;
-			} else if (subid === '001779' || (type === '1' && subtype === '1')) {
+			} else if (subid === '001779' || (type === '1' && subtype === '1') || subtype === '44') {
 				url = securty_url + fund_id;
 			} else {
 				url = etf_url + fund_id;
@@ -182,13 +182,6 @@ class Search extends React.Component {
 						mutual_data = fund_data;
 					} else {
 						mutual_data = etf_data['FundDetails'];
-					}
-					if (
-						mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value'] &&
-						this.state.search_checkbox[2]['isChecked'] // short behaves differnet since it is leveraged
-					) {
-						new_fund_list.push(fund_data);
-						new_info_list.push(keep_info[raw_ix]);
 					}
 
 					if (
