@@ -5,7 +5,7 @@ import Info from '../Info/Info';
 import Loader from 'react-loader-spinner';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CheckBox from '../Check_Box/Check_Box';
+// import CheckBox from '../Check_Box/Check_Box';
 import { fetch_data } from '../Utils/Utils';
 import * as Consts from '../Utils/Consts';
 
@@ -25,10 +25,10 @@ class Search extends React.Component {
 			search_message: 'Search Fund:',
 			today: this.get_today(),
 			search_checkbox: [
-				{ id: 1, value: 'קרן מחקה', isChecked: true },
-				{ id: 2, value: 'ממונף', isChecked: true },
-				{ id: 3, value: 'קרן חשיפה הפוכה', isChecked: true },
-				{ id: 4, value: 'מניות', isChecked: true },
+				{ key: 1, value: 'קרן מחקה', isChecked: true },
+				{ key: 2, value: 'ממונף', isChecked: true },
+				{ key: 3, value: 'קרן חשיפה הפוכה', isChecked: true },
+				{ key: 4, value: 'מניות', isChecked: false },
 			],
 			search_all: true,
 		};
@@ -80,7 +80,7 @@ class Search extends React.Component {
 		var fund_url = 'https://mayaapi.tase.co.il/api/fund/details?fundId=';
 		var etf_url = 'https://mayaapi.tase.co.il/api/etf/details?fundId=';
 		var securty_url = 'https://api.tase.co.il/api/company/securitydata?securityId=';
-		var comp_url = 'https://api.tase.co.il/api/security/majordata?secId=';
+		// var comp_url = 'https://api.tase.co.il/api/security/majordata?secId=';
 
 		var fund_id = '';
 		let type;
@@ -165,23 +165,30 @@ class Search extends React.Component {
 			let fund_data;
 			let type;
 			let subtype;
-			let bond_fund;
+			// let bond_fund;
 			// console.log('all', fund_l);
 			// console.log('all_info', keep_info);
 			for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
 				fund_data = fund_l[raw_ix];
 				type = keep_info[raw_ix]['type'];
 				subtype = keep_info[raw_ix]['subtype'];
-				bond_fund = String(fund_data['MagnaFundType']);
+				// bond_fund = String(fund_data['MagnaFundType']);
 				if (
 					(type === Consts.TYPE_ID.SECURITY && subtype !== Consts.SUB_TYPE_ID.STOCK) ||
-					(type === Consts.TYPE_ID.FUND && bond_fund !== Consts.MAGNA_TYPE.BOND)
+					type === Consts.TYPE_ID.FUND // agah filter && bond_fund !== Consts.MAGNA_TYPE.BOND
 				) {
 					etf_data = fund_data['ETFDetails'];
 					if (etf_data === undefined) {
 						mutual_data = fund_data;
 					} else {
 						mutual_data = etf_data['FundDetails'];
+					}
+					if (
+						mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value'] &&
+						this.state.search_checkbox[2]['isChecked'] // short behaves differnet since it is leveraged
+					) {
+						new_fund_list.push(fund_data);
+						new_info_list.push(keep_info[raw_ix]);
 					}
 
 					if (
@@ -288,16 +295,29 @@ class Search extends React.Component {
 				>
 					<h4>{this.state.search_message}</h4>
 					<input
-						// style={{ display: 'inline-block' }}
+						style={{ display: 'inline-block' }}
 						type="checkbox"
+						checked={this.state.search_all}
 						onClick={this.checkBoxHandleAllChecked}
 						value="checkedall"
-						checked={this.state.search_all}
+						onChange={(e) => {}}
 					/>{' '}
 					בחר \ הסר הכל
 					<ul>
 						{this.state.search_checkbox.map((option) => {
-							return <CheckBox handleCheckChieldElement={this.handleCheckChieldElement} {...option} />;
+							/* return <CheckBox handleCheckChieldElement={this.handleCheckChieldElement} {...option} />; */
+							return (
+								<div key={option.key}>
+									<input
+										onClick={this.handleCheckChieldElement}
+										type="checkbox"
+										checked={option.isChecked}
+										value={option.value}
+										onChange={(e) => {}}
+									/>{' '}
+									{option.value}
+								</div>
+							);
 						})}
 					</ul>
 					<input value={this.state.search_keyword} onChange={this.handleInputChange} />
