@@ -28,6 +28,7 @@ class Search extends React.Component {
 				{ id: 1, value: 'קרן מחקה', isChecked: true },
 				{ id: 2, value: 'ממונף', isChecked: true },
 				{ id: 3, value: 'קרן חשיפה הפוכה', isChecked: true },
+				{ id: 4, value: 'מניות', isChecked: true },
 			],
 			search_all: true,
 		};
@@ -163,12 +164,19 @@ class Search extends React.Component {
 			let etf_data;
 			let fund_data;
 			let type;
+			let subtype;
+			let bond_fund;
 			// console.log('all', fund_l);
 			// console.log('all_info', keep_info);
 			for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
 				fund_data = fund_l[raw_ix];
 				type = keep_info[raw_ix]['type'];
-				if (type === Consts.TYPE_ID.ETF || type === Consts.TYPE_ID.FUND) {
+				subtype = keep_info[raw_ix]['subtype'];
+				bond_fund = String(fund_data['MagnaFundType']);
+				if (
+					(type === Consts.TYPE_ID.SECURITY && subtype !== Consts.SUB_TYPE_ID.STOCK) ||
+					(type === Consts.TYPE_ID.FUND && bond_fund !== Consts.MAGNA_TYPE.BOND)
+				) {
 					etf_data = fund_data['ETFDetails'];
 					if (etf_data === undefined) {
 						mutual_data = fund_data;
@@ -178,16 +186,28 @@ class Search extends React.Component {
 
 					if (
 						(mutual_data['FundIndicators'][Consts.TASE_TYPES.IMITATING]['Value'] &&
-							this.state.search_checkbox[0]['isChecked']) ||
+							!this.state.search_checkbox[0]['isChecked']) ||
 						(mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] &&
-							this.state.search_checkbox[1]['isChecked']) ||
+							!this.state.search_checkbox[1]['isChecked']) ||
 						(mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value'] &&
-							this.state.search_checkbox[2]['isChecked'])
+							!this.state.search_checkbox[2]['isChecked'])
 					) {
-						new_fund_list.push(fund_data);
-						new_info_list.push(keep_info[raw_ix]);
+						continue;
 					}
+
+					new_fund_list.push(fund_data);
+					new_info_list.push(keep_info[raw_ix]);
+				} else if (type === Consts.TYPE_ID.SECURITY && subtype === Consts.SUB_TYPE_ID.STOCK) {
+					if (!this.state.search_checkbox[3]['isChecked']) {
+						continue;
+					}
+					new_fund_list.push(fund_data);
+					new_info_list.push(keep_info[raw_ix]);
 				}
+			}
+			if (new_info_list.length === 0) {
+				this.setState({ search_message: 'No funds found with given filters, try other filters' });
+				return;
 			}
 
 			this.setState({ info_list: new_info_list });

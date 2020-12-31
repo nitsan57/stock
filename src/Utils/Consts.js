@@ -1,11 +1,17 @@
 // constants.js
 
 export const TYPE_ID = {
-	ETF: '1',
-	BOND: '5',
-
+	SECURITY: '1',
 	FUND: '4',
-	// BOND: '5',
+	BOND: '5',
+};
+
+export const SUB_TYPE_ID = {
+	STOCK: '1',
+};
+
+export const MAGNA_TYPE = {
+	BOND: '1',
 };
 
 export const TASE_TYPES = {
