@@ -28,7 +28,6 @@ class Search extends React.Component {
 				{ id: 1, value: 'קרן מחקה', isChecked: true },
 				{ id: 2, value: 'ממונף', isChecked: true },
 				{ id: 3, value: 'קרן חשיפה הפוכה', isChecked: true },
-
 			],
 			search_all: true,
 		};
@@ -163,10 +162,13 @@ class Search extends React.Component {
 			let mutual_data;
 			let etf_data;
 			let fund_data;
-			console.log("all",fund_l)
+			let type;
+			// console.log('all', fund_l);
+			// console.log('all_info', keep_info);
 			for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
 				fund_data = fund_l[raw_ix];
-				if (keep_info[raw_ix]['type'] === '1') {
+				type = keep_info[raw_ix]['type'];
+				if (type === Consts.TYPE_ID.ETF || type === Consts.TYPE_ID.FUND) {
 					etf_data = fund_data['ETFDetails'];
 					if (etf_data === undefined) {
 						mutual_data = fund_data;
