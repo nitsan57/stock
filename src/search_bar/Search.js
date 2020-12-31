@@ -83,7 +83,13 @@ class Search extends React.Component {
 			subid = String(funds[k]['SubId']);
 			fund_id = String(funds[k]['id']);
 
-			if (type === '4' || type === '5' || type === '7' || subtype === '991' || subtype === Consts.TYPE_ID.BOND) {
+			if (
+				type === '5' ||
+				type === '7' ||
+				type === Consts.TYPE_ID.MANAGER ||
+				subtype === Consts.SUB_TYPE_ID.NON_EXISTS ||
+				subtype === Consts.SUB_TYPE_ID.BOND
+			) {
 				continue;
 			}
 			if (fund_id[0] === '5') {
@@ -105,6 +111,9 @@ class Search extends React.Component {
 				id: funds[k]['id'],
 			});
 			all_results.push(fetch_data('GET', url, '', 'application/x-www-form-urlencoded'));
+		}
+		if (all_results.length > 30) {
+			return [-1, -1];
 		}
 		all_results = await Promise.allSettled(all_results);
 		let fund_l = [];
@@ -133,90 +142,94 @@ class Search extends React.Component {
 			this.state.fund_set.add(JSON.stringify(temp_fund));
 		});
 		if (filteredData.length === 0) {
-			this.setState({ search_message: 'No funds found try other keyword' });
-		} else if (filteredData.length > 45) {
-			console.log(filteredData);
-			this.setState({ search_message: 'Too many funds found please search more specifically' });
-		} else {
-			this.setState({ search_message: 'Search results:' });
+			this.setState({ search_message: 'לא נמצאו תוצאות העונות למילת החיפוש' });
+		}
 
-			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
-				funds_arr.push(JSON.parse(val));
-			}
+		this.setState({ search_message: '..מחפש' });
 
-			[fund_l, keep_info] = await this.keep_relevant_data(funds_arr);
+		for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
+			funds_arr.push(JSON.parse(val));
+		}
 
-			let new_fund_list = [];
-			let new_info_list = [];
-			let raw_ix = 0;
-			let mutual_data;
-			let etf_data;
-			let fund_data;
-			let type;
-			let subtype;
-			// let bond_fund;
-			for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
-				fund_data = fund_l[raw_ix];
-				type = keep_info[raw_ix]['type'];
-				subtype = keep_info[raw_ix]['subtype'];
-				// bond_fund = String(fund_data['MagnaFundType']);
+		[fund_l, keep_info] = await this.keep_relevant_data(funds_arr);
+
+		if (fund_l === -1) {
+			this.setState({ search_message: 'יותר מידי תוצאות נמצאו אנא הכנס מילות חיפוש יותר ממוקדות' });
+
+			return;
+		}
+
+		let new_fund_list = [];
+		let new_info_list = [];
+		let raw_ix = 0;
+		let mutual_data;
+		let etf_data;
+		let fund_data;
+		let type;
+		let subtype;
+		// let bond_fund;
+		for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
+			fund_data = fund_l[raw_ix];
+			type = keep_info[raw_ix]['type'];
+			subtype = keep_info[raw_ix]['subtype'];
+			// bond_fund = String(fund_data['MagnaFundType']);
+
+			if (
+				(type === Consts.TYPE_ID.SECURITY && subtype !== Consts.SUB_TYPE_ID.STOCK) ||
+				type === Consts.TYPE_ID.FUND // agah filter && bond_fund !== Consts.MAGNA_TYPE.BOND
+			) {
+				etf_data = fund_data['ETFDetails'];
+				if (etf_data === undefined) {
+					mutual_data = fund_data;
+				} else {
+					mutual_data = etf_data['FundDetails'];
+				}
+
+				if (subtype === Consts.SUB_TYPE_ID.ABROAD_FUND) {
+					mutual_data.FundIndicators = {
+						[Consts.TASE_TYPES.IMITATING]: { Value: true },
+						[Consts.TASE_TYPES.SHORT]: { Value: false },
+						[Consts.TASE_TYPES.LEVERAGED]: { Value: false },
+					};
+				}
+
+				if (mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value']) {
+					// short behaves differnet since it is leveraged
+					mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] = false;
+				}
 
 				if (
-					(type === Consts.TYPE_ID.SECURITY && subtype !== Consts.SUB_TYPE_ID.STOCK) ||
-					type === Consts.TYPE_ID.FUND // agah filter && bond_fund !== Consts.MAGNA_TYPE.BOND
+					(mutual_data['FundIndicators'][Consts.TASE_TYPES.IMITATING]['Value'] &&
+						!this.state.search_checkbox[0]['isChecked']) ||
+					(mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] &&
+						!this.state.search_checkbox[1]['isChecked']) ||
+					(mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value'] &&
+						!this.state.search_checkbox[2]['isChecked'])
 				) {
-					etf_data = fund_data['ETFDetails'];
-					if (etf_data === undefined) {
-						mutual_data = fund_data;
-					} else {
-						mutual_data = etf_data['FundDetails'];
-					}
-
-					if (subtype === Consts.SUB_TYPE_ID.ABROAD_FUND) {
-						mutual_data.FundIndicators = {
-							[Consts.TASE_TYPES.IMITATING]: { Value: true },
-							[Consts.TASE_TYPES.SHORT]: { Value: false },
-							[Consts.TASE_TYPES.LEVERAGED]: { Value: false },
-						};
-						console.log(mutual_data);
-					}
-
-					if (mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value']) {
-						// short behaves differnet since it is leveraged
-						mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] = false;
-					}
-
-					if (
-						(mutual_data['FundIndicators'][Consts.TASE_TYPES.IMITATING]['Value'] &&
-							!this.state.search_checkbox[0]['isChecked']) ||
-						(mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] &&
-							!this.state.search_checkbox[1]['isChecked']) ||
-						(mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value'] &&
-							!this.state.search_checkbox[2]['isChecked'])
-					) {
-						continue;
-					}
-
-					new_fund_list.push(fund_data);
-					new_info_list.push(keep_info[raw_ix]);
-				} else if (type === Consts.TYPE_ID.SECURITY && subtype === Consts.SUB_TYPE_ID.STOCK) {
-					if (!this.state.search_checkbox[3]['isChecked']) {
-						continue;
-					}
-					new_fund_list.push(fund_data);
-					new_info_list.push(keep_info[raw_ix]);
+					continue;
 				}
-			}
-			if (new_info_list.length === 0) {
-				this.setState({ search_message: 'No funds found with given filters, try other filters' });
-				return;
-			}
 
-			this.setState({ info_list: new_info_list });
-			this.setState({ fund_list: new_fund_list });
-			this.setState({ is_button_pressed: true });
-			this.setState({ num_child_loaded: 0 });
+				new_fund_list.push(fund_data);
+				new_info_list.push(keep_info[raw_ix]);
+			} else if (type === Consts.TYPE_ID.SECURITY && subtype === Consts.SUB_TYPE_ID.STOCK) {
+				if (!this.state.search_checkbox[3]['isChecked']) {
+					continue;
+				}
+				new_fund_list.push(fund_data);
+				new_info_list.push(keep_info[raw_ix]);
+			}
 		}
+		if (new_info_list.length === 0) {
+			this.setState({
+				search_message: 'לא נמצאו תואות המתאימות לסינונים, יש לאפשר עוד סוגים או לשנות מילת חיפוש',
+			});
+			return;
+		}
+
+		this.setState({ info_list: new_info_list });
+		this.setState({ fund_list: new_fund_list });
+		this.setState({ is_button_pressed: true });
+		this.setState({ num_child_loaded: 0 });
 	}
 
 	clearSearch() {
@@ -264,7 +277,7 @@ class Search extends React.Component {
 	render() {
 		let loading = (
 			<form>
-				<h1>Loading...</h1>
+				<h1>...טוען</h1>
 				<Loader type="Oval" color="#00BFFF" height={100} width={100} />
 			</form>
 		);
