@@ -31,12 +31,6 @@ class Search extends React.Component {
 			],
 			search_all: true,
 		};
-
-		this.handleInputChange = this.handleInputChange.bind(this);
-		this.clearSearch = this.clearSearch.bind(this);
-		this.addSearch = this.addSearch.bind(this);
-		this.graphHandler = this.graphHandler.bind(this);
-		this.tableHandler = this.tableHandler.bind(this);
 	}
 
 	contains = (target, patterns) => {
@@ -230,30 +224,30 @@ class Search extends React.Component {
 		this.setState({ num_child_loaded: 0 });
 	}
 
-	clearSearch() {
+	clearSearch = () => {
 		this.setState({ fund_set: new Set() });
 		this.state.fund_list.splice(0, this.state.fund_list.length);
 		this.setState({ to_add_plot: false });
 		this.search();
 	}
 
-	addSearch() {
+	addSearch = () => {
 		this.setState({ to_add_plot: true });
 		this.search();
 	}
 
-	handleInputChange(e) {
+	handleInputChange =(e) => {
 		const content = e.target.value;
 		this.setState({ search_keyword: content });
 	}
 
-	graphHandler() {
+	graphHandler = () => {
 		this.setState({ is_button_pressed: false });
 		this.setState({ to_add_plot: false });
 		this.setState({ num_child_loaded: this.state.num_child_loaded + 1 });
 	}
 
-	tableHandler() {
+	tableHandler = () => {
 		this.setState({ num_child_loaded: this.state.num_child_loaded + 1 });
 	}
 
