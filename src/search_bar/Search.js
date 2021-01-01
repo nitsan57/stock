@@ -24,10 +24,10 @@ class Search extends React.Component {
 			search_message: 'חפש',
 			today: this.get_today(),
 			search_checkbox: [
-				{ key: 1, value: 'קרן מחקה', isChecked: true },
-				{ key: 2, value: 'ממונף', isChecked: true },
-				{ key: 3, value: 'קרן חשיפה הפוכה', isChecked: true },
-				{ key: 4, value: 'מניות', isChecked: false },
+				{ key: 1, value: this.props.text_lang.IMITATING, isChecked: true },
+				{ key: 2, value: this.props.text_lang.LEVERAGED, isChecked: true },
+				{ key: 3, value: this.props.text_lang.SHORT, isChecked: true },
+				{ key: 4, value: this.props.text_lang.STOCKS, isChecked: false },
 			],
 			search_all: true,
 		};
@@ -140,10 +140,10 @@ class Search extends React.Component {
 			this.state.fund_set.add(JSON.stringify(temp_fund));
 		});
 		if (filteredData.length === 0) {
-			this.setState({ search_message: 'לא נמצאו תוצאות העונות למילת החיפוש' });
+			this.setState({ search_message: this.props.text_lang.NO_RESULT_KEY_WORDS});
 		}
 
-		this.setState({ search_message: '..מחפש' });
+		this.setState({ search_message: this.props.text_lang.IN_PROGRESS });
 
 		for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
 			funds_arr.push(JSON.parse(val));
@@ -213,13 +213,13 @@ class Search extends React.Component {
 		}
 		if (new_info_list.length === 0) {
 			this.setState({
-				search_message: 'לא נמצאו תוצאות המתאימות לסינונים, יש לאפשר עוד סוגים או לשנות מילת חיפוש',
+				search_message: this.props.text_lang.NO_RESULTS_FOR_FILTERS,
 			});
 			return;
 		}
 		if (new_info_list.length > 45) {
 			this.setState({
-				search_message: 'נמצאו יותר מידי תוצאות חיפוש , אנא מקד את הפילטרים או מילות חיפוש',
+				search_message: this.props.text_lang.TO_MANY_RESULTS,
 			});
 			return;
 		}
@@ -275,7 +275,7 @@ class Search extends React.Component {
 	render() {
 		let loading = (
 			<form>
-				<h1>...טוען</h1>
+				<h1>{this.props.text_lang.LOADING}</h1>
 				<Loader type="Oval" color="#00BFFF" height={100} width={100} />
 			</form>
 		);
@@ -350,10 +350,10 @@ class Search extends React.Component {
 						size="sm"
 						onClick={this.clearSearch}
 					>
-						חיפוש חדש
+						{this.props.text_lang.NEW_SEARCH}
 					</Button>
 					<Button variant="primary" size="sm" onClick={this.addSearch}>
-						הוסף לגרף
+					{this.props.text_lang.ADD_TO_GRAPH}
 					</Button>
 				</div>
 				{loading}
