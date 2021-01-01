@@ -10560,6 +10560,7 @@
 	{
 		Id: '1159235',
 		Name: 'איישרס.חוץ MSCI AC WORLD',
+		tag: 'awci',
 		Smb: 'אש.סז505',
 		ISIN: 'IE00B6R52259',
 		Type: 1,

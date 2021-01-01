@@ -76,7 +76,6 @@ class Search extends React.Component {
 		let keep_info = [];
 		let k;
 		let all_results = [];
-
 		for (k = 0; k < funds.length; k++) {
 			type = String(funds[k]['type']);
 			subtype = String(funds[k]['subtype']);
@@ -97,7 +96,8 @@ class Search extends React.Component {
 			} else if (
 				subid === '001779' ||
 				(type === '1' && subtype === '1') ||
-				subtype === Consts.SUB_TYPE_ID.ABROAD_FUND
+				subtype === Consts.SUB_TYPE_ID.ABROAD_FUND ||
+				subtype === Consts.SUB_TYPE_ID.ABROAD_BOND
 			) {
 				url = securty_url + fund_id;
 			} else {
@@ -112,9 +112,7 @@ class Search extends React.Component {
 			});
 			all_results.push(fetch_data('GET', url, '', 'application/x-www-form-urlencoded'));
 		}
-		if (all_results.length > 30) {
-			return [-1, -1];
-		}
+
 		all_results = await Promise.allSettled(all_results);
 		let fund_l = [];
 		let i;
@@ -153,12 +151,6 @@ class Search extends React.Component {
 
 		[fund_l, keep_info] = await this.keep_relevant_data(funds_arr);
 
-		if (fund_l === -1) {
-			this.setState({ search_message: 'יותר מידי תוצאות נמצאו אנא הכנס מילות חיפוש יותר ממוקדות' });
-
-			return;
-		}
-
 		let new_fund_list = [];
 		let new_info_list = [];
 		let raw_ix = 0;
@@ -185,7 +177,7 @@ class Search extends React.Component {
 					mutual_data = etf_data['FundDetails'];
 				}
 
-				if (subtype === Consts.SUB_TYPE_ID.ABROAD_FUND) {
+				if (subtype === Consts.SUB_TYPE_ID.ABROAD_FUND || subtype === Consts.SUB_TYPE_ID.ABROAD_BOND) {
 					mutual_data.FundIndicators = {
 						[Consts.TASE_TYPES.IMITATING]: { Value: true },
 						[Consts.TASE_TYPES.SHORT]: { Value: false },
@@ -221,7 +213,13 @@ class Search extends React.Component {
 		}
 		if (new_info_list.length === 0) {
 			this.setState({
-				search_message: 'לא נמצאו תואות המתאימות לסינונים, יש לאפשר עוד סוגים או לשנות מילת חיפוש',
+				search_message: 'לא נמצאו תוצאות המתאימות לסינונים, יש לאפשר עוד סוגים או לשנות מילת חיפוש',
+			});
+			return;
+		}
+		if (new_info_list.length > 45) {
+			this.setState({
+				search_message: 'נמצאו יותר מידי תוצאות חיפוש , אנא מקד את הפילטרים או מילות חיפוש',
 			});
 			return;
 		}

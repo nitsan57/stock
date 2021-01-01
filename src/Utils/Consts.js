@@ -9,6 +9,7 @@ export const TYPE_ID = {
 export const SUB_TYPE_ID = {
 	STOCK: '1',
 	ABROAD_FUND: '44',
+	ABROAD_BOND: '45',
 	BOND: '5',
 
 	NON_EXISTS: '991',
