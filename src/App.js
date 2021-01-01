@@ -22,7 +22,6 @@ class App extends React.Component {
 		else {
 			text_lang = Lang.TASE_TYPES_ENGLISH
 		}
-		console.log(text_lang)
 		return (
 			<div>
 				<Search
