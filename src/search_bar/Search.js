@@ -301,7 +301,7 @@ class Search extends React.Component {
 					}}
 				>
 					<h4>{this.state.search_message}</h4>
-					בחר \ הסר הכל{' '}
+					{this.props.text_lang.CHOSE_REMOVE_ALL}{' '}
 					<input
 						style={{ display: 'inline-block', textAlign: 'right' }}
 						type="checkbox"

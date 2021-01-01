@@ -24,4 +24,5 @@ export const TASE_TYPES_HEBREW = {
     LOADING:                "...טוען",
     NEW_SEARCH:             "חיפוש חדש",
     ADD_TO_GRAPH:           "הוסף לגרף",
+    CHOSE_REMOVE_ALL:       "בחר / הסר הכל"
 };
