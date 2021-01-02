@@ -4,6 +4,8 @@ export const TYPE_ID = {
 	SECURITY: '1',
 	FUND: '4',
 	MANAGER: '10',
+	OPTIONS: '7',
+	COMP_PAGE: '5',
 };
 
 export const SUB_TYPE_ID = {

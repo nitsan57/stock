@@ -164,7 +164,7 @@ class Search extends React.Component {
 		if (this.state.num_child_loaded === 2 || !this.state.is_button_pressed) {
 			loading = null;
 		}
-
+		console.log(this.state.fund_set);
 		return (
 			<div
 				style={{

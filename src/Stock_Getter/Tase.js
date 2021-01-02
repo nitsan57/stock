@@ -22,15 +22,6 @@ async function keep_relevant_data(funds) {
 		subid = String(funds[k]['SubId']);
 		fund_id = String(funds[k]['id']);
 
-		if (
-			type === '5' ||
-			type === '7' ||
-			type === Consts.TYPE_ID.MANAGER ||
-			subtype === Consts.SUB_TYPE_ID.NON_EXISTS ||
-			subtype === Consts.SUB_TYPE_ID.BOND
-		) {
-			continue;
-		}
 		if (fund_id[0] === '5') {
 			url = fund_url + fund_id;
 		} else if (
@@ -74,8 +65,19 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 	let funds_arr = [];
 	let keep_info = [];
 	filteredData.forEach((item) => {
+		console.log('inserted', temp_fund);
+
 		temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
-		fund_set.add(JSON.stringify(temp_fund));
+		if (
+			temp_fund.type == Consts.TYPE_ID.DELETED ||
+			temp_fund.type == Consts.TYPE_ID.COMP_PAGE ||
+			temp_fund.type == Consts.TYPE_ID.MANAGER ||
+			temp_fund.subtype == Consts.SUB_TYPE_ID.NON_EXISTS ||
+			temp_fund.subtype == Consts.SUB_TYPE_ID.BOND
+		) {
+		} else {
+			fund_set.add(JSON.stringify(temp_fund));
+		}
 	});
 
 	if (filteredData.length === 0) {
