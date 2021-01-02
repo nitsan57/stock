@@ -183,7 +183,6 @@ class Graph extends React.Component {
 			current_jump = i * mark_jump_const;
 			marks[current_jump] = x_axis[current_jump];
 		}
-		console.log(marks);
 		return {
 			min: 0,
 			max: x_axis.length,
