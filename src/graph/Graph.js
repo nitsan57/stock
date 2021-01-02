@@ -94,7 +94,6 @@ class Graph extends React.Component {
 
 	async get_graph_data(raw_data_input, instruments, date_range) {
 		await Promise.allSettled(raw_data_input).then(async (raw_data) => {
-			var data_y_point;
 			var value;
 			let data_array = await this.prepare_data(raw_data);
 			var min_data_length = 100000;
@@ -176,12 +175,20 @@ class Graph extends React.Component {
 
 	range_params(x_axis) {
 		let final_index = x_axis.length - 1;
-		let mid_index = Math.floor(x_axis.length / 2);
+		let marks = {};
+		let i = 0;
+		let mark_jump_const = parseInt((x_axis.length - 1) / 10);
+		let current_jump;
+		for (i = 0; i < 10; i++) {
+			current_jump = i * mark_jump_const;
+			marks[current_jump] = x_axis[current_jump];
+		}
+		console.log(marks);
 		return {
 			min: 0,
 			max: x_axis.length,
 			defaultValue: [0, final_index],
-			marks: { 0: x_axis[0], [mid_index]: x_axis[mid_index], [final_index]: x_axis[final_index] },
+			marks: marks,
 		};
 	}
 
@@ -213,7 +220,7 @@ class Graph extends React.Component {
 						max={range_params.max}
 						defaultValue={range_params.defaultValue}
 						marks={range_params.marks}
-						onChange={this.range_change}
+						onAfterChange={this.range_change}
 					/>
 				</div>
 			);
