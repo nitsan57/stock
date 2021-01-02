@@ -61,10 +61,10 @@ class Search extends React.Component {
 	async search() {
 		let new_fund_list;
 		let new_info_list;
-		let imitating = this.state.search_checkbox[2]['isChecked'];
-		let leveraged = this.state.search_checkbox[2]['isChecked'];
+		let imitating = this.state.search_checkbox[0]['isChecked'];
+		let leveraged = this.state.search_checkbox[1]['isChecked'];
 		let short = this.state.search_checkbox[2]['isChecked'];
-		let normal_stock = this.state.search_checkbox[2]['isChecked'];
+		let normal_stock = this.state.search_checkbox[3]['isChecked'];
 
 		let search_res = await this.state.stock_market.search(
 			this.state.search_keyword,
@@ -77,7 +77,9 @@ class Search extends React.Component {
 		this.setState({ search_message: this.props.text_lang.IN_PROGRESS });
 
 		if (search_res === -1) {
-			this.setState({ search_message: this.props.text_lang.NO_RESULT_KEY_WORDS });
+			this.setState({
+				search_message: this.props.text_lang.NO_RESULT_KEY_WORDS,
+			});
 			return;
 		} else {
 			new_fund_list = search_res[0];
