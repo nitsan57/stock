@@ -15,6 +15,7 @@ class Graph extends React.Component {
 			raw_data: [],
 			instruments: [],
 			data: [],
+			xticks: 5,
 			dates: [],
 			is_data_loaded: null,
 		};
@@ -154,6 +155,9 @@ class Graph extends React.Component {
 				res.push(temp_data);
 			}
 
+			let xticks = parseInt(x.length / 10);
+			this.setState({ xticks: xticks });
+
 			this.setState({ data: res });
 			if (date_range[1] === 0) {
 				this.setState({ dates: x });
@@ -279,6 +283,11 @@ class Graph extends React.Component {
 							autosize: true,
 							yaxis: { tickformat: ',.0%' },
 							responsive: true,
+							xaxis: {
+								tickmode: 'linear', //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+								tick0: 0,
+								dtick: this.state.xticks,
+							},
 						}}
 						useResizeHandler={true}
 						style={{ width: '100%', height: '100%' }}

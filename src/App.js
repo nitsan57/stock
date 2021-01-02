@@ -1,32 +1,24 @@
-import      React       from 'react';
-import      Search      from './search_bar/Search';
-import * as Lang        from './Utils/Lang';
+import React from 'react';
+import Search from './search_bar/Search';
+import * as Lang from './Utils/Lang';
+import * as StockMarket from './Stock_Getter/StockGetter';
 // import styles      from  ''
 
 class App extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			he_lang : true
-		}
+			lang: Lang.TASE_TYPES_HEBREW, // cahnge to english if button pressed
+			stock_market: StockMarket.TASE_STOCK_FUNCTIONS, // cahnge to other stock if button pressed
+		};
 	}
 
 	componentDidMount() {}
 
 	render() {
-		let text_lang
-		if(this.state.he_lang)
-		{
-	        text_lang = Lang.TASE_TYPES_HEBREW
-		}
-		else {
-			text_lang = Lang.TASE_TYPES_ENGLISH
-		}
 		return (
 			<div>
-				<Search
-				    text_lang = {text_lang}
-				/>
+				<Search text_lang={this.state.lang} stock_market={this.state.stock_market} />
 			</div>
 		);
 	}
