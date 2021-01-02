@@ -72,7 +72,6 @@ class Search extends React.Component {
 			short,
 			normal_stock
 		);
-		console.log(search_res);
 		this.setState({ search_message: this.props.text_lang.IN_PROGRESS });
 
 		if (search_res === -1) {
@@ -240,6 +239,7 @@ class Search extends React.Component {
 						graphHandler={this.graphHandler}
 						is_button_pressed={this.state.is_button_pressed}
 						to_add_plot={this.state.to_add_plot}
+						stock_market={this.state.stock_market}
 					/>
 				</div>
 				<Info
@@ -248,6 +248,7 @@ class Search extends React.Component {
 					tableHandler={this.tableHandler}
 					is_button_pressed={this.state.is_button_pressed}
 					to_add_plot={this.state.to_add_plot}
+					stock_market={this.state.stock_market}
 				/>
 			</div>
 		);

@@ -1,6 +1,5 @@
 import React from 'react';
 import Plotly from 'plotly.js-basic-dist';
-import { fetch_data } from '../Utils/Utils';
 import createPlotlyComponent from 'react-plotly.js/factory';
 
 import 'rc-slider/assets/index.css';
@@ -18,6 +17,7 @@ class Graph extends React.Component {
 			xticks: 5,
 			dates: [],
 			is_data_loaded: null,
+			stock_market: this.props.stock_market,
 		};
 		this.create_graph_data = this.create_graph_data.bind(this);
 		this.setStateAsync = this.setStateAsync.bind(this);
@@ -110,47 +110,24 @@ class Graph extends React.Component {
 			var name;
 			var x = [];
 			var y = [];
-			var y_0;
-			var my_data;
 			var res = [];
-			var j;
-			var date;
-			var year;
-			var month;
-			var day;
+
 			let start_date = 0;
 			if (date_range[1] !== 0) {
 				start_date = min_data_length - date_range[1];
 				min_data_length = min_data_length - date_range[0];
 			}
 			for (i = 0; i < data_array.length; i++) {
-				value = data_array[i];
-				name = instruments[i]['name'];
-				y = [];
-				var rate;
-
-				for (j = min_data_length - 1; j >= start_date; j--) {
-					data_y_point = value[j]['CloseRate'];
-					rate = 'CloseRate';
-					if (data_y_point === undefined) {
-						data_y_point = value[j]['PurchasePrice'];
-						rate = 'PurchasePrice';
-					}
-					y_0 = value[min_data_length - 1][rate];
-					my_data = data_y_point / y_0;
-					y.push(my_data - 1);
-					if (i === 0) {
-						date = value[j]['TradeDate'].substring(0, 10).split('-');
-						if (date.length === 1) {
-							x.push(date[0]);
-						} else {
-							year = date[0];
-							month = date[1];
-							day = date[2];
-							x.push(day + '/' + month + '/' + year);
-						}
-					}
-				}
+				// value = data_array[i];
+				[x, y, name] = this.state.stock_market.extract_chart_point(
+					x,
+					y,
+					instruments,
+					data_array,
+					min_data_length,
+					start_date,
+					i
+				);
 				var temp_data = this.create_graph_data(x, y, name);
 				res.push(temp_data);
 			}
@@ -165,69 +142,8 @@ class Graph extends React.Component {
 		});
 	}
 
-	fetch_fund(today, instrument, raw_data) {
-		var temp_res = [];
-		let year = today.split('-')[0];
-		let before_5 = today.replace(year, year - 5);
-		var i;
-		for (i = 1; i < 42; i++) {
-			var instrument_id = instrument['id'];
-			var url = 'https://mayaapi.tase.co.il/api/fund/history';
-
-			var data =
-				'DateFrom=' +
-				before_5 +
-				'&DateTo=' +
-				today +
-				'&FundId=' +
-				instrument_id +
-				'&Page=' +
-				String(i) +
-				'&Period=0';
-
-			let res = fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
-			temp_res.push(res);
-		}
-		raw_data.push(temp_res);
-	}
-
-	fetch_security(today, instrument, raw_data) {
-		var temp_res = [];
-		var i;
-		let year = today.split('-')[0];
-		let before_5 = today.replace(year, year - 5);
-		for (i = 1; i < 45; i++) {
-			var instrument_id = instrument['id'];
-			var url = 'https://api.tase.co.il/api/security/historyeod';
-			var data = {
-				dFrom: before_5,
-				dTo: today,
-				oId: instrument_id,
-				pageNum: i,
-				pType: '8',
-				TotalRec: 1,
-				lang: '1',
-			};
-			let res = fetch_data('POST', url, JSON.stringify(data), 'application/json');
-			temp_res.push(res);
-		}
-		raw_data.push(temp_res);
-	}
-
 	async get_intruments_data(today, instruments, raw_data) {
-		var instrument;
-		var i;
-		let add_len = raw_data.length;
-
-		for (i = add_len; i < instruments.length; i++) {
-			instrument = instruments[i];
-			var instrument_id = instrument['id'];
-			if (String(instrument_id)[0] === '1' || (instrument['type'] === '1' && instrument['subtype'] === '1')) {
-				this.fetch_security(today, instrument, raw_data);
-			} else {
-				this.fetch_fund(today, instrument, raw_data);
-			}
-		}
+		this.state.stock_market.get_instrument_chart_data(today, instruments, raw_data);
 		this.setState({ raw_data: raw_data });
 		await this.get_graph_data(raw_data, instruments, [0, 0]);
 	}
