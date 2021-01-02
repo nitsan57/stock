@@ -15,7 +15,7 @@ export const TASE_TYPES_ENGLISH = {
 export const TASE_TYPES_HEBREW = {
 	IMITATING: 'קרן מחקה',
 	LEVERAGED: 'קרן ממונפת',
-	SHORT: 'קרן מחקה',
+	SHORT: 'קרן בחסר',
 	STOCKS: 'מניות',
 	NO_RESULT_KEY_WORDS: 'לא נמצאו תוצאות העונות למילת החיפוש',
 	NO_RESULTS_FOR_FILTERS: 'לא נמצאו תוצאות המתאימות לסינונים, יש לאפשר עוד סוגים או לשנות מילת חיפוש',
