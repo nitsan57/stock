@@ -29,6 +29,8 @@ class Search extends React.Component {
 			],
 			search_all: true,
 		};
+		this.clearSearch = this.clearSearch.bind(this);
+		this.setStateAsync = this.setStateAsync.bind(this);
 	}
 
 	contains = (target, patterns) => {
@@ -101,12 +103,19 @@ class Search extends React.Component {
 		this.setState({ num_child_loaded: 0 });
 	}
 
-	clearSearch = () => {
-		this.setState({ fund_set: new Set() });
+	setStateAsync(state) {
+		return new Promise((resolve) => {
+			this.setState(state, resolve);
+		});
+	}
+
+	async clearSearch() {
+		// this.setState({ fund_set: new Set() });
+		await this.setStateAsync({ fund_set: new Set() });
 		this.state.fund_list.splice(0, this.state.fund_list.length);
 		this.setState({ to_add_plot: false });
 		this.search();
-	};
+	}
 
 	addSearch = () => {
 		this.setState({ to_add_plot: true });
