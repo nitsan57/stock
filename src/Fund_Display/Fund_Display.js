@@ -108,7 +108,6 @@ class FundDisplay extends React.Component {
 			this.setState({ currentrows }); //update the value
 		}
 		if (this.props.info !== prevProps.info) {
-			// console.log('change');
 			this.setState({ currentrows: [] });
 			let i;
 			const rows = [];
@@ -127,7 +126,6 @@ class FundDisplay extends React.Component {
 					)
 				);
 			}
-			console.log('rows', rows);
 			this.setState({ currentrows: rows });
 		}
 	}

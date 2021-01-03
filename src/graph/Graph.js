@@ -120,7 +120,6 @@ class Graph extends React.Component {
 				min_data_length = min_data_length - date_range[0];
 			}
 			for (i = 0; i < data_array.length; i++) {
-				// value = data_array[i];
 				[x, y, name] = this.state.stock_market.extract_chart_point(
 					x,
 					y,
@@ -175,25 +174,23 @@ class Graph extends React.Component {
 	range_change(value) {
 		let date_range_len = this.state.dates.length - 1;
 		if (value === 'week') {
-			value = [date_range_len - 7, date_range_len];
+			value = [Math.max(date_range_len - 7, 0), date_range_len];
 			this.slider_change_val(value);
 		} else if (value === 'month') {
-			value = [date_range_len - 30, date_range_len];
+			value = [Math.max(date_range_len - 30, 0), date_range_len];
 			this.slider_change_val(value);
 		} else if (value === 'year') {
-			value = [date_range_len - 365, date_range_len];
+			value = [Math.max(date_range_len - 365, 0), date_range_len];
 			this.slider_change_val(value);
 		} else if (value === 'all-time') {
 			value = [0, date_range_len];
 			this.slider_change_val(value);
 		}
-
 		let raw_data = this.state.raw_data;
 		this.get_graph_data(raw_data, this.state.instruments, value);
 	}
 
 	range_params(x_axis) {
-		let final_index = x_axis.length - 1;
 		let marks = {};
 		let i = 0;
 		let mark_jump_const = parseInt((x_axis.length - 1) / 10);
@@ -205,7 +202,6 @@ class Graph extends React.Component {
 		return {
 			min: 0,
 			max: x_axis.length,
-			// defaultValue: [0, final_index],
 			marks: marks,
 		};
 	}
