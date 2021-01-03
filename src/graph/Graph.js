@@ -7,7 +7,6 @@ import { Range } from 'rc-slider';
 import Button from 'react-bootstrap/Button';
 
 const Plot = createPlotlyComponent(Plotly);
-
 class Graph extends React.Component {
 	constructor(props) {
 		super(props);
@@ -17,6 +16,7 @@ class Graph extends React.Component {
 			data: [],
 			xticks: 5,
 			dates: [],
+			slider_values: [0, 0],
 			is_data_loaded: null,
 			stock_market: this.props.stock_market,
 			text_lang: this.props.text_lang,
@@ -139,6 +139,7 @@ class Graph extends React.Component {
 			this.setState({ data: res });
 			if (date_range[1] === 0) {
 				this.setState({ dates: x });
+				this.setState({ slider_values: [0, x.length - 1] });
 			}
 		});
 	}
@@ -150,7 +151,6 @@ class Graph extends React.Component {
 	}
 
 	async componentDidUpdate(prevProps) {
-		// console.log('graph comp mount');
 		// Typical usage (don't forget to compare props):
 		if (this.props.funds.length !== prevProps.funds.length) {
 			if (this.props.funds.length !== 0) {
@@ -174,13 +174,18 @@ class Graph extends React.Component {
 		let date_range_len = this.state.dates.length - 1;
 		if (value === 'week') {
 			value = [date_range_len - 7, date_range_len];
+			this.slider_change_val(value);
 		} else if (value === 'month') {
 			value = [date_range_len - 30, date_range_len];
+			this.slider_change_val(value);
 		} else if (value === 'year') {
 			value = [date_range_len - 365, date_range_len];
+			this.slider_change_val(value);
 		} else if (value === 'all-time') {
 			value = [0, date_range_len];
+			this.slider_change_val(value);
 		}
+
 		let raw_data = this.state.raw_data;
 		this.get_graph_data(raw_data, this.state.instruments, value);
 	}
@@ -198,10 +203,14 @@ class Graph extends React.Component {
 		return {
 			min: 0,
 			max: x_axis.length,
-			defaultValue: [0, final_index],
+			// defaultValue: [0, final_index],
 			marks: marks,
 		};
 	}
+
+	slider_change_val = (slider_values) => {
+		this.setState({ slider_values });
+	};
 
 	render() {
 		if (this.state.is_data_loaded == null) {
@@ -209,6 +218,7 @@ class Graph extends React.Component {
 		}
 		if (this.state.is_data_loaded) {
 			let range_params = this.range_params(this.state.dates); //for div , width: '80%'
+
 			return (
 				<div
 					style={{
@@ -237,8 +247,10 @@ class Graph extends React.Component {
 						}}
 						min={range_params.min}
 						max={range_params.max}
-						defaultValue={range_params.defaultValue}
+						// defaultValue={range_params.defaultValue}
 						marks={range_params.marks}
+						onChange={this.slider_change_val}
+						value={this.state.slider_values}
 						onAfterChange={this.range_change}
 					/>
 					<Button
