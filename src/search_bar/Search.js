@@ -11,21 +11,22 @@ class Search extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			search_keyword: this.props.text_lang.DEFAULT_SEARCH_KEYWORD,
+			search_keyword: this.props.text_lang.SEARCH.DEFAULT_SEARCH_KEYWORD,
 			num_child_loaded: 0,
 			is_button_pressed: false,
 			to_add_plot: false,
 			fund_set: new Set(),
 			fund_list: [],
 			info_list: [],
-			search_message: this.props.text_lang.DEFAULT_SEARCH_MSG,
+			search_message: this.props.text_lang.SEARCH.DEFAULT_SEARCH_MSG,
 			today: this.get_today(),
 			stock_market: this.props.stock_market,
+			text_lang: this.props.text_lang,
 			search_checkbox: [
-				{ key: 1, value: this.props.text_lang.IMITATING, isChecked: true },
-				{ key: 2, value: this.props.text_lang.LEVERAGED, isChecked: true },
-				{ key: 3, value: this.props.text_lang.SHORT, isChecked: true },
-				{ key: 4, value: this.props.text_lang.STOCKS, isChecked: false },
+				{ key: 1, value: this.props.text_lang.SEARCH.IMITATING, isChecked: true },
+				{ key: 2, value: this.props.text_lang.SEARCH.LEVERAGED, isChecked: true },
+				{ key: 3, value: this.props.text_lang.SEARCH.SHORT, isChecked: true },
+				{ key: 4, value: this.props.text_lang.SEARCH.STOCKS, isChecked: false },
 			],
 			search_all: true,
 		};
@@ -66,7 +67,7 @@ class Search extends React.Component {
 		let leveraged = this.state.search_checkbox[1]['isChecked'];
 		let short = this.state.search_checkbox[2]['isChecked'];
 		let normal_stock = this.state.search_checkbox[3]['isChecked'];
-		this.setState({ search_message: this.props.text_lang.IN_PROGRESS });
+		this.setState({ search_message: this.state.text_lang.SEARCH.IN_PROGRESS });
 		this.setState({ num_child_loaded: 0 });
 		this.setState({ is_button_pressed: true });
 
@@ -81,10 +82,9 @@ class Search extends React.Component {
 			normal_stock
 		);
 
-		console.log(this.state.fund_set.size, prev_size);
 		if (this.state.fund_set.size === prev_size && this.state.to_add_plot) {
 			this.setState({
-				search_message: this.props.text_lang.NO_NEW_FUND_TO_ADD,
+				search_message: this.state.text_lang.SEARCH.NO_NEW_FUND_TO_ADD,
 			});
 			this.setState({ num_child_loaded: 0 });
 			this.setState({ is_button_pressed: false });
@@ -93,7 +93,7 @@ class Search extends React.Component {
 
 		if (search_res === -1) {
 			this.setState({
-				search_message: this.props.text_lang.NO_RESULT_KEY_WORDS,
+				search_message: this.state.text_lang.SEARCH.NO_RESULT_KEY_WORDS,
 			});
 			return;
 		} else {
@@ -103,13 +103,13 @@ class Search extends React.Component {
 
 		if (new_info_list.length === 0) {
 			this.setState({
-				search_message: this.props.text_lang.NO_RESULTS_FOR_FILTERS,
+				search_message: this.state.text_lang.SEARCH.NO_RESULTS_FOR_FILTERS,
 			});
 			return;
 		}
 		if (new_info_list.length > 45) {
 			this.setState({
-				search_message: this.props.text_lang.TO_MANY_RESULTS,
+				search_message: this.state.text_lang.SEARCH.TO_MANY_RESULTS,
 			});
 			return;
 		}
@@ -177,14 +177,13 @@ class Search extends React.Component {
 	render() {
 		let loading = (
 			<form>
-				<h1>{this.props.text_lang.LOADING}</h1>
+				<h1>{this.state.text_lang.SEARCH.LOADING}</h1>
 				<Loader type="Oval" color="#00BFFF" height={100} width={100} />
 			</form>
 		);
 		if (this.state.num_child_loaded === 2 || !this.state.is_button_pressed) {
 			loading = null;
 		}
-		console.log(this.state.fund_set);
 		return (
 			<div
 				style={{
@@ -203,7 +202,7 @@ class Search extends React.Component {
 					}}
 				>
 					<h4>{this.state.search_message}</h4>
-					{this.props.text_lang.CHOSE_REMOVE_ALL}{' '}
+					{this.state.text_lang.SEARCH.CHOSE_REMOVE_ALL}{' '}
 					<input
 						style={{ display: 'inline-block', textAlign: 'right' }}
 						type="checkbox"
@@ -252,16 +251,16 @@ class Search extends React.Component {
 						size="sm"
 						onClick={this.clearSearch}
 					>
-						{this.props.text_lang.NEW_SEARCH}
+						{this.state.text_lang.SEARCH.NEW_SEARCH}
 					</Button>
 					<Button variant="primary" size="sm" onClick={this.addSearch}>
-						{this.props.text_lang.ADD_TO_GRAPH}
+						{this.state.text_lang.SEARCH.ADD_TO_GRAPH}
 					</Button>
 				</div>
 				{loading}
 				<div
 					style={{
-						marginBottom: 20,
+						marginBottom: 10,
 					}}
 				>
 					<Graph
@@ -271,6 +270,7 @@ class Search extends React.Component {
 						to_add_plot={this.state.to_add_plot}
 						stock_market={this.state.stock_market}
 						num_child_loaded={this.state.num_child_loaded}
+						text_lang={this.state.text_lang}
 					/>
 				</div>
 				<Info
@@ -279,6 +279,7 @@ class Search extends React.Component {
 					tableHandler={this.tableHandler}
 					to_add_plot={this.state.to_add_plot}
 					stock_market={this.state.stock_market}
+					text_lang={this.state.text_lang}
 				/>
 			</div>
 		);

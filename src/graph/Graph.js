@@ -4,6 +4,7 @@ import createPlotlyComponent from 'react-plotly.js/factory';
 
 import 'rc-slider/assets/index.css';
 import { Range } from 'rc-slider';
+import Button from 'react-bootstrap/Button';
 
 const Plot = createPlotlyComponent(Plotly);
 
@@ -18,6 +19,7 @@ class Graph extends React.Component {
 			dates: [],
 			is_data_loaded: null,
 			stock_market: this.props.stock_market,
+			text_lang: this.props.text_lang,
 		};
 		this.create_graph_data = this.create_graph_data.bind(this);
 		this.setStateAsync = this.setStateAsync.bind(this);
@@ -152,7 +154,6 @@ class Graph extends React.Component {
 		// Typical usage (don't forget to compare props):
 		if (this.props.funds.length !== prevProps.funds.length) {
 			if (this.props.funds.length !== 0) {
-				console.log('here graph');
 				this.setState({ is_data_loaded: false });
 				var today = this.props.today;
 				var funds = this.props.funds;
@@ -170,6 +171,16 @@ class Graph extends React.Component {
 	}
 
 	range_change(value) {
+		let date_range_len = this.state.dates.length - 1;
+		if (value === 'week') {
+			value = [date_range_len - 7, date_range_len];
+		} else if (value === 'month') {
+			value = [date_range_len - 30, date_range_len];
+		} else if (value === 'year') {
+			value = [date_range_len - 365, date_range_len];
+		} else if (value === 'all-time') {
+			value = [0, date_range_len];
+		}
 		let raw_data = this.state.raw_data;
 		this.get_graph_data(raw_data, this.state.instruments, value);
 	}
@@ -199,7 +210,12 @@ class Graph extends React.Component {
 		if (this.state.is_data_loaded) {
 			let range_params = this.range_params(this.state.dates); //for div , width: '80%'
 			return (
-				<div style={{ width: '80%', margin: 'auto' }}>
+				<div
+					style={{
+						width: '80%',
+						margin: 'auto',
+					}}
+				>
 					<Plot
 						data={this.state.data}
 						layout={{
@@ -216,12 +232,48 @@ class Graph extends React.Component {
 						style={{ width: '100%', height: '100%' }}
 					/>
 					<Range
+						style={{
+							marginBottom: 30,
+						}}
 						min={range_params.min}
 						max={range_params.max}
 						defaultValue={range_params.defaultValue}
 						marks={range_params.marks}
 						onAfterChange={this.range_change}
 					/>
+					<Button
+						style={{
+							marginRight: 10,
+						}}
+						variant="primary"
+						size="sm"
+						onClick={() => this.range_change('week')}
+					>
+						{this.state.text_lang.GRAPH.WEEK_BUTTON}
+					</Button>
+					<Button
+						style={{
+							marginRight: 10,
+						}}
+						variant="primary"
+						size="sm"
+						onClick={() => this.range_change('month')}
+					>
+						{this.state.text_lang.GRAPH.MONTH_BUTTON}
+					</Button>
+					<Button
+						style={{
+							marginRight: 10,
+						}}
+						variant="primary"
+						size="sm"
+						onClick={() => this.range_change('year')}
+					>
+						{this.state.text_lang.GRAPH.YEAR_BUTTON}
+					</Button>
+					<Button variant="primary" size="sm" onClick={() => this.range_change('all-time')}>
+						{this.state.text_lang.GRAPH.ALL_TIME_BUTTON}
+					</Button>
 				</div>
 			);
 		} else {

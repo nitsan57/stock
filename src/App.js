@@ -7,7 +7,7 @@ class App extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			lang: Lang.TASE_TYPES_HEBREW, // cahnge to english if button pressed
+			lang: Lang.HEBREW, // cahnge to english if button pressed
 			stock_market: StockMarket.TASE_STOCK_FUNCTIONS, // cahnge to other stock if button pressed
 		};
 	}

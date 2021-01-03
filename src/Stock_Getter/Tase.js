@@ -65,8 +65,6 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 	let funds_arr = [];
 	let keep_info = [];
 	filteredData.forEach((item) => {
-		console.log('inserted', temp_fund);
-
 		temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
 		if (
 			temp_fund.type == Consts.TYPE_ID.OPTIONS ||
