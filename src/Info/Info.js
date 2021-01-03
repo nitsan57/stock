@@ -9,6 +9,7 @@ class Info extends React.Component {
 			is_data_loaded: false,
 			info: [],
 			stock_market: this.props.stock_market,
+			text_lang: this.props.text_lang,
 		};
 	}
 
@@ -34,7 +35,11 @@ class Info extends React.Component {
 	render() {
 		return (
 			<div>
-				<FundDisplay info={this.state.info} />
+				<FundDisplay
+					info={this.state.info}
+					text_lang={this.state.text_lang}
+					graph_yield_values={this.props.graph_yield_values}
+				/>
 			</div>
 		);
 	}

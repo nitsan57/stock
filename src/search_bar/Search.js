@@ -22,6 +22,7 @@ class Search extends React.Component {
 			today: this.get_today(),
 			stock_market: this.props.stock_market,
 			text_lang: this.props.text_lang,
+			graph_yield_values: [],
 			search_checkbox: [
 				{ key: 1, value: this.props.text_lang.SEARCH.IMITATING, isChecked: true },
 				{ key: 2, value: this.props.text_lang.SEARCH.LEVERAGED, isChecked: true },
@@ -142,9 +143,10 @@ class Search extends React.Component {
 		this.setState({ search_keyword: content });
 	};
 
-	graphHandler = () => {
+	graphHandler = (yield_values) => {
 		this.setState({ to_add_plot: false });
 		this.setState({ num_child_loaded: this.state.num_child_loaded + 1 });
+		this.setState({ graph_yield_values: yield_values });
 		this.finish_loading();
 	};
 
@@ -280,6 +282,7 @@ class Search extends React.Component {
 					to_add_plot={this.state.to_add_plot}
 					stock_market={this.state.stock_market}
 					text_lang={this.state.text_lang}
+					graph_yield_values={this.state.graph_yield_values}
 				/>
 			</div>
 		);

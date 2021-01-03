@@ -95,6 +95,7 @@ class Graph extends React.Component {
 	}
 
 	async get_graph_data(raw_data_input, instruments, date_range) {
+		let graph_yield_values = [];
 		await Promise.allSettled(raw_data_input).then(async (raw_data) => {
 			var value;
 			let data_array = await this.prepare_data(raw_data);
@@ -131,6 +132,7 @@ class Graph extends React.Component {
 				);
 				var temp_data = this.create_graph_data(x, y, name);
 				res.push(temp_data);
+				graph_yield_values.push(y[y.length - 1]);
 			}
 
 			let xticks = parseInt(x.length / 10);
@@ -142,6 +144,7 @@ class Graph extends React.Component {
 				this.setState({ slider_values: [0, x.length - 1] });
 			}
 		});
+		this.props.graphHandler(graph_yield_values);
 	}
 
 	async get_intruments_data(today, instruments, raw_data) {
@@ -159,12 +162,11 @@ class Graph extends React.Component {
 				var funds = this.props.funds;
 				if (funds.length === 0) {
 					this.setState({ is_data_loaded: null });
-					this.props.graphHandler();
+					this.props.graphHandler([]);
 					return;
 				}
 				var to_add_plot = this.props.to_add_plot;
 				await this.get_intrument_list(today, funds, to_add_plot);
-				this.props.graphHandler();
 				this.setState({ is_data_loaded: true });
 			}
 		}

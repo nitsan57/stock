@@ -17,6 +17,20 @@ export const ENGLISH = {
 	},
 
 	GRAPH: { WEEK_BUTTON: 'week', MONTH_BUTTON: 'month', YEAR_BUTTON: 'year', ALL_TIME_BUTTON: 'all-time' },
+
+	TABLE: {
+		STD: 'std',
+		MANAGMENT_FEE_HEADER: 'managment fee',
+		OVERALL_MANAGMENT_FEE_HEADER: 'total fixed fee',
+		TRUST_FEE_HEADER: 'trust fee',
+		MANAGMENT_VAR_FEE_HEADER: 'variable fee',
+		PRICE_HEADER: 'price',
+		FUND_NUMBER_HEADER: 'paper id',
+		NAME_HEADER: 'name',
+		NO_DATA_HEADER: 'no info avail',
+		CALCULATING_DATA_CELL: 'calculating..',
+		YIELD_HEADER: 'yield of shown period',
+	},
 };
 
 export const HEBREW = {
@@ -43,5 +57,19 @@ export const HEBREW = {
 		MONTH_BUTTON: 'חודש',
 		YEAR_BUTTON: 'שנה',
 		ALL_TIME_BUTTON: 'הכל',
+	},
+
+	TABLE: {
+		STD: 'שונות',
+		MANAGMENT_FEE_HEADER: 'דמי ניהול',
+		OVERALL_MANAGMENT_FEE_HEADER: 'דמי ניהול משוקלל',
+		TRUST_FEE_HEADER: 'דמי נאמנות',
+		MANAGMENT_VAR_FEE_HEADER: 'דמי ניהול משתנים',
+		PRICE_HEADER: 'שער',
+		FUND_NUMBER_HEADER: "מספר נ''ע",
+		NAME_HEADER: 'שם',
+		NO_DATA_HEADER: 'לא זמין',
+		CALCULATING_DATA_CELL: '...מחשב',
+		YIELD_HEADER: 'תשואת התקופה המוצגת',
 	},
 };
