@@ -1,8 +1,7 @@
 import React from 'react';
 import Search from './search_bar/Search';
-import * as Lang from './Utils/Lang';
-import * as StockMarket from './Stock_Getter/StockGetter';
-// import styles      from  ''
+import * as Lang from './utils/Lang';
+import * as StockMarket from './stock_getter/StockGetter';
 
 class App extends React.Component {
 	constructor() {

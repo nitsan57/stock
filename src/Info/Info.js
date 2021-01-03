@@ -1,5 +1,5 @@
 import React from 'react';
-import FundDisplay from '../Fund_Display/Fund_Display';
+import FundDisplay from '../fund_display/Fund_Display';
 
 class Info extends React.Component {
 	constructor(props) {
@@ -22,11 +22,9 @@ class Info extends React.Component {
 	}
 
 	componentDidUpdate(prevProps) {
-		if (this.props.funds !== prevProps.funds) {
-			if (this.props.is_button_pressed !== prevProps.is_button_pressed) {
-				if (this.props.is_button_pressed && (this.props.funds.length === 0 || !this.props.to_add_plot)) {
-					this.setState({ info: [] });
-				}
+		if (this.props.funds.length !== prevProps.funds.length) {
+			if (this.props.funds.length === 0 || !this.props.to_add_plot) {
+				this.setState({ info: [] });
 			}
 			this.get_table_data();
 			this.props.tableHandler();

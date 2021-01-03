@@ -150,8 +150,9 @@ class Graph extends React.Component {
 	async componentDidUpdate(prevProps) {
 		// console.log('graph comp mount');
 		// Typical usage (don't forget to compare props):
-		if (this.props.is_button_pressed !== prevProps.is_button_pressed) {
-			if (this.props.is_button_pressed) {
+		if (this.props.funds.length !== prevProps.funds.length) {
+			if (this.props.funds.length !== 0) {
+				console.log('here graph');
 				this.setState({ is_data_loaded: false });
 				var today = this.props.today;
 				var funds = this.props.funds;

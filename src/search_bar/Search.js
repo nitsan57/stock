@@ -5,20 +5,20 @@ import Loader from 'react-loader-spinner';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CheckBox from '../Check_Box/Check_Box';
-import * as Consts from '../Utils/Consts';
 
+const NUM_LOADING_CHILDREN = 2;
 class Search extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			search_keyword: 'תא 35',
+			search_keyword: this.props.text_lang.DEFAULT_SEARCH_KEYWORD,
 			num_child_loaded: 0,
 			is_button_pressed: false,
 			to_add_plot: false,
 			fund_set: new Set(),
 			fund_list: [],
 			info_list: [],
-			search_message: 'חפש',
+			search_message: this.props.text_lang.DEFAULT_SEARCH_MSG,
 			today: this.get_today(),
 			stock_market: this.props.stock_market,
 			search_checkbox: [
@@ -31,6 +31,7 @@ class Search extends React.Component {
 		};
 		this.clearSearch = this.clearSearch.bind(this);
 		this.setStateAsync = this.setStateAsync.bind(this);
+		this.finish_loading = this.finish_loading.bind(this);
 	}
 
 	contains = (target, patterns) => {
@@ -65,6 +66,11 @@ class Search extends React.Component {
 		let leveraged = this.state.search_checkbox[1]['isChecked'];
 		let short = this.state.search_checkbox[2]['isChecked'];
 		let normal_stock = this.state.search_checkbox[3]['isChecked'];
+		this.setState({ search_message: this.props.text_lang.IN_PROGRESS });
+		this.setState({ num_child_loaded: 0 });
+		this.setState({ is_button_pressed: true });
+
+		let prev_size = this.state.fund_set.size;
 
 		let search_res = await this.state.stock_market.search(
 			this.state.search_keyword,
@@ -74,7 +80,16 @@ class Search extends React.Component {
 			short,
 			normal_stock
 		);
-		this.setState({ search_message: this.props.text_lang.IN_PROGRESS });
+
+		console.log(this.state.fund_set.size, prev_size);
+		if (this.state.fund_set.size === prev_size && this.state.to_add_plot) {
+			this.setState({
+				search_message: this.props.text_lang.NO_NEW_FUND_TO_ADD,
+			});
+			this.setState({ num_child_loaded: 0 });
+			this.setState({ is_button_pressed: false });
+			return;
+		}
 
 		if (search_res === -1) {
 			this.setState({
@@ -101,8 +116,6 @@ class Search extends React.Component {
 
 		this.setState({ info_list: new_info_list });
 		this.setState({ fund_list: new_fund_list });
-		this.setState({ is_button_pressed: true });
-		this.setState({ num_child_loaded: 0 });
 	}
 
 	setStateAsync(state) {
@@ -112,9 +125,9 @@ class Search extends React.Component {
 	}
 
 	async clearSearch() {
-		// this.setState({ fund_set: new Set() });
 		await this.setStateAsync({ fund_set: new Set() });
 		this.state.fund_list.splice(0, this.state.fund_list.length);
+		this.state.info_list.splice(0, this.state.info_list.length);
 		this.setState({ to_add_plot: false });
 		this.search();
 	}
@@ -130,14 +143,21 @@ class Search extends React.Component {
 	};
 
 	graphHandler = () => {
-		this.setState({ is_button_pressed: false });
 		this.setState({ to_add_plot: false });
 		this.setState({ num_child_loaded: this.state.num_child_loaded + 1 });
+		this.finish_loading();
 	};
 
 	tableHandler = () => {
 		this.setState({ num_child_loaded: this.state.num_child_loaded + 1 });
+		this.finish_loading();
 	};
+
+	finish_loading() {
+		if (this.state.num_child_loaded === NUM_LOADING_CHILDREN) {
+			this.setState({ is_button_pressed: false });
+		}
+	}
 
 	checkBoxHandleAllChecked = (event) => {
 		let options = this.state.search_checkbox;
@@ -248,16 +268,15 @@ class Search extends React.Component {
 						today={this.state.today}
 						funds={this.state.info_list}
 						graphHandler={this.graphHandler}
-						is_button_pressed={this.state.is_button_pressed}
 						to_add_plot={this.state.to_add_plot}
 						stock_market={this.state.stock_market}
+						num_child_loaded={this.state.num_child_loaded}
 					/>
 				</div>
 				<Info
 					funds={this.state.fund_list}
 					info={this.state.info_list}
 					tableHandler={this.tableHandler}
-					is_button_pressed={this.state.is_button_pressed}
 					to_add_plot={this.state.to_add_plot}
 					stock_market={this.state.stock_market}
 				/>
