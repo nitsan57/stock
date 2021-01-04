@@ -36,9 +36,11 @@ class Info extends React.Component {
 		return (
 			<div>
 				<FundDisplay
-					info={this.state.info}
+					info={this.props.info}
 					text_lang={this.state.text_lang}
 					graph_yield_values={this.props.graph_yield_values}
+					funds={this.props.fund_list}
+					RemoveRowFromGraphHandler={this.props.RemoveRowFromGraphHandler}
 				/>
 			</div>
 		);

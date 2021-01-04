@@ -177,6 +177,11 @@ class Search extends React.Component {
 		this.setState({ search_checkbox: options });
 	};
 
+	RemoveRowFromGraphHandler = (newInfo) => {
+		this.setState({ info_list: newInfo });
+		// this.setState({ fund_list: newInfo });
+	};
+
 	render() {
 		let loading = (
 			<form>
@@ -284,6 +289,7 @@ class Search extends React.Component {
 					stock_market={this.state.stock_market}
 					text_lang={this.state.text_lang}
 					graph_yield_values={this.state.graph_yield_values}
+					RemoveRowFromGraphHandler={this.RemoveRowFromGraphHandler}
 				/>
 			</div>
 		);

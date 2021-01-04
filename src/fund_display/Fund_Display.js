@@ -134,19 +134,16 @@ class FundDisplay extends React.Component {
 		}
 	}
 	removeFromGraph = (row) => {
-		console.log(this.props.info);
-		console.log(row);
 		let info_ix = 0;
 		let new_info = this.props.info;
 		for (info_ix = 0; info_ix < this.props.info.length; info_ix++) {
 			if (new_info[info_ix].id == row.row.fnum) {
 				this.props.info.splice(info_ix, 1);
-				console.log('done');
 				break;
 			}
 		}
 		this.updateInfo();
-		console.log(this.props.info);
+		this.props.RemoveRowFromGraphHandler(this.props.info);
 	};
 	render() {
 		if (this.state.currentrows.length !== 0) {
