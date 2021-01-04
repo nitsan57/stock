@@ -96,6 +96,28 @@ class FundDisplay extends React.Component {
 		};
 	}
 
+	updateInfo = () => {
+		this.setState({ currentrows: [] });
+		let i;
+		const rows = [];
+		for (i = 0; i < this.props.info.length; i++) {
+			rows.push(
+				this.createData(
+					this.props.info[i]['name'],
+					this.props.info[i]['id'],
+					this.props.info[i]['managment_fee'],
+					this.props.info[i]['truste_fee'],
+					this.props.info[i]['var_fee'],
+					this.props.info[i]['price'],
+					this.props.info[i]['std'],
+					this.props.graph_yield_values[i],
+					i
+				)
+			);
+		}
+		this.setState({ currentrows: rows });
+	};
+
 	componentDidMount() {}
 
 	componentDidUpdate(prevProps) {
@@ -108,34 +130,29 @@ class FundDisplay extends React.Component {
 			this.setState({ currentrows }); //update the value
 		}
 		if (this.props.info !== prevProps.info) {
-			this.setState({ currentrows: [] });
-			let i;
-			const rows = [];
-			for (i = 0; i < this.props.info.length; i++) {
-				rows.push(
-					this.createData(
-						this.props.info[i]['name'],
-						this.props.info[i]['id'],
-						this.props.info[i]['managment_fee'],
-						this.props.info[i]['truste_fee'],
-						this.props.info[i]['var_fee'],
-						this.props.info[i]['price'],
-						this.props.info[i]['std'],
-						this.props.graph_yield_values[i],
-						i
-					)
-				);
-			}
-			this.setState({ currentrows: rows });
+			this.updateInfo();
 		}
 	}
-
+	removeFromGraph = (row) => {
+		console.log(this.props.info);
+		console.log(row);
+		let info_ix = 0;
+		let new_info = this.props.info;
+		for (info_ix = 0; info_ix < this.props.info.length; info_ix++) {
+			if (new_info[info_ix].id == row.row.fnum) {
+				this.props.info.splice(info_ix, 1);
+				console.log('done');
+				break;
+			}
+		}
+		this.updateInfo();
+		console.log(this.props.info);
+	};
 	render() {
 		if (this.state.currentrows.length !== 0) {
 			return (
 				<div style={{ height: 440, width: '100%' }}>
 					<DataGrid
-						// checkboxSelection
 						showColumnRightBorder={true}
 						showCellRightBorder={true}
 						rtlEnabled={true}
@@ -143,6 +160,7 @@ class FundDisplay extends React.Component {
 						rowsPerPageOptions={[10, 20, 45]}
 						rows={this.state.currentrows}
 						columns={this.state.columns}
+						onRowClick={this.removeFromGraph}
 					/>
 				</div>
 			);
