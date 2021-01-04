@@ -4,7 +4,7 @@ import Info from '../Info/Info';
 import Loader from 'react-loader-spinner';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CheckBox from '../Check_Box/Check_Box';
+import CheckBox from '../check_box/Check_Box';
 
 const NUM_LOADING_CHILDREN = 2;
 class Search extends React.Component {
