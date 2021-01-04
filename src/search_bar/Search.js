@@ -96,6 +96,7 @@ class Search extends React.Component {
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.NO_RESULT_KEY_WORDS,
 			});
+			this.setState({ is_button_pressed: false });
 			return;
 		} else {
 			new_fund_list = search_res[0];
@@ -106,12 +107,14 @@ class Search extends React.Component {
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.NO_RESULTS_FOR_FILTERS,
 			});
+			this.setState({ is_button_pressed: false });
 			return;
 		}
 		if (new_info_list.length > 45) {
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.TO_MANY_RESULTS,
 			});
+			this.setState({ is_button_pressed: false });
 			return;
 		}
 
