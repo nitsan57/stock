@@ -151,6 +151,7 @@ class FundDisplay extends React.Component {
 				return (
 					<div style={{ height: 440, width: '100%' }}>
 						<DataGrid
+							checkboxSelection
 							showColumnRightBorder={true}
 							showCellRightBorder={true}
 							rtlEnabled={true}

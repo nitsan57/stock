@@ -138,7 +138,15 @@ class Graph extends React.Component {
 				graph_yield_values.push(y[y.length - 1]);
 			}
 
-			let xticks = parseInt(x.length / 10);
+			let xticks = [];
+			let mark_jump_const = Math.max(parseInt(x.length / 10), 1);
+			let current_jump;
+			let boundry = Math.min(10, x.length - 1);
+			for (i = 0; i < boundry; i++) {
+				current_jump = i * mark_jump_const;
+				xticks.push(x[current_jump]);
+			}
+			xticks.push(x[x.length - 1]);
 			this.setState({ xticks: xticks });
 
 			this.setState({ data: res });
@@ -176,7 +184,7 @@ class Graph extends React.Component {
 	}
 
 	range_change(value) {
-		let date_range_len = this.state.dates.length - 1;
+		let date_range_len = this.state.dates.length;
 		if (value === 'week') {
 			value = [Math.max(date_range_len - 5, 0), date_range_len];
 			this.slider_change_val(value);
@@ -197,9 +205,9 @@ class Graph extends React.Component {
 	range_params(x_axis) {
 		let marks = {};
 		let i = 0;
-		let mark_jump_const = parseInt((x_axis.length - 1) / 10);
+		let mark_jump_const = parseInt(x_axis.length / 10);
 		let current_jump;
-		for (i = 0; i < 9; i++) {
+		for (i = 0; i < 10; i++) {
 			current_jump = i * mark_jump_const;
 			marks[current_jump] = x_axis[current_jump];
 		}
@@ -236,10 +244,9 @@ class Graph extends React.Component {
 							yaxis: { tickformat: ',.0%' },
 							responsive: true,
 							xaxis: {
-								tickmode: 'linear', //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+								tickmode: 'array', //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
 								tick0: 0,
-								nticks: 10,
-								dtick: this.state.xticks,
+								tickvals: this.state.xticks,
 							},
 						}}
 						useResizeHandler={true}
