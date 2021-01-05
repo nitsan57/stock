@@ -76,15 +76,17 @@ class Graph extends React.Component {
 			instrument_array_promise = raw_data[k]['value'];
 			len = instrument_array_promise.length;
 			instrument_raw_array = await Promise.allSettled(instrument_array_promise);
+
 			for (z = 0; z < len; z++) {
 				status = instrument_raw_array[z]['status'];
 				value = instrument_raw_array[z]['value'];
+
 				value = JSON.parse(value);
 				firstKey = Object.keys(value)[0];
-
 				if (status !== 'fulfilled' || value[firstKey].length === 0) {
 					break;
 				}
+
 				instrument_data_array = instrument_data_array.concat(value[firstKey]);
 			}
 			all_instruments_array.push(instrument_data_array);
@@ -99,12 +101,14 @@ class Graph extends React.Component {
 		await Promise.allSettled(raw_data_input).then(async (raw_data) => {
 			var value;
 			let data_array = await this.prepare_data(raw_data);
+
 			var min_data_length = 100000;
 			var i;
 
 			for (i = 0; i < data_array.length; i++) {
 				value = data_array[i];
 				var d_length = value.length;
+
 				if (min_data_length > d_length) {
 					min_data_length = d_length;
 				}
@@ -127,7 +131,8 @@ class Graph extends React.Component {
 					data_array,
 					min_data_length,
 					start_date,
-					i
+					i,
+					this.props.min_days
 				);
 				var temp_data = this.create_graph_data(x, y, name);
 				res.push(temp_data);
@@ -147,7 +152,7 @@ class Graph extends React.Component {
 	}
 
 	async get_intruments_data(today, instruments, raw_data) {
-		this.state.stock_market.get_instrument_chart_data(today, instruments, raw_data);
+		this.state.stock_market.get_instrument_chart_data(today, instruments, raw_data, this.props.min_days);
 		this.setState({ raw_data: raw_data });
 		await this.get_graph_data(raw_data, instruments, [0, 0]);
 	}
@@ -174,13 +179,13 @@ class Graph extends React.Component {
 	range_change(value) {
 		let date_range_len = this.state.dates.length - 1;
 		if (value === 'week') {
-			value = [Math.max(date_range_len - 7, 0), date_range_len];
+			value = [Math.max(date_range_len - 5, 0), date_range_len];
 			this.slider_change_val(value);
 		} else if (value === 'month') {
-			value = [Math.max(date_range_len - 30, 0), date_range_len];
+			value = [Math.max(date_range_len - 22, 0), date_range_len];
 			this.slider_change_val(value);
 		} else if (value === 'year') {
-			value = [Math.max(date_range_len - 365, 0), date_range_len];
+			value = [Math.max(date_range_len - 250, 0), date_range_len]; //working days
 			this.slider_change_val(value);
 		} else if (value === 'all-time') {
 			value = [0, date_range_len];
@@ -195,13 +200,14 @@ class Graph extends React.Component {
 		let i = 0;
 		let mark_jump_const = parseInt((x_axis.length - 1) / 10);
 		let current_jump;
-		for (i = 0; i < 10; i++) {
+		for (i = 0; i < 9; i++) {
 			current_jump = i * mark_jump_const;
 			marks[current_jump] = x_axis[current_jump];
 		}
+		marks[x_axis.length - 1] = x_axis[x_axis.length - 1];
 		return {
 			min: 0,
-			max: x_axis.length,
+			max: x_axis.length - 1,
 			marks: marks,
 		};
 	}
@@ -233,6 +239,7 @@ class Graph extends React.Component {
 							xaxis: {
 								tickmode: 'linear', //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
 								tick0: 0,
+								nticks: 10,
 								dtick: this.state.xticks,
 							},
 						}}

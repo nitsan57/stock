@@ -53,7 +53,16 @@ async function keep_relevant_data(funds) {
 	return [fund_l, keep_info]; // to wait one time only
 }
 
-export async function search(search_keyword, fund_set, imitating, leveraged, short, normal_stock) {
+function get_today() {
+	var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+
+	today = yyyy + '-' + mm + '-' + dd;
+	return today;
+}
+export async function search(search_keyword, fund_set, imitating, leveraged, short, normal_stock, today) {
 	let fund_l;
 	const filteredData = tase_info.filter((item) => {
 		var res = Object.keys(item).some((key) => String(item[key]).toLowerCase().includes(search_keyword));
@@ -96,6 +105,9 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 	let fund_data;
 	let type;
 	let subtype;
+	let init_date;
+	let max_date = '12/12/2015';
+	let min_days = 365 * 5;
 	// let bond_fund;
 	for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
 		fund_data = fund_l[raw_ix];
@@ -112,6 +124,11 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 				mutual_data = fund_data;
 			} else {
 				mutual_data = etf_data['FundDetails'];
+			}
+
+			init_date = mutual_data['ProspectusPubDate'];
+			if (init_date > max_date) {
+				max_date = init_date;
 			}
 
 			if (subtype === Consts.SUB_TYPE_ID.ABROAD_FUND || subtype === Consts.SUB_TYPE_ID.ABROAD_BOND) {
@@ -141,19 +158,30 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 			if (!normal_stock) {
 				continue;
 			}
+			init_date = '12/12/2010';
+
+			if (init_date > max_date) {
+				max_date = init_date;
+			}
 			new_fund_list.push(fund_data);
 			new_info_list.push(keep_info[raw_ix]);
 		}
 	}
-	return [new_fund_list, new_info_list];
+	let date1 = new Date(max_date);
+	let date2 = new Date(today);
+	let diffTime = Math.abs(date2 - date1);
+	min_days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+	return [min_days, new_fund_list, new_info_list];
 }
 
-function fetch_fund(today, instrument, raw_data) {
+function fetch_fund(today, instrument, raw_data, min_days) {
 	var temp_res = [];
 	let year = today.split('-')[0];
 	let before_5 = today.replace(year, year - 5);
 	var i;
-	for (i = 1; i < 42; i++) {
+	let num_pages = parseInt((min_days / 30) * 0.8); //since we have about 68% working days in a year, and 30 data points per page
+	for (i = 1; i < num_pages; i++) {
 		var instrument_id = instrument['id'];
 		var url = 'https://mayaapi.tase.co.il/api/fund/history';
 
@@ -174,12 +202,13 @@ function fetch_fund(today, instrument, raw_data) {
 	raw_data.push(temp_res);
 }
 
-function fetch_security(today, instrument, raw_data) {
+function fetch_security(today, instrument, raw_data, min_days) {
 	var temp_res = [];
 	var i;
 	let year = today.split('-')[0];
 	let before_5 = today.replace(year, year - 5);
-	for (i = 1; i < 45; i++) {
+	let num_pages = parseInt((min_days / 30) * 0.8); //since we have about 68% working days in a year, and 30 data points per page
+	for (i = 1; i < num_pages; i++) {
 		var instrument_id = instrument['id'];
 		var url = 'https://api.tase.co.il/api/security/historyeod';
 		var data = {
@@ -197,7 +226,7 @@ function fetch_security(today, instrument, raw_data) {
 	raw_data.push(temp_res);
 }
 
-export function get_instrument_chart_data(today, instruments, raw_data) {
+export function get_instrument_chart_data(today, instruments, raw_data, min_days) {
 	let i;
 	let instrument;
 	let add_len = raw_data.length;
@@ -206,9 +235,9 @@ export function get_instrument_chart_data(today, instruments, raw_data) {
 		instrument = instruments[i];
 		var instrument_id = instrument['id'];
 		if (String(instrument_id)[0] === '1' || (instrument['type'] === '1' && instrument['subtype'] === '1')) {
-			fetch_security(today, instrument, raw_data);
+			fetch_security(today, instrument, raw_data, min_days);
 		} else {
-			fetch_fund(today, instrument, raw_data);
+			fetch_fund(today, instrument, raw_data, min_days);
 		}
 	}
 }

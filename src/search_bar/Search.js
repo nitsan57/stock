@@ -18,6 +18,7 @@ class Search extends React.Component {
 			fund_set: new Set(),
 			fund_list: [],
 			info_list: [],
+			min_days: 0,
 			search_message: this.props.text_lang.SEARCH.DEFAULT_SEARCH_MSG,
 			today: this.get_today(),
 			stock_market: this.props.stock_market,
@@ -64,6 +65,7 @@ class Search extends React.Component {
 	async search() {
 		let new_fund_list;
 		let new_info_list;
+		let min_days;
 		let imitating = this.state.search_checkbox[0]['isChecked'];
 		let leveraged = this.state.search_checkbox[1]['isChecked'];
 		let short = this.state.search_checkbox[2]['isChecked'];
@@ -80,7 +82,8 @@ class Search extends React.Component {
 			imitating,
 			leveraged,
 			short,
-			normal_stock
+			normal_stock,
+			this.state.today
 		);
 
 		if (this.state.fund_set.size === prev_size && this.state.to_add_plot) {
@@ -99,8 +102,9 @@ class Search extends React.Component {
 			this.setState({ is_button_pressed: false });
 			return;
 		} else {
-			new_fund_list = search_res[0];
-			new_info_list = search_res[1];
+			min_days = search_res[0];
+			new_fund_list = search_res[1];
+			new_info_list = search_res[2];
 		}
 
 		if (new_info_list.length === 0) {
@@ -118,10 +122,9 @@ class Search extends React.Component {
 			return;
 		}
 
-		console.log(new_info_list);
-
 		this.setState({ info_list: new_info_list });
 		this.setState({ fund_list: new_fund_list });
+		this.setState({ min_days: min_days });
 	}
 
 	setStateAsync(state) {
@@ -278,6 +281,7 @@ class Search extends React.Component {
 					<Graph
 						today={this.state.today}
 						funds={this.state.info_list}
+						min_days={this.state.min_days}
 						graphHandler={this.graphHandler}
 						to_add_plot={this.state.to_add_plot}
 						stock_market={this.state.stock_market}
