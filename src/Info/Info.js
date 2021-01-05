@@ -36,7 +36,7 @@ class Info extends React.Component {
 		return (
 			<div>
 				<FundDisplay
-					info={this.props.info}
+					info={this.state.info}
 					text_lang={this.state.text_lang}
 					graph_yield_values={this.props.graph_yield_values}
 					funds={this.props.fund_list}

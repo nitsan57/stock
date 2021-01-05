@@ -118,6 +118,8 @@ class Search extends React.Component {
 			return;
 		}
 
+		console.log(new_info_list);
+
 		this.setState({ info_list: new_info_list });
 		this.setState({ fund_list: new_fund_list });
 	}
@@ -182,7 +184,6 @@ class Search extends React.Component {
 
 	RemoveRowFromGraphHandler = (newInfo) => {
 		this.setState({ info_list: newInfo });
-		// this.setState({ fund_list: newInfo });
 	};
 
 	render() {
