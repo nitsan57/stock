@@ -185,8 +185,13 @@ class Search extends React.Component {
 		this.setState({ search_checkbox: options });
 	};
 
-	RemoveRowFromGraphHandler = (newInfo) => {
+	RemoveRowFromGraphHandler = (newInfo, newFund) => {
+		console.log('funds', this.state.fund_list);
+		console.log('info', this.state.info_list);
+		this.setState({ info_list: [] });
+		this.setState({ fund_list: [] });
 		this.setState({ info_list: newInfo });
+		this.setState({ fund_list: newFund });
 	};
 
 	render() {

@@ -1,10 +1,12 @@
 import React from 'react';
 import { DataGrid } from '@material-ui/data-grid';
+import Button from '@material-ui/core/Button';
 
 class FundDisplay extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			selected: [],
 			currentrows: [],
 			is_data_loaded: null,
 			text_lang: this.props.text_lang,
@@ -145,13 +147,35 @@ class FundDisplay extends React.Component {
 		this.updateInfo();
 		this.props.RemoveRowFromGraphHandler(this.props.info);
 	};
+
+	handleRowSelection = (row) => {
+		this.setState({ selected: row });
+	};
+
+	cleanInfoTable = () => {
+		if (this.state.selected != undefined) {
+			const _ = require('lodash');
+			let indexToRemove = [];
+			let i;
+			for (i = 0; i < this.state.selected.rowIds.length; i++) {
+				indexToRemove.push(this.state.selected.rowIds[i] - 1);
+			}
+			_.pullAt(this.props.info, indexToRemove);
+			_.pullAt(this.props.funds, indexToRemove);
+			this.updateInfo();
+			this.props.RemoveRowFromGraphHandler(this.props.info, this.props.funds);
+		}
+	};
+
 	render() {
 		if (this.state.currentrows.length !== 0) {
-			if (this.state.currentrows[0]['graph_yield_value'] !== undefined) {
+			if (
+				this.state.currentrows[0] !== undefined &&
+				this.state.currentrows[0]['graph_yield_value'] !== undefined
+			) {
 				return (
 					<div style={{ height: 440, width: '100%' }}>
 						<DataGrid
-							checkboxSelection
 							showColumnRightBorder={true}
 							showCellRightBorder={true}
 							rtlEnabled={true}
@@ -160,7 +184,22 @@ class FundDisplay extends React.Component {
 							rows={this.state.currentrows}
 							columns={this.state.columns}
 							onRowClick={this.removeFromGraph}
+							checkboxSelection
+							onSelectionChange={this.handleRowSelection}
 						/>
+
+						<Button
+							style={{
+								position: 'absolute',
+								bottom: 0,
+								left: 400,
+							}}
+							variant="contained"
+							color="primary"
+							onClick={this.cleanInfoTable}
+						>
+							סנן
+						</Button>
 					</div>
 				);
 			} else {

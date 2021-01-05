@@ -39,7 +39,7 @@ class Info extends React.Component {
 					info={this.state.info}
 					text_lang={this.state.text_lang}
 					graph_yield_values={this.props.graph_yield_values}
-					funds={this.props.fund_list}
+					funds={this.props.funds}
 					RemoveRowFromGraphHandler={this.props.RemoveRowFromGraphHandler}
 				/>
 			</div>
