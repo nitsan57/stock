@@ -75,8 +75,7 @@ class Graph extends React.Component {
 		for (k = 0; k < raw_data.length; k++) {
 			instrument_array_promise = raw_data[k]['value'];
 			len = instrument_array_promise.length;
-			instrument_raw_array = await Promise.allSettled(instrument_array_promise);
-
+			instrument_raw_array = instrument_array_promise;
 			for (z = 0; z < len; z++) {
 				status = instrument_raw_array[z]['status'];
 				value = instrument_raw_array[z]['value'];
@@ -98,7 +97,7 @@ class Graph extends React.Component {
 
 	async get_graph_data(raw_data_input, instruments, date_range) {
 		let graph_yield_values = [];
-		await Promise.allSettled(raw_data_input).then(async (raw_data) => {
+		await Promise.allSettled(raw_data_input.map(Promise.allSettled.bind(Promise))).then(async (raw_data) => {
 			var value;
 			let data_array = await this.prepare_data(raw_data);
 
