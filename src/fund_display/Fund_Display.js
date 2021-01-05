@@ -121,6 +121,9 @@ class FundDisplay extends React.Component {
 	componentDidMount() {}
 
 	componentDidUpdate(prevProps) {
+		if (this.props.info !== prevProps.info) {
+			this.updateInfo();
+		}
 		if (this.props.graph_yield_values !== prevProps.graph_yield_values) {
 			let i;
 			let currentrows = [...this.state.currentrows]; // create the copy of state array
@@ -128,9 +131,6 @@ class FundDisplay extends React.Component {
 				currentrows[i]['graph_yield_value'] = (this.props.graph_yield_values[i] * 100).toFixed(2);
 			}
 			this.setState({ currentrows }); //update the value
-		}
-		if (this.props.info !== prevProps.info) {
-			this.updateInfo();
 		}
 	}
 	removeFromGraph = (row) => {
@@ -147,20 +147,24 @@ class FundDisplay extends React.Component {
 	};
 	render() {
 		if (this.state.currentrows.length !== 0) {
-			return (
-				<div style={{ height: 440, width: '100%' }}>
-					<DataGrid
-						showColumnRightBorder={true}
-						showCellRightBorder={true}
-						rtlEnabled={true}
-						pageSize={10}
-						rowsPerPageOptions={[10, 20, 45]}
-						rows={this.state.currentrows}
-						columns={this.state.columns}
-						onRowClick={this.removeFromGraph}
-					/>
-				</div>
-			);
+			if (this.state.currentrows[0]['graph_yield_value'] !== undefined) {
+				return (
+					<div style={{ height: 440, width: '100%' }}>
+						<DataGrid
+							showColumnRightBorder={true}
+							showCellRightBorder={true}
+							rtlEnabled={true}
+							pageSize={10}
+							rowsPerPageOptions={[10, 20, 45]}
+							rows={this.state.currentrows}
+							columns={this.state.columns}
+							onRowClick={this.removeFromGraph}
+						/>
+					</div>
+				);
+			} else {
+				return null;
+			}
 		} else {
 			return null;
 		}
