@@ -53,15 +53,6 @@ async function keep_relevant_data(funds) {
 	return [fund_l, keep_info]; // to wait one time only
 }
 
-function get_today() {
-	var today = new Date();
-	var dd = String(today.getDate()).padStart(2, '0');
-	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-	var yyyy = today.getFullYear();
-
-	today = yyyy + '-' + mm + '-' + dd;
-	return today;
-}
 export async function search(search_keyword, fund_set, imitating, leveraged, short, normal_stock, today) {
 	let fund_l;
 	const filteredData = tase_info.filter((item) => {
@@ -176,54 +167,33 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 }
 
 function fetch_fund(today, instrument, raw_data, min_days) {
-	var temp_res = [];
 	let year = today.split('-')[0];
 	let before_5 = today.replace(year, year - 5);
-	var i;
-	let num_pages = parseInt((min_days / 30) * 0.8); //since we have about 68% working days in a year, and 30 data points per page
-	for (i = 1; i < num_pages; i++) {
-		var instrument_id = instrument['id'];
-		var url = 'https://mayaapi.tase.co.il/api/fund/history';
-
-		var data =
-			'DateFrom=' +
-			before_5 +
-			'&DateTo=' +
-			today +
-			'&FundId=' +
-			instrument_id +
-			'&Page=' +
-			String(i) +
-			'&Period=0';
-
-		let res = fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
-		temp_res.push(res);
-	}
-	raw_data.push(temp_res);
+	var instrument_id = instrument['id'];
+	var url = 'https://mayaapi.tase.co.il/api/download/fundhistory';
+	var data = 'DateFrom=' + before_5 + '&DateTo=' + today + '&FundId=' + instrument_id;
+	let res = fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
+	raw_data.push(res);
 }
 
 function fetch_security(today, instrument, raw_data, min_days) {
-	var temp_res = [];
-	var i;
 	let year = today.split('-')[0];
 	let before_5 = today.replace(year, year - 5);
-	let num_pages = parseInt((min_days / 30) * 0.8); //since we have about 68% working days in a year, and 30 data points per page
-	for (i = 1; i < num_pages; i++) {
-		var instrument_id = instrument['id'];
-		var url = 'https://api.tase.co.il/api/security/historyeod';
-		var data = {
-			dFrom: before_5,
-			dTo: today,
-			oId: instrument_id,
-			pageNum: i,
-			pType: '8',
-			TotalRec: 1,
-			lang: '1',
-		};
-		let res = fetch_data('POST', url, JSON.stringify(data), 'application/json');
-		temp_res.push(res);
-	}
-	raw_data.push(temp_res);
+	var instrument_id = instrument['id'];
+	var url = 'https://api.tase.co.il/api/ChartData/ChartData/';
+
+	let data =
+		'?ct=1&ot=1&lang=1&cf=0&cp=5&cv=0&cl=0&cgt=1&' +
+		'dFrom=' +
+		before_5 +
+		'&dTo=' +
+		today +
+		'&oid=' +
+		instrument_id;
+	url = url + data;
+
+	let res = fetch_data('GET', url, data, 'application/x-www-form-urlencoded');
+	raw_data.push(res);
 }
 
 export function get_instrument_chart_data(today, instruments, raw_data, min_days) {
@@ -242,6 +212,14 @@ export function get_instrument_chart_data(today, instruments, raw_data, min_days
 	}
 }
 
+export function extract_chart_length(instrument_data) {
+	let data = instrument_data['Data'];
+	if (data === undefined) {
+		data = instrument_data['PointsForHistoryChart'];
+	}
+	return data.length;
+}
+
 export function extract_chart_point(x, y, instruments, data_array, min_data_length, start_date, i) {
 	let value;
 	let name;
@@ -253,23 +231,27 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 	let year;
 	var month;
 	var day;
+
 	value = data_array[i];
+	let data = value['Data'];
+	if (data === undefined) {
+		data = value['PointsForHistoryChart'];
+	}
 	name = instruments[i]['name'];
 	y = [];
 	var rate;
-
 	for (j = min_data_length - 1; j >= start_date; j--) {
-		data_y_point = value[j]['CloseRate'];
-		rate = 'CloseRate';
+		data_y_point = data[j]['ClosingRate'];
+		rate = 'ClosingRate';
 		if (data_y_point === undefined) {
-			data_y_point = value[j]['PurchasePrice'];
+			data_y_point = data[j]['PurchasePrice'];
 			rate = 'PurchasePrice';
 		}
-		y_0 = value[min_data_length - 1][rate];
+		y_0 = data[min_data_length - 1][rate];
 		my_data = data_y_point / y_0;
 		y.push(my_data - 1);
 		if (i === 0) {
-			date = value[j]['TradeDate'].substring(0, 10).split('-');
+			date = data[j]['TradeDate'].substring(0, 10).split('-');
 			if (date.length === 1) {
 				x.push(date[0]);
 			} else {

@@ -62,54 +62,38 @@ class Graph extends React.Component {
 	}
 
 	async prepare_data(raw_data) {
-		var instrument_array_promise;
-		var z;
+		var instrument_array_promise_val;
 		var k;
-		var len;
-		var status;
-		var value;
+
 		let all_instruments_array = [];
-		let instrument_data_array = [];
-		var instrument_raw_array;
-		let firstKey;
+		let len;
+		let len_array = [];
+
 		for (k = 0; k < raw_data.length; k++) {
-			instrument_array_promise = raw_data[k]['value'];
-			len = instrument_array_promise.length;
-			instrument_raw_array = instrument_array_promise;
-			for (z = 0; z < len; z++) {
-				status = instrument_raw_array[z]['status'];
-				value = instrument_raw_array[z]['value'];
-
-				value = JSON.parse(value);
-				firstKey = Object.keys(value)[0];
-				if (status !== 'fulfilled' || value[firstKey].length === 0) {
-					break;
-				}
-
-				instrument_data_array = instrument_data_array.concat(value[firstKey]);
-			}
-			all_instruments_array.push(instrument_data_array);
-
-			instrument_data_array = [];
+			instrument_array_promise_val = JSON.parse(raw_data[k]['value']);
+			all_instruments_array.push(instrument_array_promise_val);
+			len = this.state.stock_market.extract_chart_length(instrument_array_promise_val);
+			len_array.push(len);
 		}
-		return all_instruments_array;
+		return [len_array, all_instruments_array];
 	}
 
 	async get_graph_data(raw_data_input, instruments, date_range) {
 		let graph_yield_values = [];
-		await Promise.allSettled(raw_data_input.map(Promise.allSettled.bind(Promise))).then(async (raw_data) => {
-			var value;
-			let data_array = await this.prepare_data(raw_data);
+
+		await Promise.allSettled(raw_data_input).then(async (raw_data) => {
+			let len_array;
+			let data_array;
+			[len_array, data_array] = await this.prepare_data(raw_data);
 
 			var min_data_length = 100000;
 			var i;
+			let curr_len;
+			for (i = 0; i < len_array.length; i++) {
+				curr_len = len_array[i];
 
-			for (i = 0; i < data_array.length; i++) {
-				value = data_array[i];
-				var d_length = value.length;
-
-				if (min_data_length > d_length) {
-					min_data_length = d_length;
+				if (min_data_length > curr_len) {
+					min_data_length = curr_len;
 				}
 			}
 			var name;
