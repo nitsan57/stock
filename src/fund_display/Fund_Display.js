@@ -99,7 +99,6 @@ class FundDisplay extends React.Component {
 	}
 
 	updateInfo = () => {
-		// this.setState({ currentrows: [] });
 		let i;
 		const rows = [];
 		for (i = 0; i < this.props.info.length; i++) {
@@ -134,10 +133,10 @@ class FundDisplay extends React.Component {
 	componentDidMount() {}
 
 	componentDidUpdate(prevProps) {
+		this.update_from_graph(prevProps);
 		if (this.props.info !== prevProps.info) {
 			this.updateInfo();
 		}
-		this.update_from_graph(prevProps);
 	}
 
 	handleRowSelection = (row) => {
@@ -149,20 +148,20 @@ class FundDisplay extends React.Component {
 			let indexToRemove = [];
 			let ids_to_remove = [];
 			let i;
+
 			for (i = 0; i < this.state.selected.rowIds.length; i++) {
 				indexToRemove.push(this.state.selected.rowIds[i] - 1);
+
 				ids_to_remove.push(this.props.info[this.state.selected.rowIds[i] - 1].id);
 			}
 			this.props.RemoveRowFromGraphHandler(ids_to_remove, indexToRemove);
+			this.setState({ selected: undefined });
 		}
 	};
 
 	render() {
 		if (this.state.currentrows.length !== 0) {
-			if (
-				this.state.currentrows[0] !== undefined &&
-				this.state.currentrows[0]['graph_yield_value'] !== undefined
-			) {
+			if (this.state.currentrows[0] !== undefined && !isNaN(this.state.currentrows[0]['graph_yield_value'])) {
 				return (
 					<div style={{ height: 440, width: '100%' }}>
 						<DataGrid

@@ -207,7 +207,7 @@ class Search extends React.Component {
 				this.state.fund_set.delete(point);
 			}
 		});
-		await this.setStateAsync({ indices_to_remove: indices_to_remove });
+		this.setStateAsync({ indices_to_remove: indices_to_remove });
 
 		this.remove_state_incdices('fund_list', this.state.fund_list, indices_to_remove);
 		this.remove_state_incdices('info_list', this.state.fund_list, indices_to_remove);

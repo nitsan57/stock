@@ -44,7 +44,6 @@ class Info extends React.Component {
 		if (this.props.funds.length !== prevProps.funds.length) {
 			if (this.props.indices_to_remove.length !== 0) {
 				this.remove_state_incdices('info', this.state.info, this.props.indices_to_remove);
-
 				return;
 			}
 
