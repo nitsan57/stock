@@ -237,12 +237,11 @@ class Graph extends React.Component {
 	};
 
 	render() {
-		if (this.state.is_data_loaded == null) {
-			return null;
-		}
+		if (this.state.is_data_loaded == null) return null;
+		if (this.state.data.length === 0) return null;
+
 		if (this.state.is_data_loaded) {
 			let range_params = this.range_params(this.state.dates); //for div , width: '80%'
-
 			return (
 				<div
 					style={{
