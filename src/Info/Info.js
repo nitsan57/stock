@@ -34,7 +34,6 @@ class Info extends React.Component {
 		array = [...array_to_delete_from];
 
 		reverse_indices.forEach((i) => {
-			console.log(array.length, i);
 			array.splice(i, 1);
 		});
 		indices.reverse();

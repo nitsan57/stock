@@ -158,7 +158,6 @@ class Search extends React.Component {
 		this.setState({ num_child_loaded: this.state.num_child_loaded + 1 });
 		this.setState({ indices_to_remove: [] });
 		this.setState({ graph_yield_values: yield_values });
-		console.log(yield_values.length);
 		this.finish_loading();
 	};
 

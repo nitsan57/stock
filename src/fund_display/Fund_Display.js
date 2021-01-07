@@ -112,7 +112,7 @@ class FundDisplay extends React.Component {
 					this.props.info[i]['var_fee'],
 					this.props.info[i]['price'],
 					this.props.info[i]['std'],
-					this.props.graph_yield_values[i],
+					(this.props.graph_yield_values[i] * 100).toFixed(2),
 					i
 				)
 			);
@@ -120,13 +120,7 @@ class FundDisplay extends React.Component {
 		this.setState({ currentrows: rows });
 	};
 
-	componentDidMount() {}
-
-	componentDidUpdate(prevProps) {
-		if (this.props.info !== prevProps.info) {
-			this.updateInfo();
-		}
-
+	update_from_graph(prevProps) {
 		if (this.props.graph_yield_values !== prevProps.graph_yield_values) {
 			let i;
 			let currentrows = [...this.state.currentrows]; // create the copy of state array
@@ -135,6 +129,15 @@ class FundDisplay extends React.Component {
 			}
 			this.setState({ currentrows }); //update the value
 		}
+	}
+
+	componentDidMount() {}
+
+	componentDidUpdate(prevProps) {
+		if (this.props.info !== prevProps.info) {
+			this.updateInfo();
+		}
+		this.update_from_graph(prevProps);
 	}
 
 	handleRowSelection = (row) => {

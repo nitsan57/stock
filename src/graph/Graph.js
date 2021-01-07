@@ -161,7 +161,7 @@ class Graph extends React.Component {
 		indices.reverse(); // reverse back
 
 		this.setState({ [array_name]: array });
-		// return array;
+		return array;
 	}
 
 	async componentDidUpdate(prevProps) {
@@ -173,13 +173,13 @@ class Graph extends React.Component {
 				this.remove_state_incdices('data', this.state.data, this.props.indices_to_remove);
 				this.remove_state_incdices('raw_data', this.state.raw_data, this.props.indices_to_remove);
 				this.remove_state_incdices('instruments', this.state.instruments, this.props.indices_to_remove);
-				this.remove_state_incdices(
+				let res = this.remove_state_incdices(
 					'graph_yield_values',
 					this.state.graph_yield_values,
 					this.props.indices_to_remove
 				);
 
-				this.props.graphHandler(this.state.graph_yield_values);
+				this.props.graphHandler(res);
 				return;
 			}
 			this.setState({ is_data_loaded: false });
