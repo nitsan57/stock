@@ -18,6 +18,7 @@ class Search extends React.Component {
 			fund_set: new Set(),
 			fund_list: [],
 			info_list: [],
+			indices_to_remove: [],
 			min_days: 0,
 			search_message: this.props.text_lang.SEARCH.DEFAULT_SEARCH_MSG,
 			today: this.get_today(),
@@ -35,6 +36,7 @@ class Search extends React.Component {
 		this.clearSearch = this.clearSearch.bind(this);
 		this.setStateAsync = this.setStateAsync.bind(this);
 		this.finish_loading = this.finish_loading.bind(this);
+		this.RemoveRowFromGraphHandler = this.RemoveRowFromGraphHandler.bind(this);
 	}
 
 	contains = (target, patterns) => {
@@ -75,7 +77,6 @@ class Search extends React.Component {
 		this.setState({ is_button_pressed: true });
 
 		let prev_size = this.state.fund_set.size;
-
 		let search_res = await this.state.stock_market.search(
 			this.state.search_keyword,
 			this.state.fund_set,
@@ -155,6 +156,7 @@ class Search extends React.Component {
 	graphHandler = (yield_values) => {
 		this.setState({ to_add_plot: false });
 		this.setState({ num_child_loaded: this.state.num_child_loaded + 1 });
+		this.setState({ indices_to_remove: [] });
 		this.setState({ graph_yield_values: yield_values });
 		this.finish_loading();
 	};
@@ -185,14 +187,42 @@ class Search extends React.Component {
 		this.setState({ search_checkbox: options });
 	};
 
-	RemoveRowFromGraphHandler = (newInfo, newFund) => {
-		console.log('funds', this.state.fund_list);
-		console.log('info', this.state.info_list);
-		this.setState({ info_list: [] });
-		this.setState({ fund_list: [] });
-		this.setState({ info_list: newInfo });
-		this.setState({ fund_list: newFund });
-	};
+	// remove_state_incdices(array_to_delete_from, indices){
+	// 	let array;
+	// 	indices.forEach((i) => {
+	// 		array = [...array_to_delete_from]; // make a separate copy of the array
+	// 		array.splice(index, 1);
+
+	// 	}
+	// 	this.setState({people: array});
+
+	// }
+
+	async RemoveRowFromGraphHandler(ids_to_remove, indices_to_remove) {
+		let p_json;
+		this.state.fund_set.forEach((point) => {
+			p_json = JSON.parse(point);
+			if (ids_to_remove.includes(p_json.id)) {
+				this.state.fund_set.delete(point);
+			}
+		});
+		let reverse_indices = indices_to_remove.reverse();
+		let array;
+		array = [...this.state.fund_list];
+
+		reverse_indices.forEach((i) => {
+			array.splice(i, 1);
+		});
+		this.setState({ fund_list: array });
+
+		array = [...this.state.info_list];
+		reverse_indices.forEach((i) => {
+			array.splice(i, 1);
+		});
+		this.setState({ info_list: array });
+
+		await this.setStateAsync({ indices_to_remove: indices_to_remove });
+	}
 
 	render() {
 		let loading = (
@@ -292,6 +322,7 @@ class Search extends React.Component {
 						stock_market={this.state.stock_market}
 						num_child_loaded={this.state.num_child_loaded}
 						text_lang={this.state.text_lang}
+						indices_to_remove={this.state.indices_to_remove}
 					/>
 				</div>
 				<Info

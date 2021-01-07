@@ -83,7 +83,11 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 	}
 
 	for (var it = fund_set.values(), val = null; (val = it.next().value); ) {
+		// if (typeof val === 'string') {
 		funds_arr.push(JSON.parse(val));
+		// } else {
+		// 	funds_arr.push(val);
+		// }
 	}
 
 	[fund_l, keep_info] = await keep_relevant_data(funds_arr);

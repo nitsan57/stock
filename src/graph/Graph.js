@@ -13,6 +13,7 @@ class Graph extends React.Component {
 		this.state = {
 			raw_data: [],
 			instruments: [],
+			graph_yield_values: [],
 			data: [],
 			xticks: 5,
 			dates: [],
@@ -139,6 +140,7 @@ class Graph extends React.Component {
 				this.setState({ slider_values: [0, x.length - 1] });
 			}
 		});
+		this.setState({ graph_yield_values: graph_yield_values });
 		this.props.graphHandler(graph_yield_values);
 	}
 
@@ -150,20 +152,28 @@ class Graph extends React.Component {
 
 	async componentDidUpdate(prevProps) {
 		// Typical usage (don't forget to compare props):
+
 		if (this.props.funds.length !== prevProps.funds.length) {
-			if (this.props.funds.length !== 0) {
-				this.setState({ is_data_loaded: false });
-				var today = this.props.today;
-				var funds = this.props.funds;
-				if (funds.length === 0) {
-					this.setState({ is_data_loaded: null });
-					this.props.graphHandler([]);
-					return;
-				}
-				var to_add_plot = this.props.to_add_plot;
-				await this.get_intrument_list(today, funds, to_add_plot);
-				this.setState({ is_data_loaded: true });
+			if (this.props.indices_to_remove.length !== 0) {
+				const _ = require('lodash');
+				_.pullAt(this.state.data, this.props.indices_to_remove);
+				_.pullAt(this.state.raw_data, this.props.indices_to_remove);
+				_.pullAt(this.state.instruments, this.props.indices_to_remove);
+				_.pullAt(this.state.graph_yield_values, this.props.indices_to_remove);
+				this.props.graphHandler(this.state.graph_yield_values);
+				return;
 			}
+			this.setState({ is_data_loaded: false });
+			var today = this.props.today;
+			var funds = this.props.funds;
+			if (funds.length === 0) {
+				this.setState({ is_data_loaded: null });
+				this.props.graphHandler([]);
+				return;
+			}
+			var to_add_plot = this.props.to_add_plot;
+			await this.get_intrument_list(today, funds, to_add_plot);
+			this.setState({ is_data_loaded: true });
 		}
 	}
 

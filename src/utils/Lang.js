@@ -30,6 +30,7 @@ export const ENGLISH = {
 		NO_DATA_HEADER: 'no info avail',
 		CALCULATING_DATA_CELL: 'calculating..',
 		YIELD_HEADER: 'yield of shown period',
+		DELETE_BUTTON: 'delete selected',
 	},
 };
 
@@ -71,5 +72,6 @@ export const HEBREW = {
 		NO_DATA_HEADER: 'לא זמין',
 		CALCULATING_DATA_CELL: '...מחשב',
 		YIELD_HEADER: 'תשואת התקופה המוצגת',
+		DELETE_BUTTON: 'הסר מההשוואה',
 	},
 };

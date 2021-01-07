@@ -129,24 +129,12 @@ class FundDisplay extends React.Component {
 		if (this.props.graph_yield_values !== prevProps.graph_yield_values) {
 			let i;
 			let currentrows = [...this.state.currentrows]; // create the copy of state array
-			for (i = 0; i < this.props.info.length; i++) {
+			for (i = 0; i < currentrows.length; i++) {
 				currentrows[i]['graph_yield_value'] = (this.props.graph_yield_values[i] * 100).toFixed(2);
 			}
 			this.setState({ currentrows }); //update the value
 		}
 	}
-	removeFromGraph = (row) => {
-		let info_ix = 0;
-		let new_info = this.props.info;
-		for (info_ix = 0; info_ix < this.props.info.length; info_ix++) {
-			if (new_info[info_ix].id == row.row.fnum) {
-				this.props.info.splice(info_ix, 1);
-				break;
-			}
-		}
-		this.updateInfo();
-		this.props.RemoveRowFromGraphHandler(this.props.info);
-	};
 
 	handleRowSelection = (row) => {
 		this.setState({ selected: row });
@@ -154,16 +142,14 @@ class FundDisplay extends React.Component {
 
 	cleanInfoTable = () => {
 		if (this.state.selected != undefined) {
-			const _ = require('lodash');
 			let indexToRemove = [];
+			let ids_to_remove = [];
 			let i;
 			for (i = 0; i < this.state.selected.rowIds.length; i++) {
 				indexToRemove.push(this.state.selected.rowIds[i] - 1);
+				ids_to_remove.push(this.props.info[this.state.selected.rowIds[i] - 1].id);
 			}
-			_.pullAt(this.props.info, indexToRemove);
-			_.pullAt(this.props.funds, indexToRemove);
-			this.updateInfo();
-			this.props.RemoveRowFromGraphHandler(this.props.info, this.props.funds);
+			this.props.RemoveRowFromGraphHandler(ids_to_remove, indexToRemove);
 		}
 	};
 
@@ -183,7 +169,6 @@ class FundDisplay extends React.Component {
 							rowsPerPageOptions={[10, 20, 45]}
 							rows={this.state.currentrows}
 							columns={this.state.columns}
-							onRowClick={this.removeFromGraph}
 							checkboxSelection
 							onSelectionChange={this.handleRowSelection}
 						/>
@@ -198,7 +183,7 @@ class FundDisplay extends React.Component {
 							color="primary"
 							onClick={this.cleanInfoTable}
 						>
-							סנן
+							{this.state.text_lang.TABLE.DELETE_BUTTON}
 						</Button>
 					</div>
 				);
