@@ -150,16 +150,35 @@ class Graph extends React.Component {
 		await this.get_graph_data(raw_data, instruments, [0, 0]);
 	}
 
+	remove_state_incdices(array_name, array_to_delete_from, indices) {
+		let reverse_indices = indices.reverse();
+		let array;
+		array = [...array_to_delete_from];
+
+		reverse_indices.forEach((i) => {
+			array.splice(i, 1);
+		});
+		indices.reverse(); // reverse back
+
+		this.setState({ [array_name]: array });
+		// return array;
+	}
+
 	async componentDidUpdate(prevProps) {
 		// Typical usage (don't forget to compare props):
 
+		// let res;
 		if (this.props.funds.length !== prevProps.funds.length) {
 			if (this.props.indices_to_remove.length !== 0) {
-				const _ = require('lodash');
-				_.pullAt(this.state.data, this.props.indices_to_remove);
-				_.pullAt(this.state.raw_data, this.props.indices_to_remove);
-				_.pullAt(this.state.instruments, this.props.indices_to_remove);
-				_.pullAt(this.state.graph_yield_values, this.props.indices_to_remove);
+				this.remove_state_incdices('data', this.state.data, this.props.indices_to_remove);
+				this.remove_state_incdices('raw_data', this.state.raw_data, this.props.indices_to_remove);
+				this.remove_state_incdices('instruments', this.state.instruments, this.props.indices_to_remove);
+				this.remove_state_incdices(
+					'graph_yield_values',
+					this.state.graph_yield_values,
+					this.props.indices_to_remove
+				);
+
 				this.props.graphHandler(this.state.graph_yield_values);
 				return;
 			}

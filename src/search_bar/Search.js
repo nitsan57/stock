@@ -158,6 +158,7 @@ class Search extends React.Component {
 		this.setState({ num_child_loaded: this.state.num_child_loaded + 1 });
 		this.setState({ indices_to_remove: [] });
 		this.setState({ graph_yield_values: yield_values });
+		console.log(yield_values.length);
 		this.finish_loading();
 	};
 
@@ -187,16 +188,17 @@ class Search extends React.Component {
 		this.setState({ search_checkbox: options });
 	};
 
-	// remove_state_incdices(array_to_delete_from, indices){
-	// 	let array;
-	// 	indices.forEach((i) => {
-	// 		array = [...array_to_delete_from]; // make a separate copy of the array
-	// 		array.splice(index, 1);
+	remove_state_incdices(array_name, array_to_delete_from, indices) {
+		let reverse_indices = indices.reverse();
+		let array;
+		array = [...array_to_delete_from];
 
-	// 	}
-	// 	this.setState({people: array});
-
-	// }
+		reverse_indices.forEach((i) => {
+			array.splice(i, 1);
+		});
+		indices.reverse(); // reverse back
+		this.setStateAsync({ [array_name]: array });
+	}
 
 	async RemoveRowFromGraphHandler(ids_to_remove, indices_to_remove) {
 		let p_json;
@@ -206,22 +208,10 @@ class Search extends React.Component {
 				this.state.fund_set.delete(point);
 			}
 		});
-		let reverse_indices = indices_to_remove.reverse();
-		let array;
-		array = [...this.state.fund_list];
-
-		reverse_indices.forEach((i) => {
-			array.splice(i, 1);
-		});
-		this.setState({ fund_list: array });
-
-		array = [...this.state.info_list];
-		reverse_indices.forEach((i) => {
-			array.splice(i, 1);
-		});
-		this.setState({ info_list: array });
-
 		await this.setStateAsync({ indices_to_remove: indices_to_remove });
+
+		this.remove_state_incdices('fund_list', this.state.fund_list, indices_to_remove);
+		this.remove_state_incdices('info_list', this.state.fund_list, indices_to_remove);
 	}
 
 	render() {
@@ -334,6 +324,7 @@ class Search extends React.Component {
 					text_lang={this.state.text_lang}
 					graph_yield_values={this.state.graph_yield_values}
 					RemoveRowFromGraphHandler={this.RemoveRowFromGraphHandler}
+					indices_to_remove={this.state.indices_to_remove}
 				/>
 			</div>
 		);

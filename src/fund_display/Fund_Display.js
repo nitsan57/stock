@@ -99,7 +99,7 @@ class FundDisplay extends React.Component {
 	}
 
 	updateInfo = () => {
-		this.setState({ currentrows: [] });
+		// this.setState({ currentrows: [] });
 		let i;
 		const rows = [];
 		for (i = 0; i < this.props.info.length; i++) {
@@ -126,6 +126,7 @@ class FundDisplay extends React.Component {
 		if (this.props.info !== prevProps.info) {
 			this.updateInfo();
 		}
+
 		if (this.props.graph_yield_values !== prevProps.graph_yield_values) {
 			let i;
 			let currentrows = [...this.state.currentrows]; // create the copy of state array

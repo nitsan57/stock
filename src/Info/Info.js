@@ -22,8 +22,33 @@ class Info extends React.Component {
 		this.setState({ is_data_loaded: true });
 	}
 
-	componentDidUpdate(prevProps) {
+	// setStateAsync(state) {
+	// 	return new Promise((resolve) => {
+	// 		this.setState(state, resolve);
+	// 	});
+	// }
+
+	remove_state_incdices(array_name, array_to_delete_from, indices) {
+		let reverse_indices = indices.reverse();
+		let array;
+		array = [...array_to_delete_from];
+
+		reverse_indices.forEach((i) => {
+			console.log(array.length, i);
+			array.splice(i, 1);
+		});
+		indices.reverse();
+		this.setState({ [array_name]: array });
+	}
+
+	async componentDidUpdate(prevProps) {
 		if (this.props.funds.length !== prevProps.funds.length) {
+			if (this.props.indices_to_remove.length !== 0) {
+				this.remove_state_incdices('info', this.state.info, this.props.indices_to_remove);
+
+				return;
+			}
+
 			if (this.props.funds.length === 0 || !this.props.to_add_plot) {
 				this.setState({ info: [] });
 			}
