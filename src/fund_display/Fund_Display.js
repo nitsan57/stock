@@ -17,7 +17,9 @@ class FundDisplay extends React.Component {
 					width: 180,
 					align: 'center',
 					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.CALCULATING_DATA_CELL : params.value + '%',
+						params.value == null
+							? this.props.text_lang.TABLE.CALCULATING_DATA_CELL
+							: params.value.toFixed(2) + '%',
 				},
 				{
 					field: 'std',
@@ -111,7 +113,7 @@ class FundDisplay extends React.Component {
 					this.props.info[i]['var_fee'],
 					this.props.info[i]['price'],
 					this.props.info[i]['std'],
-					(this.props.graph_yield_values[i] * 100).toFixed(2),
+					this.props.graph_yield_values[i] * 100,
 					i
 				)
 			);
@@ -124,7 +126,7 @@ class FundDisplay extends React.Component {
 			let i;
 			let currentrows = [...this.state.currentrows]; // create the copy of state array
 			for (i = 0; i < currentrows.length; i++) {
-				currentrows[i]['graph_yield_value'] = (this.props.graph_yield_values[i] * 100).toFixed(2);
+				currentrows[i]['graph_yield_value'] = this.props.graph_yield_values[i] * 100;
 			}
 			this.setState({ currentrows }); //update the value
 		}
