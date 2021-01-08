@@ -150,12 +150,13 @@ class FundDisplay extends React.Component {
 			let i;
 
 			for (i = 0; i < this.state.selected.rowIds.length; i++) {
-				indexToRemove.push(this.state.selected.rowIds[i] - 1);
-
-				ids_to_remove.push(this.props.info[this.state.selected.rowIds[i] - 1].id);
+				let deletedFund = this.state.selected.rowIds[i];
+				if (deletedFund <= this.props.info.length) {
+					indexToRemove.push(deletedFund - 1);
+					ids_to_remove.push(this.props.info[deletedFund - 1].id);
+				}
 			}
 			this.props.RemoveRowFromGraphHandler(ids_to_remove, indexToRemove);
-			this.setState({ selected: undefined });
 		}
 	};
 
