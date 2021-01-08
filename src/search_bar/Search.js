@@ -276,7 +276,8 @@ class Search extends React.Component {
 				</form>
 				<div
 					style={{
-						marginBottom: 10,
+						marginRight: 400,
+						marginTop: -40,
 					}}
 				>
 					<Button
