@@ -2,6 +2,7 @@
 
 export const TYPE_ID = {
 	SECURITY: '1',
+	INDEX: '2',
 	FUND: '4',
 	MANAGER: '10',
 	OPTIONS: '7',

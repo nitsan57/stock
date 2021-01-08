@@ -68,6 +68,7 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 		temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
 		if (
 			temp_fund.type == Consts.TYPE_ID.OPTIONS ||
+			temp_fund.type == Consts.TYPE_ID.INDEX ||
 			temp_fund.type == Consts.TYPE_ID.COMP_PAGE ||
 			temp_fund.type == Consts.TYPE_ID.MANAGER ||
 			temp_fund.subtype == Consts.SUB_TYPE_ID.NON_EXISTS ||
