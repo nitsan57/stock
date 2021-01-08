@@ -178,9 +178,8 @@ class FundDisplay extends React.Component {
 
 						<Button
 							style={{
-								position: 'absolute',
-								bottom: 0,
-								left: 400,
+								marginRight: 10,
+								marginTop: 400,
 							}}
 							variant="contained"
 							color="primary"
