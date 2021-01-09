@@ -2,6 +2,8 @@ import React from 'react';
 import Search from './search_bar/Search';
 import * as Lang from './utils/Lang';
 import * as StockMarket from './stock_getter/StockGetter';
+import Navbar from './navbar/Navbar';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 class App extends React.Component {
 	constructor() {
@@ -16,9 +18,14 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div>
-				<Search text_lang={this.state.lang} stock_market={this.state.stock_market} />
-			</div>
+			<Router>
+				<Navbar />
+				<Switch>
+					<Route exact path="/">
+						<Search text_lang={this.state.lang} stock_market={this.state.stock_market} />
+					</Route>
+				</Switch>
+			</Router>
 		);
 	}
 }
