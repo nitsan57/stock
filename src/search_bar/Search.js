@@ -243,7 +243,7 @@ class Search extends React.Component {
 					<h4>{this.state.search_message}</h4>
 					{this.state.text_lang.SEARCH.CHOSE_REMOVE_ALL}{' '}
 					<input
-						style={{ display: 'inline-block', textAlign: 'right' }}
+						style={{ display: 'inline-block', textAlign: this.state.text_lang.LANG_DIRECTION }}
 						type="checkbox"
 						checked={this.state.search_all}
 						onClick={this.checkBoxHandleAllChecked}
@@ -252,7 +252,7 @@ class Search extends React.Component {
 					/>
 					<ul
 						style={{
-							textAlign: 'right',
+							textAlign: this.state.text_lang.LANG_DIRECTION,
 							paddingRight: '47%',
 							width: '100%',
 							justifyContent: 'space-between',
@@ -271,7 +271,6 @@ class Search extends React.Component {
 				</form>
 				<div
 					style={{
-						// marginRight: -110,
 						marginTop: 20,
 						marginBottom: 20,
 					}}
@@ -294,7 +293,10 @@ class Search extends React.Component {
 					</Button>
 
 					<input
-						style={{ textAlign: 'right' }}
+						style={{
+							textAlign: this.state.text_lang.LANG_DIRECTION,
+							float: this.state.text_lang.LANG_DIRECTION,
+						}}
 						value={this.state.search_keyword}
 						onChange={this.handleInputChange}
 					/>

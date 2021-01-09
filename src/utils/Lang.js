@@ -1,4 +1,5 @@
 export const ENGLISH = {
+	LANG_DIRECTION: 'left',
 	SEARCH: {
 		DEFAULT_SEARCH_KEYWORD: 's&p 500',
 		DEFAULT_SEARCH_MSG: 'search',
@@ -35,6 +36,7 @@ export const ENGLISH = {
 };
 
 export const HEBREW = {
+	LANG_DIRECTION: 'right',
 	SEARCH: {
 		DEFAULT_SEARCH_KEYWORD: 'תא 35',
 		DEFAULT_SEARCH_MSG: 'חפש',
