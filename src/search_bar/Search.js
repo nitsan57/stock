@@ -5,8 +5,10 @@ import Loader from 'react-loader-spinner';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CheckBox from '../check_box/Check_Box';
+import CustomInput from '../custom_input/CustomInput';
 
 const NUM_LOADING_CHILDREN = 2;
+
 class Search extends React.Component {
 	constructor(props) {
 		super(props);
@@ -269,27 +271,16 @@ class Search extends React.Component {
 						})}
 					</ul>
 				</form>
-				<div
-					style={{
-						marginBottom: 20,
-					}}
-				>
-					<Button variant="primary" size="sm" onClick={this.clearSearch}>
-						{this.state.text_lang.SEARCH.NEW_SEARCH}
-					</Button>
-					<Button variant="primary" size="sm" onClick={this.addSearch}>
-						{this.state.text_lang.SEARCH.ADD_TO_GRAPH}
-					</Button>
-
-					<input
-						style={{
-							textAlign: this.state.text_lang.LANG_DIRECTION,
-							float: 'center',
-						}}
+				<div>
+					<CustomInput
+						onNewSearch={this.clearSearch}
+						onAddToGraphClick={this.addSearch}
+						langDirection={this.state.text_lang.LANG_DIRECTION}
 						value={this.state.search_keyword}
 						onChange={this.handleInputChange}
 					/>
 				</div>
+
 				{loading}
 				<div
 					style={{
