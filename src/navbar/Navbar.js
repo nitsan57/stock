@@ -3,7 +3,6 @@ import { AppBar, Toolbar, IconButton, List, ListItem, ListItemText, Container, H
 import { Home } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import SideDrawer from '../side_drawer/SideDrawer';
-import HideOnScroll from '../hide_on_scroll/HideOnScroll';
 
 const navLinks = [
 	{ title: `חפש`, path: `/` },
@@ -33,31 +32,29 @@ const useStyles = makeStyles({
 const Header = () => {
 	const classes = useStyles();
 	return (
-		<HideOnScroll>
-			<AppBar position="fixed">
-				<Toolbar>
-					<Container maxWidth="md" className={classes.navbarDisplayFlex}>
-						<IconButton edge="start" color="inherit" aria-label="home">
-							<Home fontSize="large" />
-						</IconButton>
-						<Hidden smDown>
-							<List component="nav" aria-labelledby="main navigation" className={classes.navDisplayFlex}>
-								{navLinks.map(({ title, path }) => (
-									<a href={path} key={title} className={classes.linkText}>
-										<ListItem button>
-											<ListItemText primary={title} />
-										</ListItem>
-									</a>
-								))}
-							</List>
-						</Hidden>
-						<Hidden mdUp>
-							<SideDrawer navLinks={navLinks} />
-						</Hidden>
-					</Container>
-				</Toolbar>
-			</AppBar>
-		</HideOnScroll>
+		<AppBar position="static">
+			<Toolbar>
+				<Container maxWidth="md" className={classes.navbarDisplayFlex}>
+					<IconButton edge="start" color="inherit" aria-label="home">
+						<Home fontSize="large" />
+					</IconButton>
+					<Hidden smDown>
+						<List component="nav" aria-labelledby="main navigation" className={classes.navDisplayFlex}>
+							{navLinks.map(({ title, path }) => (
+								<a href={path} key={title} className={classes.linkText}>
+									<ListItem button>
+										<ListItemText primary={title} />
+									</ListItem>
+								</a>
+							))}
+						</List>
+					</Hidden>
+					<Hidden mdUp>
+						<SideDrawer navLinks={navLinks} />
+					</Hidden>
+				</Container>
+			</Toolbar>
+		</AppBar>
 	);
 };
 export default Header;
