@@ -14,7 +14,7 @@ export default function CustomInput(props) {
 			padding: '2px 4px',
 			display: 'flex',
 			alignItems: 'center',
-			width: '30%',
+			width: '60%',
 		},
 		input: {
 			marginLeft: theme.spacing(1),
@@ -59,7 +59,6 @@ export default function CustomInput(props) {
 				onChange={props.onChange}
 				inputProps={{ 'aria-label': input }}
 				value={props.value}
-				hintStyle={{ width: '100px' }}
 			/>
 		</Paper>
 	);
