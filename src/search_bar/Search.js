@@ -295,7 +295,7 @@ class Search extends React.Component {
 					<input
 						style={{
 							textAlign: this.state.text_lang.LANG_DIRECTION,
-							float: this.state.text_lang.LANG_DIRECTION,
+							float: 'center',
 						}}
 						value={this.state.search_keyword}
 						onChange={this.handleInputChange}
