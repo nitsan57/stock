@@ -19,7 +19,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<Router>
-				<Navbar />
+				<Navbar text_lang={this.state.lang} />
 				<Switch>
 					<Route exact path="/">
 						<Search text_lang={this.state.lang} stock_market={this.state.stock_market} />

@@ -4,12 +4,6 @@ import { Home } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import SideDrawer from '../side_drawer/SideDrawer';
 
-const navLinks = [
-	{ title: `חפש`, path: `/` },
-	{ title: `צור קשר`, path: `/contact` },
-	{ title: `שאלות ותשובות`, path: `/faq` },
-];
-
 const useStyles = makeStyles({
 	navDisplayFlex: {
 		display: `flex`,
@@ -29,7 +23,12 @@ const useStyles = makeStyles({
 	},
 });
 
-const Header = () => {
+const Header = (props) => {
+	const navLinks = [
+		{ title: props.text_lang.NAV.SEARCH, path: `/` },
+		{ title: props.text_lang.NAV.CONTACT, path: `/contact` },
+		{ title: props.text_lang.NAV.FAQ, path: `/faq` },
+	];
 	const classes = useStyles();
 	return (
 		<AppBar position="static">

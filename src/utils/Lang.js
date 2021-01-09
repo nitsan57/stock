@@ -74,4 +74,10 @@ export const HEBREW = {
 		YIELD_HEADER: 'תשואת התקופה המוצגת',
 		DELETE_BUTTON: 'הסר מההשוואה',
 	},
+
+	NAV: {
+		SEARCH: 'חפש',
+		CONTACT: 'צור קשר',
+		FAQ: 'שאלות ותשובות',
+	},
 };
