@@ -245,13 +245,14 @@ class Graph extends React.Component {
 			return (
 				<div
 					style={{
-						width: '80%',
+						width: '95%',
 						margin: 'auto',
 					}}
 				>
 					<Plot
 						data={this.state.data}
 						layout={{
+							margin: { t: 0, b: 0, f: 0, r: 0 },
 							autosize: true,
 							showlegend: false,
 							yaxis: { tickformat: ',.0%' },

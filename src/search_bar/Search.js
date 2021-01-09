@@ -278,6 +278,7 @@ class Search extends React.Component {
 					style={{
 						marginRight: 400,
 						marginTop: -40,
+						marginBottom: 20,
 					}}
 				>
 					<Button
