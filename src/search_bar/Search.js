@@ -268,16 +268,11 @@ class Search extends React.Component {
 							);
 						})}
 					</ul>
-					<input
-						style={{ textAlign: 'right' }}
-						value={this.state.search_keyword}
-						onChange={this.handleInputChange}
-					/>
 				</form>
 				<div
 					style={{
-						marginRight: 400,
-						marginTop: -40,
+						marginRight: -110,
+						marginTop: 20,
 						marginBottom: 20,
 					}}
 				>
@@ -297,6 +292,12 @@ class Search extends React.Component {
 					<Button variant="primary" size="sm" onClick={this.addSearch}>
 						{this.state.text_lang.SEARCH.ADD_TO_GRAPH}
 					</Button>
+
+					<input
+						style={{ textAlign: 'right' }}
+						value={this.state.search_keyword}
+						onChange={this.handleInputChange}
+					/>
 				</div>
 				{loading}
 				<div
