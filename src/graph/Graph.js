@@ -1,6 +1,7 @@
 import React from 'react';
 import Plotly from 'plotly.js-basic-dist';
 import createPlotlyComponent from 'react-plotly.js/factory';
+import Ratio from 'react-ratio';
 
 import 'rc-slider/assets/index.css';
 import { Range } from 'rc-slider';
@@ -249,23 +250,26 @@ class Graph extends React.Component {
 						margin: 'auto',
 					}}
 				>
-					<Plot
-						data={this.state.data}
-						layout={{
-							margin: { t: 0, b: 0, f: 0, r: 0 },
-							autosize: true,
-							showlegend: false,
-							yaxis: { tickformat: ',.0%' },
-							responsive: true,
-							xaxis: {
-								tickmode: 'array', //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
-								tick0: 0,
-								tickvals: this.state.xticks,
-							},
-						}}
-						useResizeHandler={true}
-						style={{ width: '100%', height: '100%' }}
-					/>
+					<Ratio ratio={3 / 1}>
+						<Plot
+							data={this.state.data}
+							layout={{
+								margin: { t: 0, b: 0, f: 0, r: 0 },
+								autosize: true,
+								showlegend: false,
+								yaxis: { tickformat: ',.0%' },
+								responsive: true,
+								xaxis: {
+									tickmode: 'array', //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+									tick0: 0,
+									tickvals: this.state.xticks,
+								},
+							}}
+							useResizeHandler={true}
+							style={{ width: '100%', height: '100%' }}
+						/>
+					</Ratio>
+
 					<Range
 						style={{
 							marginBottom: 30,
