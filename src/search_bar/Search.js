@@ -271,21 +271,10 @@ class Search extends React.Component {
 				</form>
 				<div
 					style={{
-						marginTop: 20,
 						marginBottom: 20,
 					}}
 				>
-					<Button
-						style={{
-							marginLeft: 0,
-							marginRight: 10,
-							paddingLeft: 10,
-							paddingRight: 10,
-						}}
-						variant="primary"
-						size="sm"
-						onClick={this.clearSearch}
-					>
+					<Button variant="primary" size="sm" onClick={this.clearSearch}>
 						{this.state.text_lang.SEARCH.NEW_SEARCH}
 					</Button>
 					<Button variant="primary" size="sm" onClick={this.addSearch}>
@@ -295,7 +284,6 @@ class Search extends React.Component {
 					<input
 						style={{
 							textAlign: this.state.text_lang.LANG_DIRECTION,
-							float: this.state.text_lang.LANG_DIRECTION,
 						}}
 						value={this.state.search_keyword}
 						onChange={this.handleInputChange}
