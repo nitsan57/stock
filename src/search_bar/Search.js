@@ -171,6 +171,7 @@ class Search extends React.Component {
 	finish_loading() {
 		if (this.state.num_child_loaded === NUM_LOADING_CHILDREN) {
 			this.setState({ is_button_pressed: false });
+			this.setState({ search_message: this.state.text_lang.SEARCH.RESULT_SEARCH_MSG });
 		}
 	}
 
@@ -271,7 +272,11 @@ class Search extends React.Component {
 						})}
 					</ul>
 				</form>
-				<div>
+				<div
+					style={{
+						marginBottom: 20,
+					}}
+				>
 					<CustomInput
 						onNewSearch={this.clearSearch}
 						onAddToGraphClick={this.addSearch}

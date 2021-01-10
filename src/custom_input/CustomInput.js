@@ -38,7 +38,7 @@ export default function CustomInput(props) {
 	let input = props.value;
 
 	return (
-		<Paper component="form" className={classes.root}>
+		<Paper component="form" className={classes.root} variant="outlined">
 			<IconButton
 				color="primary"
 				className={classes.iconButton}

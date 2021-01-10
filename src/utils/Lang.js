@@ -2,7 +2,8 @@ export const ENGLISH = {
 	LANG_DIRECTION: 'left',
 	SEARCH: {
 		DEFAULT_SEARCH_KEYWORD: 's&p 500',
-		DEFAULT_SEARCH_MSG: 'search',
+		DEFAULT_SEARCH_MSG: 'Search',
+		RESULT_SEARCH_MSG: 'Results',
 		IMITATING: 'Imitating',
 		LEVERAGED: 'leveraged',
 		SHORT: 'short',
@@ -40,6 +41,7 @@ export const HEBREW = {
 	SEARCH: {
 		DEFAULT_SEARCH_KEYWORD: 'תא 35',
 		DEFAULT_SEARCH_MSG: 'חפש',
+		RESULT_SEARCH_MSG: 'תוצאות',
 		IMITATING: 'קרן מחקה',
 		LEVERAGED: 'קרן ממונפת',
 		SHORT: 'קרן בחסר',
