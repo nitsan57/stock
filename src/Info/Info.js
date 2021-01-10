@@ -22,12 +22,6 @@ class Info extends React.Component {
 		this.setState({ is_data_loaded: true });
 	}
 
-	// setStateAsync(state) {
-	// 	return new Promise((resolve) => {
-	// 		this.setState(state, resolve);
-	// 	});
-	// }
-
 	remove_state_incdices(array_name, array_to_delete_from, indices) {
 		let reverse_indices = indices.reverse();
 		let array;

@@ -171,7 +171,7 @@ class FundDisplay extends React.Component {
 							showColumnRightBorder={true}
 							showCellRightBorder={true}
 							rtlEnabled={true}
-							pageSize={10}
+							pageSize={45}
 							rowsPerPageOptions={[10, 20, 45]}
 							rows={this.state.currentrows}
 							columns={this.state.columns}

@@ -16,7 +16,7 @@ class Graph extends React.Component {
 			instruments: [],
 			graph_yield_values: [],
 			data: [],
-			xticks: 5,
+			xticks: [],
 			dates: [],
 			slider_values: [0, 0],
 			is_data_loaded: null,
@@ -257,11 +257,13 @@ class Graph extends React.Component {
 								margin: { t: 0, b: 0, f: 0, r: 0 },
 								autosize: true,
 								showlegend: false,
+								// legend: { x: 1, y: 1 },
 								yaxis: { tickformat: ',.0%' },
 								responsive: true,
+
 								xaxis: {
 									tickmode: 'array', //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
-									tick0: 0,
+									// tick0: 0,
 									tickvals: this.state.xticks,
 								},
 							}}
@@ -272,11 +274,11 @@ class Graph extends React.Component {
 
 					<Range
 						style={{
+							marginTop: 20,
 							marginBottom: 30,
 						}}
 						min={range_params.min}
 						max={range_params.max}
-						// defaultValue={range_params.defaultValue}
 						marks={range_params.marks}
 						onChange={this.slider_change_val}
 						value={this.state.slider_values}

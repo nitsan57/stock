@@ -2,7 +2,6 @@ import React from 'react';
 import Graph from '../graph/Graph';
 import Info from '../Info/Info';
 import Loader from 'react-loader-spinner';
-import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CheckBox from '../check_box/Check_Box';
 import CustomInput from '../custom_input/CustomInput';
@@ -29,11 +28,11 @@ class Search extends React.Component {
 			graph_yield_values: [],
 			search_checkbox: [
 				{ key: 1, value: this.props.text_lang.SEARCH.IMITATING, isChecked: true },
-				{ key: 2, value: this.props.text_lang.SEARCH.LEVERAGED, isChecked: true },
-				{ key: 3, value: this.props.text_lang.SEARCH.SHORT, isChecked: true },
+				{ key: 2, value: this.props.text_lang.SEARCH.LEVERAGED, isChecked: false },
+				{ key: 3, value: this.props.text_lang.SEARCH.SHORT, isChecked: false },
 				{ key: 4, value: this.props.text_lang.SEARCH.STOCKS, isChecked: false },
 			],
-			search_all: true,
+			search_all: false,
 		};
 		this.clearSearch = this.clearSearch.bind(this);
 		this.setStateAsync = this.setStateAsync.bind(this);
