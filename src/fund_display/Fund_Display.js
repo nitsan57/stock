@@ -166,7 +166,7 @@ class FundDisplay extends React.Component {
 		if (this.state.currentrows.length !== 0) {
 			if (this.state.currentrows[0] !== undefined && !isNaN(this.state.currentrows[0]['graph_yield_value'])) {
 				return (
-					<div style={{ height: 440, width: '100%' }}>
+					<div>
 						<DataGrid
 							showColumnRightBorder={true}
 							showCellRightBorder={true}
