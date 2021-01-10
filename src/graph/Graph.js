@@ -254,7 +254,7 @@ class Graph extends React.Component {
 						<Plot
 							data={this.state.data}
 							layout={{
-								margin: { t: 0, b: 0, f: 0, r: 0 },
+								margin: { t: 0, b: 25, f: 0, r: 0 },
 								autosize: true,
 								showlegend: false,
 								// legend: { x: 1, y: 1 },
@@ -263,8 +263,9 @@ class Graph extends React.Component {
 
 								xaxis: {
 									tickmode: 'array', //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
-									// tick0: 0,
+									tick0: 0,
 									tickvals: this.state.xticks,
+									// tickvals: [1, 2, 3, 4, 5, 6, 10, 20, 30, 40],
 								},
 							}}
 							useResizeHandler={true}
@@ -274,7 +275,7 @@ class Graph extends React.Component {
 
 					<Range
 						style={{
-							marginTop: 20,
+							marginTop: 10,
 							marginBottom: 30,
 						}}
 						min={range_params.min}
