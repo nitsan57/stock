@@ -6,6 +6,7 @@ import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import Plus from '@material-ui/icons/Add';
+import Tooltip from '@material-ui/core/Tooltip';
 
 export default function CustomInput(props) {
 	const useStyles = makeStyles((theme) => ({
@@ -39,20 +40,22 @@ export default function CustomInput(props) {
 
 	return (
 		<Paper component="form" className={classes.root} variant="outlined">
-			<IconButton
-				color="primary"
-				className={classes.iconButton}
-				aria-label="search"
-				onClick={props.onAddToGraphClick}
-			>
-				<Plus />
-			</IconButton>
-
+			<Tooltip title="Add to graph">
+				<IconButton
+					color="primary"
+					className={classes.iconButton}
+					aria-label="search"
+					onClick={props.onAddToGraphClick}
+				>
+					<Plus />
+				</IconButton>
+			</Tooltip>
 			<Divider className={classes.divider} orientation="vertical" />
-
-			<IconButton className={classes.iconButton} aria-label="search" onClick={props.onNewSearch}>
-				<SearchIcon />
-			</IconButton>
+			<Tooltip title="New Search">
+				<IconButton className={classes.iconButton} aria-label="search" onClick={props.onNewSearch}>
+					<SearchIcon />
+				</IconButton>
+			</Tooltip>
 			<InputBase
 				className={classes.input}
 				placeholder={input}
