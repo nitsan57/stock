@@ -53,8 +53,34 @@ async function keep_relevant_data(funds) {
 	return [fund_l, keep_info]; // to wait one time only
 }
 
+// export function filter_data(search_keyword, fund_set) {
+// 	const filteredData = tase_info.filter((item) => {
+// 		var res = Object.keys(item).some((key) => String(item[key]).toLowerCase().includes(search_keyword));
+
+// 		return res;
+// 	});
+
+// 	var temp_fund = null;
+// 	let funds_arr = [];
+// 	let keep_info = [];
+// 	filteredData.forEach((item) => {
+// 		temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
+// 		if (
+// 			temp_fund.type == Consts.TYPE_ID.OPTIONS ||
+// 			temp_fund.type == Consts.TYPE_ID.INDEX ||
+// 			temp_fund.type == Consts.TYPE_ID.COMP_PAGE ||
+// 			temp_fund.type == Consts.TYPE_ID.MANAGER ||
+// 			temp_fund.subtype == Consts.SUB_TYPE_ID.NON_EXISTS ||
+// 			temp_fund.subtype == Consts.SUB_TYPE_ID.BOND
+// 		) {
+// 		} else {
+// 			fund_set.add(JSON.stringify(temp_fund));
+// 		}
+// 	});
+// 	return fund_set;
+// }
+
 export async function search(search_keyword, fund_set, imitating, leveraged, short, normal_stock, today) {
-	let fund_l;
 	const filteredData = tase_info.filter((item) => {
 		var res = Object.keys(item).some((key) => String(item[key]).toLowerCase().includes(search_keyword));
 
@@ -62,8 +88,10 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 	});
 
 	var temp_fund = null;
-	let funds_arr = [];
-	let keep_info = [];
+	if (filteredData.length === 0) {
+		return -1;
+	}
+
 	filteredData.forEach((item) => {
 		temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
 		if (
@@ -79,9 +107,9 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 		}
 	});
 
-	if (filteredData.length === 0) {
-		return -1;
-	}
+	let fund_l;
+	let funds_arr = [];
+	let keep_info = [];
 
 	for (var it = fund_set.values(), val = null; (val = it.next().value); ) {
 		// if (typeof val === 'string') {

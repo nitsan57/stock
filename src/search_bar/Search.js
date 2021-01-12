@@ -5,6 +5,7 @@ import Loader from 'react-loader-spinner';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CheckBox from '../check_box/Check_Box';
 import CustomInput from '../custom_input/CustomInput';
+import Suggestions from '../custom_input/Sugesstions';
 
 const NUM_LOADING_CHILDREN = 2;
 
@@ -13,6 +14,7 @@ class Search extends React.Component {
 		super(props);
 		this.state = {
 			search_keyword: this.props.text_lang.SEARCH.DEFAULT_SEARCH_KEYWORD,
+			auto_complete_res: [],
 			num_child_loaded: 0,
 			is_button_pressed: false,
 			to_add_plot: false,
@@ -40,20 +42,20 @@ class Search extends React.Component {
 		this.RemoveRowFromGraphHandler = this.RemoveRowFromGraphHandler.bind(this);
 	}
 
-	contains = (target, patterns) => {
-		//TODO need to think how to filter data good
-		let target_array = Object.values(target);
-		let i,
-			k = 0;
-		for (i = 0; i < target_array.length; i++) {
-			for (k = 0; k < patterns.length; k++) {
-				if (String(target_array[i]).includes(String(patterns[i]))) {
-					return true;
-				}
-			}
-		}
-		return false;
-	};
+	// contains = (target, patterns) => {
+	// 	//TODO need to think how to filter data good
+	// 	let target_array = Object.values(target);
+	// 	let i,
+	// 		k = 0;
+	// 	for (i = 0; i < target_array.length; i++) {
+	// 		for (k = 0; k < patterns.length; k++) {
+	// 			if (String(target_array[i]).includes(String(patterns[i]))) {
+	// 				return true;
+	// 			}
+	// 		}
+	// 	}
+	// 	return false;
+	// };
 
 	get_today() {
 		var today = new Date();
@@ -283,6 +285,7 @@ class Search extends React.Component {
 						value={this.state.search_keyword}
 						onChange={this.handleInputChange}
 					/>
+					{/* <Suggestions results={this.state.info_list} /> */}
 				</div>
 
 				{loading}
