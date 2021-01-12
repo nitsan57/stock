@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import CheckBox from '../check_box/Check_Box';
 import CustomInput from '../custom_input/CustomInput';
 import Suggestions from '../custom_input/Sugesstions';
+import History from '../history/History';
 
 const NUM_LOADING_CHILDREN = 2;
 
@@ -35,6 +36,7 @@ class Search extends React.Component {
 				{ key: 4, value: this.props.text_lang.SEARCH.STOCKS, isChecked: false },
 			],
 			search_all: false,
+			search_history: {},
 		};
 		this.clearSearch = this.clearSearch.bind(this);
 		this.setStateAsync = this.setStateAsync.bind(this);
@@ -125,7 +127,9 @@ class Search extends React.Component {
 			this.setState({ is_button_pressed: false });
 			return;
 		}
-
+		let old_history = this.state.search_history;
+		old_history[this.state.search_keyword] = 0;
+		this.setState({ search_history: old_history });
 		this.setState({ info_list: new_info_list });
 		this.setState({ fund_list: new_fund_list });
 		this.setState({ min_days: min_days });
@@ -144,6 +148,7 @@ class Search extends React.Component {
 		this.state.info_list.splice(0, this.state.info_list.length);
 		this.setState({ to_add_plot: false });
 		this.search();
+		this.setState({ search_history: {} });
 	}
 
 	addSearch = () => {
@@ -287,7 +292,7 @@ class Search extends React.Component {
 					/>
 					{/* <Suggestions results={this.state.info_list} /> */}
 				</div>
-
+				<History search_history={this.state.search_history} />
 				{loading}
 				<div
 					style={{
