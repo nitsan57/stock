@@ -98,15 +98,15 @@ class Search extends React.Component {
 			});
 			this.setState({ num_child_loaded: 0 });
 			this.setState({ is_button_pressed: false });
-			return;
+			return -1;
 		}
 
 		if (search_res === -1) {
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.NO_RESULT_KEY_WORDS,
 			});
-			this.setState({ is_button_pressed: false });
-			return;
+			// this.setState({ is_button_pressed: false });
+			return -1;
 		} else {
 			min_days = search_res[0];
 			new_fund_list = search_res[1];
@@ -118,14 +118,14 @@ class Search extends React.Component {
 				search_message: this.state.text_lang.SEARCH.NO_RESULTS_FOR_FILTERS,
 			});
 			this.setState({ is_button_pressed: false });
-			return;
+			return -1;
 		}
 		if (new_info_list.length > 45) {
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.TO_MANY_RESULTS,
 			});
 			this.setState({ is_button_pressed: false });
-			return;
+			return -1;
 		}
 		let old_history = this.state.search_history;
 		old_history[this.state.search_keyword] = 0;
@@ -133,6 +133,7 @@ class Search extends React.Component {
 		this.setState({ info_list: new_info_list });
 		this.setState({ fund_list: new_fund_list });
 		this.setState({ min_days: min_days });
+		return 0;
 	}
 
 	setStateAsync(state) {
@@ -159,6 +160,15 @@ class Search extends React.Component {
 	handleInputChange = (e) => {
 		const content = e.target.value;
 		this.setState({ search_keyword: content });
+		// let res = this.search();
+		// if (res === -1) {
+		// 	this.setState({ num_child_loaded: 0 });
+		// 	this.setState({ is_button_pressed: false });
+		// }
+		// else if (res === 0) {
+		// 	this.setState({ num_child_loaded: 0 });
+		// 	this.setState({ is_button_pressed: true });
+		// }
 	};
 
 	graphHandler = (yield_values) => {

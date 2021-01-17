@@ -146,6 +146,7 @@ class Graph extends React.Component {
 	}
 
 	async get_intruments_data(today, instruments, raw_data) {
+		console.log(instruments);
 		this.state.stock_market.get_instrument_chart_data(today, instruments, raw_data, this.props.min_days);
 		this.setState({ raw_data: raw_data });
 		await this.get_graph_data(raw_data, instruments, [0, 0]);

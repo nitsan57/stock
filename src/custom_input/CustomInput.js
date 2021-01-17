@@ -40,7 +40,7 @@ export default function CustomInput(props) {
 
 	return (
 		<Paper component="form" className={classes.root} variant="outlined">
-			<Tooltip title="Add to graph">
+			<Tooltip title="Add to comparation">
 				<IconButton
 					color="primary"
 					className={classes.iconButton}

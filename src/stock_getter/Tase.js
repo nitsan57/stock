@@ -1,89 +1,13 @@
 import { fetch_data } from '../utils/Utils';
 import * as Consts from '../utils/Consts';
-import Information from '../info-json';
+// import Information from '../info-json';
+import Information from '../new';
 
 const tase_info = Information;
-
-async function keep_relevant_data(funds) {
-	var url = '';
-	var fund_url = 'https://mayaapi.tase.co.il/api/fund/details?fundId=';
-	var etf_url = 'https://mayaapi.tase.co.il/api/etf/details?fundId=';
-	var securty_url = 'https://api.tase.co.il/api/company/securitydata?securityId=';
-	var fund_id = '';
-	let type;
-	let subtype;
-	let subid;
-	let keep_info = [];
-	let k;
-	let all_results = [];
-	for (k = 0; k < funds.length; k++) {
-		type = String(funds[k]['type']);
-		subtype = String(funds[k]['subtype']);
-		subid = String(funds[k]['SubId']);
-		fund_id = String(funds[k]['id']);
-
-		if (fund_id[0] === '5') {
-			url = fund_url + fund_id;
-		} else if (
-			subid === '001779' ||
-			(type === '1' && subtype === '1') ||
-			subtype === Consts.SUB_TYPE_ID.ABROAD_FUND ||
-			subtype === Consts.SUB_TYPE_ID.ABROAD_BOND
-		) {
-			url = securty_url + fund_id;
-		} else {
-			url = etf_url + fund_id;
-		}
-
-		keep_info.push({
-			type: type,
-			subtype: subtype,
-			name: funds[k]['name'],
-			id: funds[k]['id'],
-		});
-		all_results.push(fetch_data('GET', url, '', 'application/x-www-form-urlencoded'));
-	}
-
-	all_results = await Promise.allSettled(all_results);
-	let fund_l = [];
-	let i;
-	for (i = 0; i < all_results.length; i++) {
-		fund_l.push(JSON.parse(all_results[i].value));
-	}
-	return [fund_l, keep_info]; // to wait one time only
-}
-
-// export function filter_data(search_keyword, fund_set) {
-// 	const filteredData = tase_info.filter((item) => {
-// 		var res = Object.keys(item).some((key) => String(item[key]).toLowerCase().includes(search_keyword));
-
-// 		return res;
-// 	});
-
-// 	var temp_fund = null;
-// 	let funds_arr = [];
-// 	let keep_info = [];
-// 	filteredData.forEach((item) => {
-// 		temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
-// 		if (
-// 			temp_fund.type == Consts.TYPE_ID.OPTIONS ||
-// 			temp_fund.type == Consts.TYPE_ID.INDEX ||
-// 			temp_fund.type == Consts.TYPE_ID.COMP_PAGE ||
-// 			temp_fund.type == Consts.TYPE_ID.MANAGER ||
-// 			temp_fund.subtype == Consts.SUB_TYPE_ID.NON_EXISTS ||
-// 			temp_fund.subtype == Consts.SUB_TYPE_ID.BOND
-// 		) {
-// 		} else {
-// 			fund_set.add(JSON.stringify(temp_fund));
-// 		}
-// 	});
-// 	return fund_set;
-// }
 
 export async function search(search_keyword, fund_set, imitating, leveraged, short, normal_stock, today) {
 	const filteredData = tase_info.filter((item) => {
 		var res = Object.keys(item).some((key) => String(item[key]).toLowerCase().includes(search_keyword));
-
 		return res;
 	});
 
@@ -91,95 +15,56 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 	if (filteredData.length === 0) {
 		return -1;
 	}
+	let funds_arr = [];
+	let fund_l = [];
+	let keep_info = [];
 
 	filteredData.forEach((item) => {
 		temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
-		if (
-			temp_fund.type == Consts.TYPE_ID.OPTIONS ||
-			temp_fund.type == Consts.TYPE_ID.INDEX ||
-			temp_fund.type == Consts.TYPE_ID.COMP_PAGE ||
-			temp_fund.type == Consts.TYPE_ID.MANAGER ||
-			temp_fund.subtype == Consts.SUB_TYPE_ID.NON_EXISTS ||
-			temp_fund.subtype == Consts.SUB_TYPE_ID.BOND
-		) {
-		} else {
-			fund_set.add(JSON.stringify(temp_fund));
-		}
+		fund_l.push(item);
+		keep_info.push(temp_fund);
+
+		fund_set.add(JSON.stringify(temp_fund));
 	});
 
-	let fund_l;
-	let funds_arr = [];
-	let keep_info = [];
-
 	for (var it = fund_set.values(), val = null; (val = it.next().value); ) {
-		// if (typeof val === 'string') {
 		funds_arr.push(JSON.parse(val));
-		// } else {
-		// 	funds_arr.push(val);
-		// }
 	}
-
-	[fund_l, keep_info] = await keep_relevant_data(funds_arr);
 
 	let new_fund_list = [];
 	let new_info_list = [];
 	let raw_ix = 0;
-	let mutual_data;
-	let etf_data;
 	let fund_data;
 	let type;
 	let subtype;
 	let init_date;
 	let max_date = '12/12/2015';
 	let min_days = 365 * 5;
-	// let bond_fund;
 	for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
 		fund_data = fund_l[raw_ix];
 		type = keep_info[raw_ix]['type'];
 		subtype = keep_info[raw_ix]['subtype'];
-		// bond_fund = String(fund_data['MagnaFundType']);
 
 		if (
 			(type === Consts.TYPE_ID.SECURITY && subtype !== Consts.SUB_TYPE_ID.STOCK) ||
 			type === Consts.TYPE_ID.FUND // agah filter && bond_fund !== Consts.MAGNA_TYPE.BOND
 		) {
-			etf_data = fund_data['ETFDetails'];
-			if (etf_data === undefined) {
-				mutual_data = fund_data;
-			} else {
-				mutual_data = etf_data['FundDetails'];
-			}
-
-			init_date = mutual_data['ProspectusPubDate'];
-			if (init_date > max_date) {
-				max_date = init_date;
-			}
-
-			if (subtype === Consts.SUB_TYPE_ID.ABROAD_FUND || subtype === Consts.SUB_TYPE_ID.ABROAD_BOND) {
-				mutual_data.FundIndicators = {
-					[Consts.TASE_TYPES.IMITATING]: { Value: true },
-					[Consts.TASE_TYPES.SHORT]: { Value: false },
-					[Consts.TASE_TYPES.LEVERAGED]: { Value: false },
-				};
-			}
-
-			if (mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value']) {
-				// short behaves differnet since it is leveraged
-				mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] = false;
-			}
-
 			if (
-				(mutual_data['FundIndicators'][Consts.TASE_TYPES.IMITATING]['Value'] && !imitating) ||
-				(mutual_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED]['Value'] && !leveraged) ||
-				(mutual_data['FundIndicators'][Consts.TASE_TYPES.SHORT]['Value'] && !short)
+				(fund_data['FundIndicators'][Consts.TASE_TYPES.IMITATING] && !imitating) ||
+				(fund_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED] && !leveraged) ||
+				(fund_data['FundIndicators'][Consts.TASE_TYPES.SHORT] && !short)
 			) {
+				console.log('WUT');
+
 				continue;
 			}
+			console.log('YEY');
 
 			new_fund_list.push(fund_data);
 			new_info_list.push(keep_info[raw_ix]);
 		} else if (type === Consts.TYPE_ID.SECURITY && subtype === Consts.SUB_TYPE_ID.STOCK) {
 			if (!normal_stock) {
+				console.log('STOCK - no filter');
 				continue;
 			}
 			init_date = '12/12/2010';
@@ -187,6 +72,7 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 			if (init_date > max_date) {
 				max_date = init_date;
 			}
+			console.log('yey1');
 			new_fund_list.push(fund_data);
 			new_info_list.push(keep_info[raw_ix]);
 		}
@@ -195,6 +81,12 @@ export async function search(search_keyword, fund_set, imitating, leveraged, sho
 	let date2 = new Date(today);
 	let diffTime = Math.abs(date2 - date1);
 	min_days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+	console.log('---------------------');
+
+	console.log(new_fund_list);
+	console.log(new_info_list);
+	console.log('---------------------');
 
 	return [min_days, new_fund_list, new_info_list];
 }
@@ -302,7 +194,6 @@ export function extract_table_info(keep_info, all_results) {
 	let table_data = [];
 
 	let fund_data;
-	let etf_data;
 	let mutual_data;
 
 	let managment_fee;
@@ -324,36 +215,25 @@ export function extract_table_info(keep_info, all_results) {
 		subtype = keep_info[k]['subtype'];
 
 		fund_data = all_results[k];
-		etf_data = fund_data['ETFDetails'];
-		if (etf_data === undefined) {
-			managment_fee = fund_data['ManagementFee'];
-			mutual_data = fund_data;
-		} else {
-			mutual_data = etf_data['FundDetails'];
-		}
+		mutual_data = fund_data;
+
 		managment_fee = mutual_data['ManagementFee'];
 		var_fee = mutual_data['VariableFee'];
 		truste_fee = mutual_data['TrusteeFee'];
-		twelve_months = mutual_data['Last12MonthYield'];
-		year_yield = mutual_data['YearYield'];
-		month_yield = mutual_data['MonthYield'];
-		daily_yield = mutual_data['DayYield'];
-		price = mutual_data['UnitValuePrice'];
+
+		price = mutual_data['Price'];
 		std = mutual_data['StandardDeviation'];
 
-		if (type === '1' && subtype === '1') {
+		if (type === Consts.TYPE_ID.SECURITY && subtype === Consts.SUB_TYPE_ID.STOCK) {
 			managment_fee = 0;
 			var_fee = 0;
 			truste_fee = 0;
-			twelve_months = mutual_data['Last12MonthYield'];
-			year_yield = mutual_data['AnnualYield'];
-			month_yield = mutual_data['MonthYield'];
 
-			price = mutual_data['BaseRate'];
+			price = mutual_data['Price'];
 			std = mutual_data['StandardDeviation'];
-			daily_yield = 'שינוי אחרון: ' + mutual_data['Change'];
 		}
 
+		console.log(keep_info);
 		relevant_info = {
 			name: keep_info[k]['name'],
 			id: keep_info[k]['id'],
@@ -368,12 +248,7 @@ export function extract_table_info(keep_info, all_results) {
 			std: std,
 		};
 
-		// if (this.state.info.some((e) => e.id === relevant_info['id'])) {
-		// 	// console.log('Some Error in info.js');
-		// 	continue;
-		// } else {
 		table_data.push(relevant_info);
-		// }
 	}
 	return table_data;
 }

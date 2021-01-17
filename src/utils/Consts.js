@@ -23,7 +23,7 @@ export const MAGNA_TYPE = {
 };
 
 export const TASE_TYPES = {
-	IMITATING: 4,
-	LEVERAGED: 3,
-	SHORT: 5,
+	IMITATING: 'IMITATING',
+	LEVERAGED: 'LEVERAGED',
+	SHORT: 'SHORT',
 };
