@@ -178,7 +178,6 @@ class Search extends React.Component {
 	};
 
 	handleInputChange = (e) => {
-		console.log(e);
 		const content = e.target.value;
 		this.setState({ search_keyword: content });
 		let res = this.search(content);
