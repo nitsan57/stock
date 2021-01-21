@@ -1,7 +1,7 @@
 export const ENGLISH = {
 	LANG_DIRECTION: 'left',
 	SEARCH: {
-		DEFAULT_SEARCH_KEYWORD: 's&p 500',
+		DEFAULT_SEARCH_KEYWORD: '',
 		DEFAULT_SEARCH_MSG: 'Search',
 		RESULT_SEARCH_MSG: 'Results',
 		IMITATING: 'Imitating',
@@ -34,12 +34,15 @@ export const ENGLISH = {
 		YIELD_HEADER: 'yield of shown period',
 		DELETE_BUTTON: 'delete selected',
 	},
+	SUGGESTIONS: {
+		ALL: 'הראה הכל',
+	},
 };
 
 export const HEBREW = {
 	LANG_DIRECTION: 'right',
 	SEARCH: {
-		DEFAULT_SEARCH_KEYWORD: 'תא 35',
+		DEFAULT_SEARCH_KEYWORD: '',
 		DEFAULT_SEARCH_MSG: 'חפש',
 		RESULT_SEARCH_MSG: 'תוצאות',
 		IMITATING: 'קרן מחקה',
@@ -77,6 +80,9 @@ export const HEBREW = {
 		CALCULATING_DATA_CELL: '...מחשב',
 		YIELD_HEADER: 'תשואת התקופה המוצגת',
 		DELETE_BUTTON: 'הסר מההשוואה',
+	},
+	SUGGESTIONS: {
+		ALL: 'הראה הכל',
 	},
 
 	NAV: {

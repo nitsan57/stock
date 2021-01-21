@@ -1,5 +1,8 @@
 // constants.js
 
+export const NUM_SEARCH_ELEMENTS_LIMIT = 45;
+export const NUM_SEARCH_ELEMENTS_LIMIT_TO_SHOW = 5;
+
 export const TYPE_ID = {
 	SECURITY: '1',
 	INDEX: '2',

@@ -21,10 +21,10 @@ export default function CustomInput(props) {
 			marginLeft: theme.spacing(1),
 			flex: 1,
 			padding: 10,
-			textAlign: props.langDirection,
-			align: props.langDirection,
+			textAlign: props.text_lang.LANG_DIRECTION,
+			align: props.text_lang.LANG_DIRECTION,
 			'& input': {
-				textAlign: props.langDirection,
+				textAlign: props.text_lang.LANG_DIRECTION,
 			},
 		},
 		iconButton: {
@@ -40,7 +40,7 @@ export default function CustomInput(props) {
 
 	return (
 		<Paper component="form" className={classes.root} variant="outlined">
-			<Tooltip title="Add to comparation">
+			<Tooltip title={props.text_lang.SEARCH.ADD_TO_GRAPH}>
 				<IconButton
 					color="primary"
 					className={classes.iconButton}
@@ -51,12 +51,13 @@ export default function CustomInput(props) {
 				</IconButton>
 			</Tooltip>
 			<Divider className={classes.divider} orientation="vertical" />
-			<Tooltip title="New Search">
+			<Tooltip title={props.text_lang.SEARCH.NEW_SEARCH}>
 				<IconButton className={classes.iconButton} aria-label="search" onClick={props.onNewSearch}>
 					<SearchIcon />
 				</IconButton>
 			</Tooltip>
 			<InputBase
+				autoFocus
 				className={classes.input}
 				placeholder={input}
 				onChange={props.onChange}

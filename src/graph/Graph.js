@@ -116,8 +116,7 @@ class Graph extends React.Component {
 					data_array,
 					min_data_length,
 					start_date,
-					i,
-					this.props.min_days
+					i
 				);
 				var temp_data = this.create_graph_data(x, y, name);
 				res.push(temp_data);
@@ -146,8 +145,7 @@ class Graph extends React.Component {
 	}
 
 	async get_intruments_data(today, instruments, raw_data) {
-		console.log(instruments);
-		this.state.stock_market.get_instrument_chart_data(today, instruments, raw_data, this.props.min_days);
+		this.state.stock_market.get_instrument_chart_data(today, instruments, raw_data);
 		this.setState({ raw_data: raw_data });
 		await this.get_graph_data(raw_data, instruments, [0, 0]);
 	}
@@ -166,10 +164,25 @@ class Graph extends React.Component {
 		return array;
 	}
 
+	shouldComponentUpdate(nextProps, nextState) {
+		if (nextState.slider_values !== this.state.slider_values) {
+			return true;
+		}
+		if (nextState.is_data_loaded && !this.state.is_data_loaded) {
+			return true;
+		}
+		if (this.props.funds && nextProps.funds) {
+			if (nextProps.funds.length !== this.props.funds.length) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
 	async componentDidUpdate(prevProps) {
 		// Typical usage (don't forget to compare props):
 
-		// let res;
 		if (this.props.funds.length !== prevProps.funds.length) {
 			if (this.props.indices_to_remove.length !== 0) {
 				this.remove_state_incdices('data', this.state.data, this.props.indices_to_remove);
@@ -239,6 +252,7 @@ class Graph extends React.Component {
 	};
 
 	render() {
+		// console.log('here');
 		if (this.state.is_data_loaded == null) return null;
 		if (this.state.data.length === 0) return null;
 

@@ -5,93 +5,60 @@ import Information from '../new';
 
 const tase_info = Information;
 
-export async function search(search_keyword, fund_set, imitating, leveraged, short, normal_stock, today) {
-	const filteredData = tase_info.filter((item) => {
-		var res = Object.keys(item).some((key) => String(item[key]).toLowerCase().includes(search_keyword));
-		return res;
-	});
+export async function search(search_keyword, imitating, leveraged, short, normal_stock, today) {
+	const filteredData = tase_info.filter(
+		function (item) {
+			if (
+				this.count < Consts.NUM_SEARCH_ELEMENTS_LIMIT &&
+				Object.keys(item).some((key) => String(item[key]).toLowerCase().includes(search_keyword))
+			) {
+				let fund_data = item;
+				let type = item['Type'];
+				let subtype = item['SubType'];
+				if (
+					(type === Consts.TYPE_ID.SECURITY && subtype !== Consts.SUB_TYPE_ID.STOCK) ||
+					type === Consts.TYPE_ID.FUND // agah filter && bond_fund !== Consts.MAGNA_TYPE.BOND
+				) {
+					if (
+						(fund_data['FundIndicators'][Consts.TASE_TYPES.IMITATING] && !imitating) ||
+						(fund_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED] && !leveraged) ||
+						(fund_data['FundIndicators'][Consts.TASE_TYPES.SHORT] && !short)
+					) {
+						return false;
+					}
+					this.count++;
+					return true;
+				} else if (type === Consts.TYPE_ID.SECURITY && subtype === Consts.SUB_TYPE_ID.STOCK) {
+					if (!normal_stock) {
+						return false;
+					}
+					this.count++;
+					return true;
+				}
+				return false;
+			}
+			return false;
+		},
+		{ count: 0 }
+	);
 
 	var temp_fund = null;
 	if (filteredData.length === 0) {
 		return -1;
 	}
-	let funds_arr = [];
 	let fund_l = [];
 	let keep_info = [];
-
 	filteredData.forEach((item) => {
 		temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
 		fund_l.push(item);
 		keep_info.push(temp_fund);
-
-		fund_set.add(JSON.stringify(temp_fund));
+		// fund_set.add(JSON.stringify(temp_fund));
 	});
 
-	for (var it = fund_set.values(), val = null; (val = it.next().value); ) {
-		funds_arr.push(JSON.parse(val));
-	}
-
-	let new_fund_list = [];
-	let new_info_list = [];
-	let raw_ix = 0;
-	let fund_data;
-	let type;
-	let subtype;
-	let init_date;
-	let max_date = '12/12/2015';
-	let min_days = 365 * 5;
-	for (raw_ix = 0; raw_ix < fund_l.length; raw_ix++) {
-		fund_data = fund_l[raw_ix];
-		type = keep_info[raw_ix]['type'];
-		subtype = keep_info[raw_ix]['subtype'];
-
-		if (
-			(type === Consts.TYPE_ID.SECURITY && subtype !== Consts.SUB_TYPE_ID.STOCK) ||
-			type === Consts.TYPE_ID.FUND // agah filter && bond_fund !== Consts.MAGNA_TYPE.BOND
-		) {
-			if (
-				(fund_data['FundIndicators'][Consts.TASE_TYPES.IMITATING] && !imitating) ||
-				(fund_data['FundIndicators'][Consts.TASE_TYPES.LEVERAGED] && !leveraged) ||
-				(fund_data['FundIndicators'][Consts.TASE_TYPES.SHORT] && !short)
-			) {
-				console.log('WUT');
-
-				continue;
-			}
-			console.log('YEY');
-
-			new_fund_list.push(fund_data);
-			new_info_list.push(keep_info[raw_ix]);
-		} else if (type === Consts.TYPE_ID.SECURITY && subtype === Consts.SUB_TYPE_ID.STOCK) {
-			if (!normal_stock) {
-				console.log('STOCK - no filter');
-				continue;
-			}
-			init_date = '12/12/2010';
-
-			if (init_date > max_date) {
-				max_date = init_date;
-			}
-			console.log('yey1');
-			new_fund_list.push(fund_data);
-			new_info_list.push(keep_info[raw_ix]);
-		}
-	}
-	let date1 = new Date(max_date);
-	let date2 = new Date(today);
-	let diffTime = Math.abs(date2 - date1);
-	min_days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-	console.log('---------------------');
-
-	console.log(new_fund_list);
-	console.log(new_info_list);
-	console.log('---------------------');
-
-	return [min_days, new_fund_list, new_info_list];
+	return [fund_l, keep_info];
 }
 
-function fetch_fund(today, instrument, raw_data, min_days) {
+function fetch_fund(today, instrument, raw_data) {
 	let year = today.split('-')[0];
 	let before_5 = today.replace(year, year - 5);
 	var instrument_id = instrument['id'];
@@ -101,7 +68,7 @@ function fetch_fund(today, instrument, raw_data, min_days) {
 	raw_data.push(res);
 }
 
-function fetch_security(today, instrument, raw_data, min_days) {
+function fetch_security(today, instrument, raw_data) {
 	let year = today.split('-')[0];
 	let before_5 = today.replace(year, year - 5);
 	var instrument_id = instrument['id'];
@@ -121,7 +88,7 @@ function fetch_security(today, instrument, raw_data, min_days) {
 	raw_data.push(res);
 }
 
-export function get_instrument_chart_data(today, instruments, raw_data, min_days) {
+export function get_instrument_chart_data(today, instruments, raw_data) {
 	let i;
 	let instrument;
 	let add_len = raw_data.length;
@@ -130,9 +97,9 @@ export function get_instrument_chart_data(today, instruments, raw_data, min_days
 		instrument = instruments[i];
 		var instrument_id = instrument['id'];
 		if (String(instrument_id)[0] === '1' || (instrument['type'] === '1' && instrument['subtype'] === '1')) {
-			fetch_security(today, instrument, raw_data, min_days);
+			fetch_security(today, instrument, raw_data);
 		} else {
-			fetch_fund(today, instrument, raw_data, min_days);
+			fetch_fund(today, instrument, raw_data);
 		}
 	}
 }
@@ -233,7 +200,6 @@ export function extract_table_info(keep_info, all_results) {
 			std = mutual_data['StandardDeviation'];
 		}
 
-		console.log(keep_info);
 		relevant_info = {
 			name: keep_info[k]['name'],
 			id: keep_info[k]['id'],

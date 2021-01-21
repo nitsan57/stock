@@ -7,6 +7,7 @@ import CheckBox from '../check_box/Check_Box';
 import CustomInput from '../custom_input/CustomInput';
 import Suggestions from '../custom_input/Sugesstions';
 import History from '../history/History';
+import * as Consts from '../utils/Consts';
 
 const NUM_LOADING_CHILDREN = 2;
 
@@ -20,10 +21,12 @@ class Search extends React.Component {
 			is_button_pressed: false,
 			to_add_plot: false,
 			fund_set: new Set(),
+			info_set: new Set(),
 			fund_list: [],
+			temp_data: [[], []],
+			suggeestion_list: [],
 			info_list: [],
 			indices_to_remove: [],
-			min_days: 0,
 			search_message: this.props.text_lang.SEARCH.DEFAULT_SEARCH_MSG,
 			today: this.get_today(),
 			stock_market: this.props.stock_market,
@@ -39,25 +42,14 @@ class Search extends React.Component {
 			search_history: {},
 		};
 		this.clearSearch = this.clearSearch.bind(this);
+		this.hide_suggestions = this.hide_suggestions.bind(this);
+		this.show_suggestions = this.show_suggestions.bind(this);
+		this.suggestionHandler = this.suggestionHandler.bind(this);
+		this.clearState = this.clearState.bind(this);
 		this.setStateAsync = this.setStateAsync.bind(this);
 		this.finish_loading = this.finish_loading.bind(this);
 		this.RemoveRowFromGraphHandler = this.RemoveRowFromGraphHandler.bind(this);
 	}
-
-	// contains = (target, patterns) => {
-	// 	//TODO need to think how to filter data good
-	// 	let target_array = Object.values(target);
-	// 	let i,
-	// 		k = 0;
-	// 	for (i = 0; i < target_array.length; i++) {
-	// 		for (k = 0; k < patterns.length; k++) {
-	// 			if (String(target_array[i]).includes(String(patterns[i]))) {
-	// 				return true;
-	// 			}
-	// 		}
-	// 	}
-	// 	return false;
-	// };
 
 	get_today() {
 		var today = new Date();
@@ -69,22 +61,58 @@ class Search extends React.Component {
 		return today;
 	}
 
-	async search() {
+	search_button_clicked(temp_fund_list, temp_info_list) {
+		if (temp_fund_list.length !== 0) {
+			let new_info_list = [];
+			let new_fund_list = [];
+			let prev_size = this.state.info_set.size;
+
+			temp_info_list.forEach((item) => {
+				this.state.info_set.add(JSON.stringify(item));
+			});
+
+			temp_fund_list.forEach((item) => {
+				this.state.fund_set.add(JSON.stringify(item));
+			});
+
+			if (this.state.info_set.size === prev_size && this.state.to_add_plot) {
+				this.setState({
+					search_message: this.state.text_lang.SEARCH.NO_NEW_FUND_TO_ADD,
+				});
+				return -1;
+			}
+			let item;
+			for (var it = this.state.info_set.values(), val = null; (val = it.next().value); ) {
+				item = JSON.parse(val);
+				new_info_list.push(item);
+			}
+
+			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
+				item = JSON.parse(val);
+				new_fund_list.push(item);
+			}
+
+			this.setState({ search_message: this.state.text_lang.SEARCH.IN_PROGRESS });
+			this.setState({ num_child_loaded: 0 });
+			this.setState({ is_button_pressed: true });
+			this.setState({ info_list: new_info_list });
+			this.setState({ fund_list: new_fund_list });
+			let old_history = this.state.search_history;
+			old_history[this.state.search_keyword] = 0;
+			this.setState({ search_history: old_history });
+		}
+	}
+
+	async search(word) {
 		let new_fund_list;
 		let new_info_list;
-		let min_days;
 		let imitating = this.state.search_checkbox[0]['isChecked'];
 		let leveraged = this.state.search_checkbox[1]['isChecked'];
 		let short = this.state.search_checkbox[2]['isChecked'];
 		let normal_stock = this.state.search_checkbox[3]['isChecked'];
-		this.setState({ search_message: this.state.text_lang.SEARCH.IN_PROGRESS });
-		this.setState({ num_child_loaded: 0 });
-		this.setState({ is_button_pressed: true });
 
-		let prev_size = this.state.fund_set.size;
 		let search_res = await this.state.stock_market.search(
-			this.state.search_keyword,
-			this.state.fund_set,
+			word,
 			imitating,
 			leveraged,
 			short,
@@ -92,48 +120,33 @@ class Search extends React.Component {
 			this.state.today
 		);
 
-		if (this.state.fund_set.size === prev_size && this.state.to_add_plot) {
-			this.setState({
-				search_message: this.state.text_lang.SEARCH.NO_NEW_FUND_TO_ADD,
-			});
-			this.setState({ num_child_loaded: 0 });
-			this.setState({ is_button_pressed: false });
-			return -1;
-		}
-
 		if (search_res === -1) {
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.NO_RESULT_KEY_WORDS,
 			});
-			// this.setState({ is_button_pressed: false });
 			return -1;
 		} else {
-			min_days = search_res[0];
-			new_fund_list = search_res[1];
-			new_info_list = search_res[2];
+			new_fund_list = search_res[0];
+			new_info_list = search_res[1];
+
+			this.setState({
+				search_message: this.state.text_lang.SEARCH.DEFAULT_SEARCH_MSG,
+			});
 		}
 
 		if (new_info_list.length === 0) {
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.NO_RESULTS_FOR_FILTERS,
 			});
-			this.setState({ is_button_pressed: false });
 			return -1;
 		}
-		if (new_info_list.length > 45) {
+		if (new_info_list.length > Consts.NUM_SEARCH_ELEMENTS_LIMIT) {
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.TO_MANY_RESULTS,
 			});
-			this.setState({ is_button_pressed: false });
 			return -1;
 		}
-		let old_history = this.state.search_history;
-		old_history[this.state.search_keyword] = 0;
-		this.setState({ search_history: old_history });
-		this.setState({ info_list: new_info_list });
-		this.setState({ fund_list: new_fund_list });
-		this.setState({ min_days: min_days });
-		return 0;
+		return [new_fund_list, new_info_list];
 	}
 
 	setStateAsync(state) {
@@ -142,33 +155,40 @@ class Search extends React.Component {
 		});
 	}
 
-	async clearSearch() {
+	async clearState() {
+		await this.setStateAsync({ info_set: new Set() });
 		await this.setStateAsync({ fund_set: new Set() });
 		this.setState({ graph_yield_values: [] });
 		this.state.fund_list.splice(0, this.state.fund_list.length);
 		this.state.info_list.splice(0, this.state.info_list.length);
 		this.setState({ to_add_plot: false });
-		this.search();
 		this.setState({ search_history: {} });
+	}
+
+	async clearSearch() {
+		await this.clearState();
+		this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1]);
+		this.hide_suggestions();
 	}
 
 	addSearch = () => {
 		this.setState({ to_add_plot: true });
-		this.search();
+		this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1]);
+		this.hide_suggestions();
 	};
 
 	handleInputChange = (e) => {
 		const content = e.target.value;
 		this.setState({ search_keyword: content });
-		// let res = this.search();
-		// if (res === -1) {
-		// 	this.setState({ num_child_loaded: 0 });
-		// 	this.setState({ is_button_pressed: false });
-		// }
-		// else if (res === 0) {
-		// 	this.setState({ num_child_loaded: 0 });
-		// 	this.setState({ is_button_pressed: true });
-		// }
+		let res = this.search(content);
+		res.then((value) => {
+			if (value !== -1) {
+				this.setState({ suggeestion_list: value[1] });
+				this.setState({ temp_data: value });
+			} else {
+				this.setState({ suggeestion_list: [] });
+			}
+		});
 	};
 
 	graphHandler = (yield_values) => {
@@ -183,6 +203,27 @@ class Search extends React.Component {
 		this.setState({ num_child_loaded: this.state.num_child_loaded + 1 });
 		this.finish_loading();
 	};
+
+	show_suggestions() {
+		this.setState({ suggeestion_list: this.state.temp_data[1] });
+	}
+
+	hide_suggestions() {
+		this.setState({ suggeestion_list: [] });
+	}
+
+	async suggestionHandler(clicked_element) {
+		await this.clearState();
+
+		if (clicked_element === Consts.NUM_SEARCH_ELEMENTS_LIMIT_TO_SHOW) {
+			this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1]);
+		} else {
+			this.search_button_clicked(
+				[this.state.temp_data[0][clicked_element]],
+				[this.state.temp_data[1][clicked_element]]
+			);
+		}
+	}
 
 	finish_loading() {
 		if (this.state.num_child_loaded === NUM_LOADING_CHILDREN) {
@@ -220,12 +261,20 @@ class Search extends React.Component {
 
 	async RemoveRowFromGraphHandler(ids_to_remove, indices_to_remove) {
 		let p_json;
+		this.state.info_set.forEach((point) => {
+			p_json = JSON.parse(point);
+			if (ids_to_remove.includes(p_json.id)) {
+				this.state.info_set.delete(point);
+			}
+		});
+
 		this.state.fund_set.forEach((point) => {
 			p_json = JSON.parse(point);
 			if (ids_to_remove.includes(p_json.id)) {
 				this.state.fund_set.delete(point);
 			}
 		});
+
 		this.setStateAsync({ indices_to_remove: indices_to_remove });
 
 		this.remove_state_incdices('fund_list', this.state.fund_list, indices_to_remove);
@@ -292,15 +341,21 @@ class Search extends React.Component {
 					style={{
 						marginBottom: 20,
 					}}
+					onFocus={this.show_suggestions}
+					onBlur={this.hide_suggestions}
 				>
 					<CustomInput
 						onNewSearch={this.clearSearch}
 						onAddToGraphClick={this.addSearch}
-						langDirection={this.state.text_lang.LANG_DIRECTION}
+						text_lang={this.state.text_lang}
 						value={this.state.search_keyword}
 						onChange={this.handleInputChange}
 					/>
-					{/* <Suggestions results={this.state.info_list} /> */}
+					<Suggestions
+						click_handler={this.suggestionHandler}
+						results={this.state.suggeestion_list}
+						text_lang={this.state.text_lang}
+					/>
 				</div>
 				<History search_history={this.state.search_history} />
 				{loading}
@@ -312,7 +367,6 @@ class Search extends React.Component {
 					<Graph
 						today={this.state.today}
 						funds={this.state.info_list}
-						min_days={this.state.min_days}
 						graphHandler={this.graphHandler}
 						to_add_plot={this.state.to_add_plot}
 						stock_market={this.state.stock_market}

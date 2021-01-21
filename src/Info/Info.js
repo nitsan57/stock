@@ -5,7 +5,6 @@ class Info extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			data: [],
 			is_data_loaded: false,
 			info: [],
 			stock_market: this.props.stock_market,
@@ -32,6 +31,23 @@ class Info extends React.Component {
 		});
 		indices.reverse();
 		this.setState({ [array_name]: array });
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		if (
+			(nextState.is_data_loaded && !this.state.is_data_loaded) ||
+			nextProps.graph_yield_values !== this.props.graph_yield_values
+		) {
+			return true;
+		}
+
+		if (this.props.funds && nextProps.funds) {
+			if (nextProps.funds.length !== this.props.funds.length) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 
 	async componentDidUpdate(prevProps) {
