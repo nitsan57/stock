@@ -124,9 +124,9 @@ class Graph extends React.Component {
 			}
 
 			let xticks = [];
-			let mark_jump_const = Math.max(parseInt(x.length / 10), 1);
+			let mark_jump_const = Math.max(parseInt(x.length / 5), 1);
 			let current_jump;
-			let boundry = Math.min(10, x.length - 1);
+			let boundry = Math.min(5, x.length - 1);
 			for (i = 0; i < boundry; i++) {
 				current_jump = i * mark_jump_const;
 				xticks.push(x[current_jump]);
@@ -166,6 +166,9 @@ class Graph extends React.Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
 		if (nextState.slider_values !== this.state.slider_values) {
+			return true;
+		}
+		if (nextState.data !== this.state.data) {
 			return true;
 		}
 		if (nextState.is_data_loaded && !this.state.is_data_loaded) {
@@ -233,9 +236,9 @@ class Graph extends React.Component {
 	range_params(x_axis) {
 		let marks = {};
 		let i = 0;
-		let mark_jump_const = parseInt(x_axis.length / 10);
+		let mark_jump_const = parseInt(x_axis.length / 6);
 		let current_jump;
-		for (i = 0; i < 10; i++) {
+		for (i = 0; i < 6; i++) {
 			current_jump = i * mark_jump_const;
 			marks[current_jump] = x_axis[current_jump];
 		}
@@ -261,30 +264,28 @@ class Graph extends React.Component {
 			return (
 				<div
 					style={{
-						width: '95%',
+						width: '90%',
 						margin: 'auto',
 					}}
 				>
 					<Ratio ratio={3 / 1}>
 						<Plot
+							style={{ width: '100%', height: '100%' }}
 							data={this.state.data}
 							layout={{
-								margin: { t: 0, b: 25, f: 0, r: 0 },
+								margin: { t: 0, b: 30, l: 0, r: 0 },
 								autosize: true,
 								showlegend: false,
-								// legend: { x: 1, y: 1 },
 								yaxis: { tickformat: ',.0%' },
 								responsive: true,
 
 								xaxis: {
-									tickmode: 'array', //  If "linear", the placement of the ticks is determined by a starting position `tick0` and a tick step `dtick`
+									tickmode: 'array',
 									tick0: 0,
 									tickvals: this.state.xticks,
-									// tickvals: [1, 2, 3, 4, 5, 6, 10, 20, 30, 40],
 								},
 							}}
 							useResizeHandler={true}
-							style={{ width: '100%', height: '100%' }}
 						/>
 					</Ratio>
 
