@@ -177,9 +177,7 @@ class Search extends React.Component {
 		this.hide_suggestions();
 	};
 
-	handleInputChange = (e) => {
-		const content = e.target.value;
-		this.setState({ search_keyword: content });
+	input_helper(content) {
 		let res = this.search(content);
 		res.then((value) => {
 			if (value !== -1) {
@@ -189,6 +187,12 @@ class Search extends React.Component {
 				this.setState({ suggeestion_list: [] });
 			}
 		});
+	}
+
+	handleInputChange = (e) => {
+		const content = e.target.value;
+		this.setState({ search_keyword: content });
+		this.input_helper(content);
 	};
 
 	graphHandler = (yield_values) => {
@@ -244,7 +248,9 @@ class Search extends React.Component {
 		options.forEach((option) => {
 			if (option.value === event.target.value) option.isChecked = event.target.checked;
 		});
+
 		this.setState({ search_checkbox: options });
+		this.input_helper(this.state.search_keyword);
 	};
 
 	remove_state_incdices(array_name, array_to_delete_from, indices) {
