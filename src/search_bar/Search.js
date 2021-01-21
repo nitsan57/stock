@@ -178,6 +178,7 @@ class Search extends React.Component {
 	};
 
 	handleInputChange = (e) => {
+		console.log(e);
 		const content = e.target.value;
 		this.setState({ search_keyword: content });
 		let res = this.search(content);
@@ -283,10 +284,10 @@ class Search extends React.Component {
 
 	render() {
 		let loading = (
-			<form>
+			<div>
 				<h1>{this.state.text_lang.SEARCH.LOADING}</h1>
 				<Loader type="Oval" color="#00BFFF" height={100} width={100} />
-			</form>
+			</div>
 		);
 		if (this.state.num_child_loaded === 2 || !this.state.is_button_pressed) {
 			loading = null;
@@ -298,7 +299,7 @@ class Search extends React.Component {
 					width: '100%',
 				}}
 			>
-				<form
+				<div
 					style={{
 						marginLeft: 0,
 						marginRight: 0,
@@ -336,7 +337,7 @@ class Search extends React.Component {
 							);
 						})}
 					</ul>
-				</form>
+				</div>
 				<div
 					style={{
 						marginBottom: 20,

@@ -39,7 +39,15 @@ export default function CustomInput(props) {
 	let input = props.value;
 
 	return (
-		<Paper component="form" className={classes.root} variant="outlined">
+		<Paper
+			component="form"
+			className={classes.root}
+			variant="outlined"
+			onSubmit={(e) => {
+				e.preventDefault();
+				props.onNewSearch();
+			}}
+		>
 			<Tooltip title={props.text_lang.SEARCH.ADD_TO_GRAPH}>
 				<IconButton
 					color="primary"
