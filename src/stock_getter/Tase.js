@@ -10,11 +10,13 @@ const tase_info = Information;
 const tase_indices = Indices;
 
 export function filter_indices(search_keyword) {
-	const filteredData = tase_indices.filter((word) => word.includes(search_keyword));
+	const filteredData = tase_indices.filter((word) => word.toLowerCase().includes(search_keyword.toLowerCase()));
 	return filteredData;
 }
 
 export async function search(search_keyword, imitating, leveraged, short, normal_stock) {
+	search_keyword = search_keyword.toLowerCase();
+
 	const filteredData = tase_info.filter(
 		function (item) {
 			if (
@@ -61,7 +63,6 @@ export async function search(search_keyword, imitating, leveraged, short, normal
 		temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
 		fund_l.push(item);
 		keep_info.push(temp_fund);
-		// fund_set.add(JSON.stringify(temp_fund));
 	});
 
 	return [fund_l, keep_info];

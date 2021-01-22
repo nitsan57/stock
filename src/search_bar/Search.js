@@ -181,16 +181,15 @@ class Search extends React.Component {
 
 	suggestion_index_search(content) {
 		this.setState({ search_keyword: content });
-		this.input_helper(content);
-		this.clearSearch();
+		this.input_helper(content, this.clearSearch);
 	}
 
-	input_helper(content) {
+	input_helper(content, callback) {
 		let res = this.search(content);
 		res.then((value) => {
 			if (value !== -1) {
 				this.setState({ suggeestion_list: value[1] });
-				this.setState({ temp_data: value });
+				this.setState({ temp_data: value }, callback);
 			} else {
 				this.setState({ suggeestion_list: [] });
 			}
@@ -202,7 +201,7 @@ class Search extends React.Component {
 		let indices = this.state.stock_market.filter_indices(content);
 		this.setState({ incdices_list: indices });
 		this.setState({ search_keyword: content });
-		this.input_helper(content);
+		this.input_helper(content, null);
 	};
 
 	graphHandler = (yield_values) => {
