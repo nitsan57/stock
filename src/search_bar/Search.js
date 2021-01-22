@@ -180,6 +180,7 @@ class Search extends React.Component {
 	};
 
 	suggestion_index_search(content) {
+		this.setState({ search_keyword: content });
 		this.input_helper(content);
 		this.clearSearch();
 	}
