@@ -175,6 +175,8 @@ class Search extends React.Component {
 
 	addSearch = () => {
 		this.setState({ to_add_plot: true });
+		// this.setState({ search_keyword: '' });
+
 		this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1]);
 		this.hide_suggestions();
 	};
@@ -182,6 +184,20 @@ class Search extends React.Component {
 	suggestion_index_search(content) {
 		this.setState({ search_keyword: content });
 		this.input_helper(content, this.clearSearch);
+	}
+
+	async suggestionHandler(clicked_element) {
+		await this.clearState();
+		this.setState({ search_keyword: this.state.temp_data[0][clicked_element]['Name'] });
+
+		if (clicked_element === Consts.NUM_SEARCH_ELEMENTS_LIMIT_TO_SHOW) {
+			this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1]);
+		} else {
+			this.search_button_clicked(
+				[this.state.temp_data[0][clicked_element]],
+				[this.state.temp_data[1][clicked_element]]
+			);
+		}
 	}
 
 	input_helper(content, callback) {
@@ -223,19 +239,6 @@ class Search extends React.Component {
 
 	hide_suggestions() {
 		this.setState({ suggeestion_list: [] });
-	}
-
-	async suggestionHandler(clicked_element) {
-		await this.clearState();
-
-		if (clicked_element === Consts.NUM_SEARCH_ELEMENTS_LIMIT_TO_SHOW) {
-			this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1]);
-		} else {
-			this.search_button_clicked(
-				[this.state.temp_data[0][clicked_element]],
-				[this.state.temp_data[1][clicked_element]]
-			);
-		}
 	}
 
 	finish_loading() {
