@@ -70,7 +70,7 @@ export const HEBREW = {
 	TABLE: {
 		STD: 'שונות',
 		MANAGMENT_FEE_HEADER: 'דמי ניהול',
-		OVERALL_MANAGMENT_FEE_HEADER: 'דמי ניהול משוקלל',
+		OVERALL_MANAGMENT_FEE_HEADER: 'עלות משוקללת',
 		TRUST_FEE_HEADER: 'דמי נאמנות',
 		MANAGMENT_VAR_FEE_HEADER: 'דמי ניהול משתנים',
 		PRICE_HEADER: 'שער',

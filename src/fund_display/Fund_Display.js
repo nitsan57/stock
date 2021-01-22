@@ -1,85 +1,123 @@
 import React from 'react';
-import { DataGrid } from '@material-ui/data-grid';
 import Button from '@material-ui/core/Button';
+import DataTable from 'react-data-table-component';
+import SortIcon from '@material-ui/icons/ArrowDownward';
 
+function ExpandableComponent({ data }) {
+	return <h1>{data.name}</h1>;
+}
+
+const customStyles = {
+	rows: {
+		style: {
+			minHeight: '30px', // override the row height
+		},
+	},
+	headCells: {
+		style: {
+			paddingLeft: '8px', // override the cell padding for head cells
+			paddingRight: '8px',
+		},
+	},
+	cells: {
+		style: {
+			paddingLeft: '10px', // override the cell padding for data cells
+			paddingRight: '20px',
+			width: 20,
+		},
+	},
+};
+
+// Toggle the state so React Table Table changes to `clearSelectedRows` are triggered
+const handleClearRows = () => {
+	this.setState({ toggledClearRows: !this.state.toggledClearRows });
+};
 class FundDisplay extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			toggledClearRows: false,
 			selected: [],
 			currentrows: [],
+			toggledClearRows: false,
 			is_data_loaded: null,
 			text_lang: this.props.text_lang,
 			columns: [
 				{
-					field: 'graph_yield_value',
-					headerName: this.props.text_lang.TABLE.YIELD_HEADER,
-					width: 180,
-					align: 'center',
+					sortable: true,
+					selector: 'name',
+					name: this.props.text_lang.TABLE.NAME_HEADER,
+					align: 'right',
+					cell: (row) => <div style={{ fontWeight: 100 }}>{row.name}</div>,
+				},
+				{
+					sortable: true,
+					selector: 'fnum',
+					name: this.props.text_lang.TABLE.FUND_NUMBER_HEADER,
+					align: 'right',
+				},
+
+				{
+					sortable: true,
+					selector: 'overall',
+					name: this.props.text_lang.TABLE.OVERALL_MANAGMENT_FEE_HEADER,
+					valueFormatter: (params) =>
+						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
+					right: true,
+				},
+				{
+					sortable: true,
+					selector: 'mfee',
+					name: this.props.text_lang.TABLE.MANAGMENT_FEE_HEADER,
+					valueFormatter: (params) =>
+						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
+					right: true,
+					hide: 'lg',
+				},
+				{
+					sortable: true,
+					selector: 'lfee',
+					name: this.props.text_lang.TABLE.TRUST_FEE_HEADER,
+					valueFormatter: (params) =>
+						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
+					right: true,
+					hide: 'lg',
+				},
+				{
+					sortable: true,
+					selector: 'dfee',
+					name: this.props.text_lang.TABLE.MANAGMENT_VAR_FEE_HEADER,
+					valueFormatter: (params) =>
+						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
+					right: true,
+					hide: 'lg',
+				},
+				{
+					sortable: true,
+					selector: 'price',
+					name: this.props.text_lang.TABLE.PRICE_HEADER,
+					valueFormatter: (params) =>
+						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value,
+					right: true,
+				},
+
+				{
+					sortable: true,
+					selector: 'graph_yield_value',
+					name: this.props.text_lang.TABLE.YIELD_HEADER,
 					valueFormatter: (params) =>
 						params.value == null
 							? this.props.text_lang.TABLE.CALCULATING_DATA_CELL
 							: params.value.toFixed(2) + '%',
+					right: true,
 				},
 				{
-					field: 'std',
-					headerName: this.props.text_lang.TABLE.STD,
-					width: 75,
-					align: 'center',
+					sortable: true,
+					selector: 'std',
+					name: this.props.text_lang.TABLE.STD,
 					valueFormatter: (params) =>
 						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value,
-				},
-				{
-					field: 'overall',
-					headerName: this.props.text_lang.TABLE.OVERALL_MANAGMENT_FEE_HEADER,
-					width: 140,
-					align: 'center',
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
-				},
-				{
-					field: 'mfee',
-					headerName: this.props.text_lang.TABLE.MANAGMENT_FEE_HEADER,
-					width: 100,
-					align: 'center',
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
-				},
-				{
-					field: 'lfee',
-					headerName: this.props.text_lang.TABLE.TRUST_FEE_HEADER,
-					width: 100,
-					align: 'center',
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
-				},
-				{
-					field: 'dfee',
-					headerName: this.props.text_lang.TABLE.MANAGMENT_VAR_FEE_HEADER,
-					width: 150,
-					align: 'center',
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
-				},
-				{
-					field: 'price',
-					headerName: this.props.text_lang.TABLE.PRICE_HEADER,
-					width: 95,
-					align: 'center',
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value,
-				},
-				{
-					field: 'fnum',
-					headerName: this.props.text_lang.TABLE.FUND_NUMBER_HEADER,
-					align: 'center',
-					width: 100,
-				},
-				{
-					field: 'name',
-					headerName: this.props.text_lang.TABLE.NAME_HEADER,
-					align: 'right',
-					width: 240,
+					hide: 'lg',
 				},
 			],
 		};
@@ -145,20 +183,25 @@ class FundDisplay extends React.Component {
 		this.setState({ selected: row });
 	};
 
+	handleClearRows = () => {
+		this.setState({ toggledClearRows: !this.state.toggledClearRows });
+	};
 	cleanInfoTable = () => {
+		console.log('CLEAN', this.state.selected);
+
 		if (this.state.selected != undefined) {
 			let indexToRemove = [];
 			let ids_to_remove = [];
 			let i;
-
-			for (i = 0; i < this.state.selected.rowIds.length; i++) {
-				let deletedFund = this.state.selected.rowIds[i];
+			for (i = 0; i < this.state.selected.selectedRows.length; i++) {
+				let deletedFund = this.state.selected.selectedRows[i].id;
 				if (deletedFund <= this.props.info.length) {
 					indexToRemove.push(deletedFund - 1);
 					ids_to_remove.push(this.props.info[deletedFund - 1].id);
 				}
 			}
 			this.props.RemoveRowFromGraphHandler(ids_to_remove, indexToRemove);
+			this.handleClearRows();
 		}
 	};
 
@@ -167,22 +210,27 @@ class FundDisplay extends React.Component {
 			if (this.state.currentrows[0] !== undefined && !isNaN(this.state.currentrows[0]['graph_yield_value'])) {
 				return (
 					<div>
-						<DataGrid
-							showColumnRightBorder={true}
-							showCellRightBorder={true}
-							rtlEnabled={true}
-							pageSize={45}
-							rowsPerPageOptions={[10, 20, 45]}
-							rows={this.state.currentrows}
+						<DataTable
 							columns={this.state.columns}
-							checkboxSelection
-							onSelectionChange={this.handleRowSelection}
+							data={this.state.currentrows}
+							defaultSortField="title"
+							sortIcon={<SortIcon />}
+							pagination
+							selectableRows
+							direction="rtl"
+							dense
+							// expandableRows
+							// expandableRowsComponent={<ExpandableComponent />}
+							customStyles={customStyles}
+							striped
+							selectableRowsHighlight
+							onSelectedRowsChange={this.handleRowSelection}
+							clearSelectedRows={this.state.toggledClearRows}
 						/>
-
 						<Button
 							style={{
 								marginRight: 10,
-								marginTop: 400,
+								marginTop: 100,
 							}}
 							variant="contained"
 							color="primary"
