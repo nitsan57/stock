@@ -26,6 +26,7 @@ class Search extends React.Component {
 			temp_data: [[], []],
 			suggeestion_list: [],
 			info_list: [],
+			incdices_list: [],
 			indices_to_remove: [],
 			search_message: this.props.text_lang.SEARCH.DEFAULT_SEARCH_MSG,
 			today: this.get_today(),
@@ -42,6 +43,7 @@ class Search extends React.Component {
 			search_history: {},
 		};
 		this.clearSearch = this.clearSearch.bind(this);
+		this.suggestion_index_search = this.suggestion_index_search.bind(this);
 		this.hide_suggestions = this.hide_suggestions.bind(this);
 		this.show_suggestions = this.show_suggestions.bind(this);
 		this.suggestionHandler = this.suggestionHandler.bind(this);
@@ -177,6 +179,11 @@ class Search extends React.Component {
 		this.hide_suggestions();
 	};
 
+	suggestion_index_search(content) {
+		this.input_helper(content);
+		this.clearSearch();
+	}
+
 	input_helper(content) {
 		let res = this.search(content);
 		res.then((value) => {
@@ -191,6 +198,8 @@ class Search extends React.Component {
 
 	handleInputChange = (e) => {
 		const content = e.target.value;
+		let indices = this.state.stock_market.filter_indices(content);
+		this.setState({ incdices_list: indices });
 		this.setState({ search_keyword: content });
 		this.input_helper(content);
 	};
@@ -359,8 +368,11 @@ class Search extends React.Component {
 					/>
 					<Suggestions
 						click_handler={this.suggestionHandler}
+						index_search={this.suggestion_index_search}
 						results={this.state.suggeestion_list}
 						text_lang={this.state.text_lang}
+						stock_market={this.state.stock_market}
+						indices={this.state.incdices_list}
 					/>
 				</div>
 				<History search_history={this.state.search_history} />

@@ -1,11 +1,20 @@
 import { fetch_data } from '../utils/Utils';
 import * as Consts from '../utils/Consts';
 // import Information from '../info-json';
-import Information from '../new';
+import { Information } from '../new';
+import { Indices } from '../new';
+
+// import * as Consts from '../new'';
 
 const tase_info = Information;
+const tase_indices = Indices;
 
-export async function search(search_keyword, imitating, leveraged, short, normal_stock, today) {
+export function filter_indices(search_keyword) {
+	const filteredData = tase_indices.filter((word) => word.includes(search_keyword));
+	return filteredData;
+}
+
+export async function search(search_keyword, imitating, leveraged, short, normal_stock) {
 	const filteredData = tase_info.filter(
 		function (item) {
 			if (

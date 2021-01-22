@@ -6,6 +6,7 @@ export const TASE_STOCK_FUNCTIONS = {
 	extract_chart_point: TASE.extract_chart_point,
 	extract_table_info: TASE.extract_table_info,
 	extract_chart_length: TASE.extract_chart_length,
+	filter_indices: TASE.filter_indices,
 };
 
 export const NY_STOCK_FUNCTIONS = {

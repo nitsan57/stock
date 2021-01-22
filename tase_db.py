@@ -79,11 +79,25 @@ def req(f_id, f_type, f_subtype, f_sub_id):
     return resp.json()
 
 
+def fix_index_names(name):
+    bad_vars = ["AlphaBeta", "NTR", "RT", "GTR",
+                "Value", "INDEX", "Select", "Sector"]
+
+    index = name.replace("\"", "")
+    index = index.replace("-", " ")
+    for bad in bad_vars:
+        index = index.replace(" "+bad, " ")
+
+    index = re.sub(' +', ' ', index)
+    if index[-1] == " ":
+        index = index[:-1]
+    return index
+
+
 def prepare_data(fund_data, f_id, f_type, f_subtype, f_sub_id):
     # agah filter and bond_fund != = Consts.MAGNA_TYPE.BOND
     mutual_data = fund_data
     if ((f_type == TYPE_SECURITY and f_subtype != SUB_TYPE_STOCK) or f_type == TYPE_FUND):
-
         etf_data = fund_data.get('ETFDetails', None)
         # etf_data = fund_data['ETFDetails']
         if (etf_data is None):
@@ -134,7 +148,9 @@ def prepare_data(fund_data, f_id, f_type, f_subtype, f_sub_id):
         name = mutual_data['FundLongName']
 
     name = name.replace("\"", "")
-    name = name.replace("-", "")
+    name = name.replace("S&P500", "S&P 500")
+
+    name = name.replace("-", " ")
     name = re.sub(' +', ' ', name)
     # print(mutual_data)
     if mutual_data.get('FundIndicators', None) != None and type(mutual_data.get('FundIndicators', None)) == list:
@@ -142,6 +158,19 @@ def prepare_data(fund_data, f_id, f_type, f_subtype, f_sub_id):
             'IMITATING': mutual_data['FundIndicators'][IMITATING]['Value'],
             'SHORT': mutual_data['FundIndicators'][SHORT]['Value'],
             'LEVERAGED': mutual_data['FundIndicators'][LEVERAGED]['Value']}
+
+    index = "תא 35"
+    # if f_id.find("1150416") != -1:
+    #     print(mutual_data)
+    #     print(mutual_data['AssetRisk'])
+
+    try:
+        index = mutual_data['AssetRisk'][0]['AssetName']
+        index = fix_index_names(index)
+        print(index)
+
+    except:
+        pass
 
     relevant_info = {
         'Name': name,
@@ -160,7 +189,7 @@ def prepare_data(fund_data, f_id, f_type, f_subtype, f_sub_id):
         'Price': price,
         'StandardDeviation': std,
     }
-    return relevant_info
+    return relevant_info, index
 
 
 def main():
@@ -168,6 +197,8 @@ def main():
     all_securities = maya.get_all_securities()
     info = []
     # print(all_securities)
+    indices = set()
+
     for sec in all_securities:
         f_id = sec['Id']
         f_type = str(sec['Type'])
@@ -178,12 +209,30 @@ def main():
             continue
 
         x = req(f_id, f_type, f_subtype, f_sub_id)
-        fund_data = prepare_data(x, f_id, f_type, f_subtype, f_sub_id)
+        fund_data, index = prepare_data(x, f_id, f_type, f_subtype, f_sub_id)
+        indices.add(index)
         info.append(fund_data)
+
+    indices = list(indices)
+
+    filterd_indices = []
+
+    for index in indices:  # filter indices with etfs
+        for info_data in info:
+            if info_data["Name"].find(index) != -1:
+                filterd_indices.append(index)
+                break
+
     with open('new.js', 'w', encoding='utf-8') as fout:
-        fout.write("const Information = ")
+        fout.write("export const Information = ")
         json.dump(info, fout, indent=2, ensure_ascii=False)
-        fout.write("; \n export default Information; ")
+        fout.write("; \n ")
+        # fout.write("; \n export default Information; \n")
+
+        fout.write("export const Indices = ")
+        json.dump(filterd_indices, fout, indent=2, ensure_ascii=False)
+        fout.write(";")
+        # fout.write("; \n export default Indices; ")
 
 
 if __name__ == "__main__":

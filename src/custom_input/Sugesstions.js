@@ -7,8 +7,15 @@ const Suggestions = (props) => {
 		return null;
 	}
 	let suggestions = props.results.slice(0, Consts.NUM_SEARCH_ELEMENTS_LIMIT_TO_SHOW);
-	suggestions.push({ id: 0, name: props.text_lang.SUGGESTIONS.ALL });
-	const options = suggestions.map((r, index) => (
+	// Consts.NUM_SEARCH_INDICES_LIMIT_TO_SHOW
+	suggestions.push({ id: 9999, name: props.text_lang.SUGGESTIONS.ALL });
+	let show_indices = props.indices.slice(0, Consts.NUM_SEARCH_INDICES_LIMIT_TO_SHOW);
+	const indices_list = show_indices.map((r, index) => (
+		<Button size="sm" key={index} variant="outline-secondary" onMouseDown={() => props.index_search(r)}>
+			{r}
+		</Button>
+	));
+	const etfs = suggestions.map((r, index) => (
 		<Button size="sm" variant="outline-primary" key={r.id} onMouseDown={() => props.click_handler(index)}>
 			{r.name}
 		</Button>
@@ -21,7 +28,8 @@ const Suggestions = (props) => {
 				width: '40%',
 			}}
 		>
-			{options}
+			{indices_list}
+			{etfs}
 		</div>
 	);
 };
