@@ -13,33 +13,38 @@ const Suggestions = (props) => {
 	let suggestions = props.results.slice(0, total_to_show - indices_len);
 	suggestions.push({ id: 9999, name: props.text_lang.SUGGESTIONS.ALL });
 	const indices_list = show_indices.map((r, index) => (
-		<Button size="sm" key={index} variant="outline-secondary" onMouseDown={() => props.index_search(r)}>
-			{r}
-		</Button>
+		<SuggestionSingleLine
+			variant="outline-secondary"
+			search={props.index_search}
+			text_lang={props.text_lang}
+			name={r}
+			id={index}
+			index={r}
+		/>
 	));
 	const etfs = suggestions.map((r, index) => (
-		<Button size="sm" variant="outline-primary" key={r.id} onMouseDown={() => props.click_handler(index)}>
-			{r.name}
-		</Button>
-		// <CustomInput
-		// 	onNewSearch={null}
-		// 	onAddToGraphClick={null}
-		// 	text_lang={props.text_lang}
-		// 	value={r}
-		// 	onChange={null}
-		// />
+		<SuggestionSingleLine
+			search={props.specific_search}
+			text_lang={props.text_lang}
+			name={r.name}
+			id={r.id}
+			index={index}
+			variant="outline-primary"
+		/>
 	));
 	return (
-		<div
-			style={{
-				display: 'grid',
-				marginLeft: '30%',
-				width: '40%',
-			}}
-		>
+		// <div
+		// 	style={{
+		// 		display: 'grid',
+		// 		marginLeft: '30%',
+		// 		width: '40%',
+		// 	}}
+		// >
+		<div>
 			{indices_list}
 			{etfs}
 		</div>
+		// </div>
 	);
 };
 

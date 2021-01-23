@@ -1,51 +1,48 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
 import Plus from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
+import Button from 'react-bootstrap/Button';
 
 export default function CustomInput(props) {
 	const useStyles = makeStyles((theme) => ({
 		root: {
 			margin: 'auto',
-			padding: '2px 4px',
+			// padding: '2px 4px',
 			display: 'flex',
 			alignItems: 'center',
-			width: '60%',
+			width: '20%',
 		},
-		input: {
-			marginLeft: theme.spacing(1),
-			flex: 1,
-			padding: 10,
-			textAlign: props.text_lang.LANG_DIRECTION,
-			align: props.text_lang.LANG_DIRECTION,
-			'& input': {
-				textAlign: props.text_lang.LANG_DIRECTION,
-			},
-		},
+		// input: {
+		// 	marginLeft: theme.spacing(1),
+		// 	flex: 1,
+		// 	padding: 2,
+		// 	textAlign: props.text_lang.LANG_DIRECTION,
+		// 	align: props.text_lang.LANG_DIRECTION,
+		// 	'& input': {
+		// 		textAlign: props.text_lang.LANG_DIRECTION,
+		// 	},
+		// },
 		iconButton: {
-			padding: 10,
+			padding: 2,
 		},
-		divider: {
-			height: 28,
-			margin: 4,
-		},
+		// divider: {
+		// 	height: 28,
+		// 	margin: 4,
+		// },
 	}));
 	const classes = useStyles();
-	let input = props.value;
 
 	return (
 		<Paper
-			component="form"
+			component="div"
 			className={classes.root}
-			variant="outlined"
+			// variant="outlined"
 			onSubmit={(e) => {
 				e.preventDefault();
-				props.onNewSearch();
 			}}
 		>
 			<Tooltip title={props.text_lang.SEARCH.ADD_TO_GRAPH}>
@@ -53,18 +50,22 @@ export default function CustomInput(props) {
 					color="primary"
 					className={classes.iconButton}
 					aria-label="search"
-					onClick={props.onAddToGraphClick}
+					onMouseDown={() => props.search(props.index, true)}
 				>
 					<Plus />
 				</IconButton>
 			</Tooltip>
 			<Divider className={classes.divider} orientation="vertical" />
 			<Tooltip title={props.text_lang.SEARCH.NEW_SEARCH}>
-				<IconButton className={classes.iconButton} aria-label="search" onClick={props.onNewSearch}>
-					<SearchIcon />
-				</IconButton>
+				<Button
+					size="sm"
+					variant={props.variant}
+					key={props.id}
+					onMouseDown={() => props.search(props.index, false)}
+				>
+					{props.name}
+				</Button>
 			</Tooltip>
-			<h4>ssss</h4>
 		</Paper>
 	);
 }

@@ -182,14 +182,19 @@ class Search extends React.Component {
 		this.hide_suggestions();
 	};
 
-	suggestion_index_search(content) {
+	suggestion_index_search(content, to_add_plot) {
 		this.setState({ search_keyword: content });
-		this.input_helper(content, this.clearSearch);
+		if (to_add_plot) {
+			this.input_helper(content, this.addSearch);
+		} else {
+			this.input_helper(content, this.clearSearch);
+		}
 	}
 
-	async suggestionHandler(clicked_element) {
-		let to_add_plot = false;
-		await this.clearState();
+	async suggestionHandler(clicked_element, to_add_plot) {
+		if (!to_add_plot) {
+			await this.clearState();
+		}
 		this.setState({ search_keyword: this.state.temp_data[0][clicked_element]['Name'] });
 
 		if (clicked_element === Consts.NUM_SEARCH_ELEMENTS_LIMIT_TO_SHOW) {
@@ -374,7 +379,7 @@ class Search extends React.Component {
 						onChange={this.handleInputChange}
 					/>
 					<Suggestions
-						click_handler={this.suggestionHandler}
+						specific_search={this.suggestionHandler}
 						index_search={this.suggestion_index_search}
 						results={this.state.suggeestion_list}
 						text_lang={this.state.text_lang}
