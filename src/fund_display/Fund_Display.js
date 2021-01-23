@@ -2,15 +2,33 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import DataTable from 'react-data-table-component';
 import SortIcon from '@material-ui/icons/ArrowDownward';
+import { Hidden, responsiveFontSizes } from '@material-ui/core';
 
 function ExpandableComponent({ data }) {
-	return <h1>{data.name}</h1>;
+	console.log(data);
+	return (
+		<div>
+			{' '}
+			<h1> פרטי הקרן</h1>
+			<div>
+				{' '}
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}> שם נ"ע: {data.name} </h4>{' '}
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}> מספר נ"ע: {data.fnum} </h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}> דמי ניהול: {data.mfee} </h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}> דמי נאמנות: {data.lfee} </h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}> דמי ניהול משתנים: {data.dfee} </h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}> עלות כוללת: {data.overall} </h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}> שונות: {data.std} </h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}> שער: {data.price} </h4>
+			</div>
+		</div>
+	);
 }
 
 const customStyles = {
 	rows: {
 		style: {
-			minHeight: '30px', // override the row height
+			minHeight: '72px', // override the row height
 		},
 	},
 	headCells: {
@@ -21,17 +39,12 @@ const customStyles = {
 	},
 	cells: {
 		style: {
-			paddingLeft: '10px', // override the cell padding for data cells
-			paddingRight: '20px',
-			width: 20,
+			paddingLeft: '8px', // override the cell padding for data cells
+			paddingRight: '8px',
 		},
 	},
 };
 
-// Toggle the state so React Table Table changes to `clearSelectedRows` are triggered
-const handleClearRows = () => {
-	this.setState({ toggledClearRows: !this.state.toggledClearRows });
-};
 class FundDisplay extends React.Component {
 	constructor(props) {
 		super(props);
@@ -50,12 +63,6 @@ class FundDisplay extends React.Component {
 					align: 'right',
 					cell: (row) => <div style={{ fontWeight: 100 }}>{row.name}</div>,
 				},
-				{
-					sortable: true,
-					selector: 'fnum',
-					name: this.props.text_lang.TABLE.FUND_NUMBER_HEADER,
-					align: 'right',
-				},
 
 				{
 					sortable: true,
@@ -64,41 +71,7 @@ class FundDisplay extends React.Component {
 					valueFormatter: (params) =>
 						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
 					right: true,
-				},
-				{
-					sortable: true,
-					selector: 'mfee',
-					name: this.props.text_lang.TABLE.MANAGMENT_FEE_HEADER,
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
-					right: true,
 					hide: 'lg',
-				},
-				{
-					sortable: true,
-					selector: 'lfee',
-					name: this.props.text_lang.TABLE.TRUST_FEE_HEADER,
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
-					right: true,
-					hide: 'lg',
-				},
-				{
-					sortable: true,
-					selector: 'dfee',
-					name: this.props.text_lang.TABLE.MANAGMENT_VAR_FEE_HEADER,
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
-					right: true,
-					hide: 'lg',
-				},
-				{
-					sortable: true,
-					selector: 'price',
-					name: this.props.text_lang.TABLE.PRICE_HEADER,
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value,
-					right: true,
 				},
 
 				{
@@ -110,14 +83,6 @@ class FundDisplay extends React.Component {
 							? this.props.text_lang.TABLE.CALCULATING_DATA_CELL
 							: params.value.toFixed(2) + '%',
 					right: true,
-				},
-				{
-					sortable: true,
-					selector: 'std',
-					name: this.props.text_lang.TABLE.STD,
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value,
-					hide: 'lg',
 				},
 			],
 		};
@@ -187,8 +152,6 @@ class FundDisplay extends React.Component {
 		this.setState({ toggledClearRows: !this.state.toggledClearRows });
 	};
 	cleanInfoTable = () => {
-		console.log('CLEAN', this.state.selected);
-
 		if (this.state.selected != undefined) {
 			let indexToRemove = [];
 			let ids_to_remove = [];
@@ -219,13 +182,14 @@ class FundDisplay extends React.Component {
 							selectableRows
 							direction="rtl"
 							dense
-							// expandableRows
-							// expandableRowsComponent={<ExpandableComponent />}
+							expandableRows
+							expandableRowsComponent={<ExpandableComponent />}
 							customStyles={customStyles}
 							striped
 							selectableRowsHighlight
 							onSelectedRowsChange={this.handleRowSelection}
 							clearSelectedRows={this.state.toggledClearRows}
+							customStyles={customStyles}
 						/>
 						<Button
 							style={{

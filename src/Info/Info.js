@@ -67,7 +67,12 @@ class Info extends React.Component {
 
 	render() {
 		return (
-			<div>
+			<div
+				style={{
+					width: '100%',
+					margin: 'auto',
+				}}
+			>
 				<FundDisplay
 					info={this.state.info}
 					text_lang={this.state.text_lang}
