@@ -35,7 +35,7 @@ class Graph extends React.Component {
 			type: 'scatter',
 			mode: 'lines',
 			name: name,
-			showlegend: true,
+			hovertemplate: '<i>Yield</i>: %{y:.2f}%' + '<br>%{x}<br>',
 		};
 	}
 
@@ -272,7 +272,9 @@ class Graph extends React.Component {
 						<Plot
 							style={{ width: '100%', height: '100%' }}
 							data={this.state.data}
+							// onHover={(e) => console.log(e)}
 							layout={{
+								hovermode: 'closest',
 								margin: { t: 0, b: 30, l: 0, r: 0 },
 								autosize: true,
 								showlegend: false,
