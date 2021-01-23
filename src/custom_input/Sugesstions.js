@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import * as Consts from '../utils/Consts';
+import SuggestionSingleLine from '../custom_input/SuggestionSingleLine';
 
 const Suggestions = (props) => {
 	if (props.results.length === 0) {
@@ -20,6 +21,13 @@ const Suggestions = (props) => {
 		<Button size="sm" variant="outline-primary" key={r.id} onMouseDown={() => props.click_handler(index)}>
 			{r.name}
 		</Button>
+		// <CustomInput
+		// 	onNewSearch={null}
+		// 	onAddToGraphClick={null}
+		// 	text_lang={props.text_lang}
+		// 	value={r}
+		// 	onChange={null}
+		// />
 	));
 	return (
 		<div

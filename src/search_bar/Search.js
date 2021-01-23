@@ -210,6 +210,7 @@ class Search extends React.Component {
 				this.setState({ suggeestion_list: value[1] });
 				this.setState({ temp_data: value }, callback);
 			} else {
+				this.setState({ temp_data: [[], []] }, null);
 				this.setState({ suggeestion_list: [] });
 			}
 		});
