@@ -63,7 +63,7 @@ class Search extends React.Component {
 		return today;
 	}
 
-	search_button_clicked(temp_fund_list, temp_info_list) {
+	search_button_clicked(temp_fund_list, temp_info_list, to_add_plot) {
 		if (temp_fund_list.length !== 0) {
 			let new_info_list = [];
 			let new_fund_list = [];
@@ -77,7 +77,7 @@ class Search extends React.Component {
 				this.state.fund_set.add(JSON.stringify(item));
 			});
 
-			if (this.state.info_set.size === prev_size && this.state.to_add_plot) {
+			if (this.state.info_set.size === prev_size && to_add_plot) {
 				this.setState({
 					search_message: this.state.text_lang.SEARCH.NO_NEW_FUND_TO_ADD,
 				});
@@ -168,20 +168,39 @@ class Search extends React.Component {
 	}
 
 	async clearSearch() {
+		let to_add_plot = false;
 		await this.clearState();
-		this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1]);
+		this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1], to_add_plot);
 		this.hide_suggestions();
 	}
 
 	addSearch = () => {
-		this.setState({ to_add_plot: true });
-		this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1]);
+		let to_add_plot = true;
+		this.setState({ to_add_plot: to_add_plot });
+		// this.setState({ search_keyword: '' });
+		this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1], to_add_plot);
 		this.hide_suggestions();
 	};
 
 	suggestion_index_search(content) {
 		this.setState({ search_keyword: content });
 		this.input_helper(content, this.clearSearch);
+	}
+
+	async suggestionHandler(clicked_element) {
+		let to_add_plot = false;
+		await this.clearState();
+		this.setState({ search_keyword: this.state.temp_data[0][clicked_element]['Name'] });
+
+		if (clicked_element === Consts.NUM_SEARCH_ELEMENTS_LIMIT_TO_SHOW) {
+			this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1], to_add_plot);
+		} else {
+			this.search_button_clicked(
+				[this.state.temp_data[0][clicked_element]],
+				[this.state.temp_data[1][clicked_element]],
+				to_add_plot
+			);
+		}
 	}
 
 	input_helper(content, callback) {
@@ -191,6 +210,7 @@ class Search extends React.Component {
 				this.setState({ suggeestion_list: value[1] });
 				this.setState({ temp_data: value }, callback);
 			} else {
+				this.setState({ temp_data: [[], []] }, null);
 				this.setState({ suggeestion_list: [] });
 			}
 		});
@@ -223,19 +243,6 @@ class Search extends React.Component {
 
 	hide_suggestions() {
 		this.setState({ suggeestion_list: [] });
-	}
-
-	async suggestionHandler(clicked_element) {
-		await this.clearState();
-
-		if (clicked_element === Consts.NUM_SEARCH_ELEMENTS_LIMIT_TO_SHOW) {
-			this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1]);
-		} else {
-			this.search_button_clicked(
-				[this.state.temp_data[0][clicked_element]],
-				[this.state.temp_data[1][clicked_element]]
-			);
-		}
 	}
 
 	finish_loading() {
