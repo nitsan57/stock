@@ -195,17 +195,18 @@ class Search extends React.Component {
 		if (!to_add_plot) {
 			await this.clearState();
 		}
+
+		if (clicked_element === 9999) {
+			this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1], to_add_plot);
+			return;
+		}
 		this.setState({ search_keyword: this.state.temp_data[0][clicked_element]['Name'] });
 
-		if (clicked_element === Consts.NUM_SEARCH_ELEMENTS_LIMIT_TO_SHOW) {
-			this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1], to_add_plot);
-		} else {
-			this.search_button_clicked(
-				[this.state.temp_data[0][clicked_element]],
-				[this.state.temp_data[1][clicked_element]],
-				to_add_plot
-			);
-		}
+		this.search_button_clicked(
+			[this.state.temp_data[0][clicked_element]],
+			[this.state.temp_data[1][clicked_element]],
+			to_add_plot
+		);
 	}
 
 	input_helper(content, callback) {

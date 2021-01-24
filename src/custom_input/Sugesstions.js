@@ -11,7 +11,7 @@ const Suggestions = (props) => {
 	let show_indices = props.indices.slice(0, Consts.NUM_SEARCH_INDICES_LIMIT_TO_SHOW);
 	let indices_len = show_indices.length;
 	let suggestions = props.results.slice(0, total_to_show - indices_len);
-	suggestions.push({ id: 9999, name: props.text_lang.SUGGESTIONS.ALL });
+	// suggestions.push({ id: 9999, name: props.text_lang.SUGGESTIONS.ALL });
 	const indices_list = show_indices.map((r, index) => (
 		<SuggestionSingleLine
 			variant="outline-secondary"
@@ -32,6 +32,16 @@ const Suggestions = (props) => {
 			variant="outline-primary"
 		/>
 	));
+	const show_all = (
+		<SuggestionSingleLine
+			search={props.specific_search}
+			text_lang={props.text_lang}
+			name={props.text_lang.SUGGESTIONS.ALL}
+			id={9999}
+			index={9999}
+			variant="outline-primary"
+		/>
+	);
 	return (
 		// <div
 		// 	style={{
@@ -43,6 +53,7 @@ const Suggestions = (props) => {
 		<div>
 			{indices_list}
 			{etfs}
+			{show_all}
 		</div>
 		// </div>
 	);

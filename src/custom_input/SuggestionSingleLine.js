@@ -29,20 +29,20 @@ export default function CustomInput(props) {
 		iconButton: {
 			padding: 2,
 		},
-		// divider: {
-		// 	height: 28,
-		// 	margin: 4,
-		// },
+		divider: {
+			// margin: 'auto',
+			height: 20,
+			margin: 2,
+		},
 	}));
 	const classes = useStyles();
 
 	return (
-		<Paper
-			component="div"
-			className={classes.root}
-			// variant="outlined"
-			onSubmit={(e) => {
-				e.preventDefault();
+		<div
+			style={{
+				marginLeft: '30%',
+				display: 'flex',
+				width: '60%',
 			}}
 		>
 			<Tooltip title={props.text_lang.SEARCH.ADD_TO_GRAPH}>
@@ -51,6 +51,7 @@ export default function CustomInput(props) {
 					className={classes.iconButton}
 					aria-label="search"
 					onMouseDown={() => props.search(props.index, true)}
+					s
 				>
 					<Plus />
 				</IconButton>
@@ -58,14 +59,26 @@ export default function CustomInput(props) {
 			<Divider className={classes.divider} orientation="vertical" />
 			<Tooltip title={props.text_lang.SEARCH.NEW_SEARCH}>
 				<Button
+					style={{
+						margin: '0',
+						// padding: '2px 4px',
+						display: 'flex',
+						width: '60%',
+					}}
 					size="sm"
 					variant={props.variant}
 					key={props.id}
 					onMouseDown={() => props.search(props.index, false)}
 				>
-					{props.name}
+					<div
+						style={{
+							margin: 'auto',
+						}}
+					>
+						{props.name}
+					</div>
 				</Button>
 			</Tooltip>
-		</Paper>
+		</div>
 	);
 }
