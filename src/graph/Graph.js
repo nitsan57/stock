@@ -278,14 +278,25 @@ class Graph extends React.Component {
 								margin: { t: 0, b: 30, l: 0, r: 0 },
 								autosize: true,
 								showlegend: false,
-								yaxis: { tickformat: ',.0%' },
-								responsive: true,
-
+								yaxis: {
+									tickformat: ',.0%',
+									automargin: true,
+									tick0: 0,
+									dtick: 0.01,
+									ticklen: 8,
+									tickwidth: 4,
+									tickcolor: '#000',
+								},
 								xaxis: {
 									tickmode: 'array',
 									tick0: 0,
 									tickvals: this.state.xticks,
+									ticklen: 8,
+									tickwidth: 4,
+									tickcolor: '#000',
+									automargin: true,
 								},
+								responsive: true,
 							}}
 							useResizeHandler={true}
 						/>
