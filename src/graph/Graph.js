@@ -282,7 +282,7 @@ class Graph extends React.Component {
 									tickformat: ',.0%',
 									automargin: true,
 									tick0: 0,
-									dtick: 0.01,
+									dtick: 0.05,
 									ticklen: 8,
 									tickwidth: 4,
 									tickcolor: '#000',
