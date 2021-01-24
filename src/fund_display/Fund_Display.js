@@ -68,8 +68,11 @@ class FundDisplay extends React.Component {
 					sortable: true,
 					selector: 'overall',
 					name: this.props.text_lang.TABLE.OVERALL_MANAGMENT_FEE_HEADER,
-					valueFormatter: (params) =>
-						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
+					cell: (row) => (
+						<div style={{ fontWeight: 100 }}>
+							{row.overall == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : row.overall + '%'}
+						</div>
+					),
 					right: true,
 				},
 
@@ -77,6 +80,13 @@ class FundDisplay extends React.Component {
 					sortable: true,
 					selector: 'graph_yield_value',
 					name: this.props.text_lang.TABLE.YIELD_HEADER,
+					cell: (row) => (
+						<div style={{ fontWeight: 100 }}>
+							{row.graph_yield_value == null
+								? this.props.text_lang.TABLE.CALCULATING_DATA_CELL
+								: row.graph_yield_value.toFixed(2) + '%'}
+						</div>
+					),
 					valueFormatter: (params) =>
 						params.value == null
 							? this.props.text_lang.TABLE.CALCULATING_DATA_CELL
