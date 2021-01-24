@@ -71,7 +71,6 @@ class FundDisplay extends React.Component {
 					valueFormatter: (params) =>
 						params.value == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : params.value + '%',
 					right: true,
-					hide: 'lg',
 				},
 
 				{
