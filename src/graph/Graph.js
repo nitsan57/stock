@@ -273,6 +273,7 @@ class Graph extends React.Component {
 							style={{ width: '100%', height: '100%' }}
 							data={this.state.data}
 							// onHover={(e) => console.log(e)}
+							config={{ displayModeBar: false }}
 							layout={{
 								hovermode: 'closest',
 								margin: { t: 0, b: 30, l: 0, r: 0 },
@@ -296,6 +297,7 @@ class Graph extends React.Component {
 									tickcolor: '#000',
 									automargin: true,
 								},
+								displayModeBar: false,
 								responsive: true,
 							}}
 							useResizeHandler={true}
