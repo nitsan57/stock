@@ -19,7 +19,7 @@ class Graph extends React.Component {
 			xticks: [],
 			dates: [],
 			slider_values: [0, 0],
-			is_data_loaded: null,
+			is_data_loaded: false,
 			stock_market: this.props.stock_market,
 			text_lang: this.props.text_lang,
 		};
@@ -172,21 +172,20 @@ class Graph extends React.Component {
 		if (nextState.data !== this.state.data) {
 			return true;
 		}
-		if (nextState.is_data_loaded && !this.state.is_data_loaded) {
+		if (nextState.is_data_loaded !== this.state.is_data_loaded) {
 			return true;
 		}
-		if (this.props.funds && nextProps.funds) {
-			if (nextProps.funds.length !== this.props.funds.length) {
-				return true;
-			} else {
-				return false;
-			}
+
+		if (nextProps.funds !== this.props.funds) {
+			return true;
+		} else {
+			return false;
 		}
+		// }
 	}
 
 	async componentDidUpdate(prevProps) {
 		// Typical usage (don't forget to compare props):
-
 		if (this.props.funds.length !== prevProps.funds.length) {
 			if (this.props.indices_to_remove.length !== 0) {
 				this.remove_state_incdices('data', this.state.data, this.props.indices_to_remove);
@@ -205,7 +204,8 @@ class Graph extends React.Component {
 			var today = this.props.today;
 			var funds = this.props.funds;
 			if (funds.length === 0) {
-				this.setState({ is_data_loaded: null });
+				// this.setState({ data: [] });
+				this.setState({ is_data_loaded: false });
 				this.props.graphHandler([]);
 				return;
 			}
@@ -256,8 +256,6 @@ class Graph extends React.Component {
 	};
 
 	render() {
-		// console.log('here');
-		if (this.state.is_data_loaded == null) return null;
 		if (this.state.data.length === 0) return null;
 
 		if (this.state.is_data_loaded) {
@@ -298,16 +296,16 @@ class Graph extends React.Component {
 									automargin: true,
 									tick0: 0,
 									dtick: 0.05,
-									ticklen: 8,
-									tickwidth: 4,
+									ticklen: 4,
+									tickwidth: 2,
 									tickcolor: '#000',
 								},
 								xaxis: {
 									tickmode: 'array',
 									tick0: 0,
 									tickvals: this.state.xticks,
-									ticklen: 8,
-									tickwidth: 4,
+									ticklen: 4,
+									tickwidth: 2,
 									tickcolor: '#000',
 									automargin: true,
 								},

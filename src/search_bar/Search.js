@@ -161,8 +161,10 @@ class Search extends React.Component {
 		await this.setStateAsync({ info_set: new Set() });
 		await this.setStateAsync({ fund_set: new Set() });
 		this.setState({ graph_yield_values: [] });
-		this.state.fund_list.splice(0, this.state.fund_list.length);
-		this.state.info_list.splice(0, this.state.info_list.length);
+		// this.state.fund_list.splice(0, this.state.fund_list.length);
+		// this.state.info_list.splice(0, this.state.info_list.length);
+		this.setState({ fund_list: [] });
+		this.setState({ info_list: [] });
 		this.setState({ to_add_plot: false });
 		this.setState({ search_history: {} });
 	}
