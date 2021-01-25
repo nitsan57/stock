@@ -2,10 +2,8 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import DataTable from 'react-data-table-component';
 import SortIcon from '@material-ui/icons/ArrowDownward';
-import { Hidden, responsiveFontSizes } from '@material-ui/core';
 
 function ExpandableComponent({ data }) {
-	console.log(data);
 	return (
 		<div>
 			{' '}
@@ -52,7 +50,6 @@ class FundDisplay extends React.Component {
 			toggledClearRows: false,
 			selected: [],
 			currentrows: [],
-			toggledClearRows: false,
 			is_data_loaded: null,
 			text_lang: this.props.text_lang,
 			columns: [
@@ -188,8 +185,10 @@ class FundDisplay extends React.Component {
 							defaultSortField="title"
 							sortIcon={<SortIcon />}
 							pagination
+							paginationPerPage={20}
+							paginationRowsPerPageOptions={[20, 40, 60]}
 							selectableRows
-							direction="rtl"
+							direction={this.state.text_lang.TABLE.DIRECTION}
 							dense
 							expandableRows
 							expandableRowsComponent={<ExpandableComponent />}
@@ -198,7 +197,6 @@ class FundDisplay extends React.Component {
 							selectableRowsHighlight
 							onSelectedRowsChange={this.handleRowSelection}
 							clearSelectedRows={this.state.toggledClearRows}
-							customStyles={customStyles}
 						/>
 						<Button
 							style={{

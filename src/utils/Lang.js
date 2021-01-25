@@ -21,6 +21,7 @@ export const ENGLISH = {
 	GRAPH: { WEEK_BUTTON: 'week', MONTH_BUTTON: 'month', YEAR_BUTTON: 'year', ALL_TIME_BUTTON: 'all-time' },
 
 	TABLE: {
+		DIRECTION: 'ltr',
 		STD: 'std',
 		MANAGMENT_FEE_HEADER: 'managment fee',
 		OVERALL_MANAGMENT_FEE_HEADER: 'total fixed fee',
@@ -41,6 +42,7 @@ export const ENGLISH = {
 
 export const HEBREW = {
 	LANG_DIRECTION: 'right',
+
 	SEARCH: {
 		DEFAULT_SEARCH_KEYWORD: '',
 		DEFAULT_SEARCH_MSG: 'חפש',
@@ -68,6 +70,7 @@ export const HEBREW = {
 	},
 
 	TABLE: {
+		DIRECTION: 'rtl',
 		STD: 'שונות',
 		MANAGMENT_FEE_HEADER: 'דמי ניהול',
 		OVERALL_MANAGMENT_FEE_HEADER: 'עלות משוקללת',
