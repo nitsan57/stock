@@ -272,11 +272,8 @@ class Graph extends React.Component {
 							style={{ width: '100%', height: '100%' }}
 							data={this.state.data}
 							onHover={(e) => {
-								// let index = e['points'][0]['curveNumber'];
-								// let temp_data = this.state.data; //.slice();
-								// temp_data[index]['opacity'] = 1;
-								// this.setState({ data: temp_data });
-								// this.forceUpdate();
+								let dragLayer = document.getElementsByClassName('nsewdrag')[0];
+								dragLayer.style.cursor = 'pointer';
 							}}
 							onUnhover={(e) => {
 								// let index = e['points'][0]['curveNumber'];
@@ -284,6 +281,8 @@ class Graph extends React.Component {
 								// temp_data[index]['opacity'] = 0.5;
 								// this.setState({ data: temp_data });
 								// this.forceUpdate();
+								let dragLayer = document.getElementsByClassName('nsewdrag')[0];
+								dragLayer.style.cursor = '';
 							}}
 							config={{ displayModeBar: false }}
 							layout={{

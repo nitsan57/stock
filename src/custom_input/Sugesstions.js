@@ -3,9 +3,9 @@ import * as Consts from '../utils/Consts';
 import SuggestionSingleLine from '../custom_input/SuggestionSingleLine';
 
 const Suggestions = (props) => {
-	// if (props.results.length === 0) {
-	// 	return null;
-	// }
+	if (props.results.length === 0) {
+		return null;
+	}
 	let total_to_show = Consts.NUM_SEARCH_ELEMENTS_LIMIT_TO_SHOW + Consts.NUM_SEARCH_INDICES_LIMIT_TO_SHOW;
 	let show_indices = props.indices.slice(0, Consts.NUM_SEARCH_INDICES_LIMIT_TO_SHOW);
 	let indices_len = show_indices.length;
@@ -46,7 +46,7 @@ const Suggestions = (props) => {
 		<div>
 			{indices_list}
 			{etfs}
-			{/* {show_all} */}
+			{show_all}
 		</div>
 	);
 };
