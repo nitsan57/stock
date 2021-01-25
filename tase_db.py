@@ -81,7 +81,7 @@ def req(f_id, f_type, f_subtype, f_sub_id):
 
 def fix_index_names(name):
     bad_vars = ["AlphaBeta", "NTR", "RT", "GTR",
-                "Value", "INDEX", "Select", "Sector"]
+                "Value", "INDEX", "Select", "Sector", "ENTREPRISES"]
 
     index = name.replace("\"", "")
     index = index.replace("-", " ")
@@ -197,7 +197,7 @@ def main():
     all_securities = maya.get_all_securities()
     info = []
     # print(all_securities)
-    indices = set()
+    indices = dict()
 
     for sec in all_securities:
         f_id = sec['Id']
@@ -210,10 +210,15 @@ def main():
 
         x = req(f_id, f_type, f_subtype, f_sub_id)
         fund_data, index = prepare_data(x, f_id, f_type, f_subtype, f_sub_id)
-        indices.add(index)
+
+        if index in indices:
+            indices[index] = indices[index] + 1
+        else:
+            indices[index] = 0
+
         info.append(fund_data)
 
-    indices = list(indices)
+    indices = sorted(indices, key=indices.get, reverse=True)
 
     filterd_indices = []
 
