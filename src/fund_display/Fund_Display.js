@@ -137,7 +137,8 @@ class FundDisplay extends React.Component {
 			for (i = 0; i < currentrows.length; i++) {
 				currentrows[i]['graph_yield_value'] = this.props.graph_yield_values[i] * 100;
 			}
-			this.setState({ currentrows }); //update the value
+			this.setState({ columns: [...this.state.columns] }); //update the value
+			this.setState({ currentrows: currentrows }); //update the value
 		}
 	}
 

@@ -35,7 +35,7 @@ class Info extends React.Component {
 
 	shouldComponentUpdate(nextProps, nextState) {
 		if (
-			(nextState.is_data_loaded && !this.state.is_data_loaded) ||
+			nextState.is_data_loaded != !this.state.is_data_loaded ||
 			nextProps.graph_yield_values !== this.props.graph_yield_values
 		) {
 			return true;
