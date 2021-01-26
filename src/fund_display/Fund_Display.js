@@ -120,10 +120,10 @@ class FundDisplay extends React.Component {
 	}
 
 	createData(name, fnum, mfee, lfee, dfee, price, std, graph_yield_value, index, lang) {
-		let overall = mfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : mfee + lfee;
-		mfee = mfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : mfee;
-		lfee = lfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : lfee;
-		dfee = dfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : dfee;
+		let overall = mfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : mfee + lfee + '%';
+		mfee = mfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : mfee + '%';
+		lfee = lfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : lfee + '%';
+		dfee = dfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : dfee + '%';
 		price = price == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : price;
 		std = std == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : std;
 		return {
