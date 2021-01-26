@@ -4,20 +4,45 @@ import DataTable from 'react-data-table-component';
 import SortIcon from '@material-ui/icons/ArrowDownward';
 
 function ExpandableComponent({ data }) {
+	let lang = data['lang'];
 	return (
 		<div>
 			{' '}
 			<h1> פרטי הקרן</h1>
 			<div>
 				{' '}
-				<h4 style={{ textAlign: 'right', fontSize: 12 }}> שם נ"ע: {data.name} </h4>{' '}
-				<h4 style={{ textAlign: 'right', fontSize: 12 }}> מספר נ"ע: {data.fnum} </h4>
-				<h4 style={{ textAlign: 'right', fontSize: 12 }}> דמי ניהול: {data.mfee} </h4>
-				<h4 style={{ textAlign: 'right', fontSize: 12 }}> דמי נאמנות: {data.lfee} </h4>
-				<h4 style={{ textAlign: 'right', fontSize: 12 }}> דמי ניהול משתנים: {data.dfee} </h4>
-				<h4 style={{ textAlign: 'right', fontSize: 12 }}> עלות כוללת: {data.overall} </h4>
-				<h4 style={{ textAlign: 'right', fontSize: 12 }}> שונות: {data.std} </h4>
-				<h4 style={{ textAlign: 'right', fontSize: 12 }}> שער: {data.price} </h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}>
+					{' '}
+					{lang.TABLE.NAME_HEADER}: {data.name}{' '}
+				</h4>{' '}
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}>
+					{' '}
+					{lang.TABLE.FUND_NUMBER_HEADER}: {data.fnum}{' '}
+				</h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}>
+					{' '}
+					{lang.TABLE.MANAGMENT_FEE_HEADER}: {data.mfee}{' '}
+				</h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}>
+					{' '}
+					{lang.TABLE.TRUST_FEE_HEADER}: {data.lfee}{' '}
+				</h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}>
+					{' '}
+					{lang.TABLE.MANAGMENT_VAR_FEE_HEADER}: {data.dfee}{' '}
+				</h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}>
+					{' '}
+					{lang.TABLE.OVERALL_MANAGMENT_FEE_HEADER}: {data.overall}{' '}
+				</h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}>
+					{' '}
+					{lang.TABLE.STD}: {data.std}{' '}
+				</h4>
+				<h4 style={{ textAlign: 'right', fontSize: 12 }}>
+					{' '}
+					{lang.TABLE.PRICE_HEADER}: {data.price}{' '}
+				</h4>
 			</div>
 		</div>
 	);
@@ -66,8 +91,8 @@ class FundDisplay extends React.Component {
 					selector: 'overall',
 					name: this.props.text_lang.TABLE.OVERALL_MANAGMENT_FEE_HEADER,
 					cell: (row) => (
-						<div style={{ fontWeight: 100 }}>
-							{row.overall == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : row.overall + '%'}
+						<div>
+							<div style={{ fontWeight: 100 }}>{row.overall}</div>
 						</div>
 					),
 					right: true,
@@ -94,7 +119,13 @@ class FundDisplay extends React.Component {
 		};
 	}
 
-	createData(name, fnum, mfee, lfee, dfee, price, std, graph_yield_value, index) {
+	createData(name, fnum, mfee, lfee, dfee, price, std, graph_yield_value, index, lang) {
+		let overall = mfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : mfee + lfee;
+		mfee = mfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : mfee;
+		lfee = lfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : lfee;
+		dfee = dfee == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : dfee;
+		price = price == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : price;
+		std = std == null ? this.props.text_lang.TABLE.NO_DATA_HEADER : std;
 		return {
 			name,
 			fnum,
@@ -102,10 +133,11 @@ class FundDisplay extends React.Component {
 			lfee,
 			dfee,
 			id: index + 1,
-			overall: (lfee + mfee).toFixed(2),
+			overall: overall,
 			price,
 			std,
 			graph_yield_value,
+			lang,
 		};
 	}
 
@@ -123,7 +155,8 @@ class FundDisplay extends React.Component {
 					this.props.info[i]['price'],
 					this.props.info[i]['std'],
 					this.props.graph_yield_values[i] * 100,
-					i
+					i,
+					this.state.text_lang
 				)
 			);
 		}
