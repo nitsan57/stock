@@ -74,7 +74,7 @@ class Search extends React.Component {
 		return today;
 	}
 
-	search_button_clicked(temp_fund_list, temp_info_list, to_add_plot) {
+	search_button_clicked(temp_fund_list, temp_info_list, to_add_plot, history_keyword) {
 		if (temp_fund_list.length !== 0) {
 			let new_info_list = [];
 			let new_fund_list = [];
@@ -111,7 +111,7 @@ class Search extends React.Component {
 			this.setState({ info_list: new_info_list });
 			this.setState({ fund_list: new_fund_list });
 			let old_history = this.state.search_history;
-			old_history[this.state.search_keyword] = 0;
+			old_history[history_keyword] = 0;
 			this.setState({ search_history: old_history });
 		}
 	}
@@ -183,7 +183,12 @@ class Search extends React.Component {
 	async clearSearch() {
 		let to_add_plot = false;
 		await this.clearState();
-		this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1], to_add_plot);
+		this.search_button_clicked(
+			this.state.temp_data[0],
+			this.state.temp_data[1],
+			to_add_plot,
+			this.state.search_keyword
+		);
 		this.hide_suggestions();
 	}
 
@@ -191,7 +196,12 @@ class Search extends React.Component {
 		let to_add_plot = true;
 		this.setState({ to_add_plot: to_add_plot });
 		// this.setState({ search_keyword: '' });
-		this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1], to_add_plot);
+		this.search_button_clicked(
+			this.state.temp_data[0],
+			this.state.temp_data[1],
+			to_add_plot,
+			this.state.search_keyword
+		);
 		this.hide_suggestions();
 	};
 
@@ -210,15 +220,20 @@ class Search extends React.Component {
 		}
 
 		if (clicked_element === 9999) {
-			this.search_button_clicked(this.state.temp_data[0], this.state.temp_data[1], to_add_plot);
+			this.search_button_clicked(
+				this.state.temp_data[0],
+				this.state.temp_data[1],
+				to_add_plot,
+				this.state.search_keyword
+			);
 			return;
 		}
-		this.setState({ search_keyword: this.state.temp_data[0][clicked_element]['Name'] });
 
 		this.search_button_clicked(
 			[this.state.temp_data[0][clicked_element]],
 			[this.state.temp_data[1][clicked_element]],
-			to_add_plot
+			to_add_plot,
+			this.state.temp_data[0][clicked_element]['Name']
 		);
 	}
 
