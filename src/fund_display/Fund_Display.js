@@ -178,6 +178,9 @@ class FundDisplay extends React.Component {
 	componentDidMount() {}
 
 	componentDidUpdate(prevProps) {
+		// if (this.props.text_lang.NAME !== prevProps.text_lang.NAME) {
+		// 	this.setState({ text_lang: this.props.text_lang });
+		// }
 		this.update_from_graph(prevProps);
 		if (this.props.info !== prevProps.info) {
 			this.updateInfo();

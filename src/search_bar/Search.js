@@ -9,6 +9,11 @@ import Suggestions from '../custom_input/Sugesstions';
 import History from '../history/History';
 import * as Consts from '../utils/Consts';
 
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 const NUM_LOADING_CHILDREN = 2;
 
 class Search extends React.Component {
@@ -39,6 +44,7 @@ class Search extends React.Component {
 				{ key: 3, value: this.props.text_lang.SEARCH.SHORT, isChecked: false },
 				{ key: 4, value: this.props.text_lang.SEARCH.STOCKS, isChecked: false },
 			],
+			expandable_json: { [this.props.text_lang.SEARCH.IMITATING]: 0 },
 			search_all: false,
 			search_history: {},
 		};
@@ -51,6 +57,11 @@ class Search extends React.Component {
 		this.setStateAsync = this.setStateAsync.bind(this);
 		this.finish_loading = this.finish_loading.bind(this);
 		this.RemoveRowFromGraphHandler = this.RemoveRowFromGraphHandler.bind(this);
+	}
+	componentDidUpdate(prevProps) {
+		if (this.props.text_lang.NAME !== prevProps.text_lang.NAME) {
+			this.setState({ text_lang: this.props.text_lang });
+		}
 	}
 
 	get_today() {
@@ -89,7 +100,7 @@ class Search extends React.Component {
 				new_info_list.push(item);
 			}
 
-			for (var it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
+			for (it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
 				item = JSON.parse(val);
 				new_fund_list.push(item);
 			}
@@ -187,9 +198,9 @@ class Search extends React.Component {
 	suggestion_index_search(content, to_add_plot) {
 		this.setState({ search_keyword: content });
 		if (to_add_plot) {
-			this.input_helper(content, this.addSearch);
+			this.input_helper(content, true, this.addSearch);
 		} else {
-			this.input_helper(content, this.clearSearch);
+			this.input_helper(content, true, this.clearSearch);
 		}
 	}
 
@@ -211,11 +222,14 @@ class Search extends React.Component {
 		);
 	}
 
-	input_helper(content, callback) {
+	input_helper(content, is_focused, callback) {
 		let res = this.search(content);
 		res.then((value) => {
 			if (value !== -1) {
-				this.setState({ suggeestion_list: value[1] });
+				if (is_focused) {
+					this.setState({ suggeestion_list: value[1] });
+				}
+
 				this.setState({ temp_data: value }, callback);
 			} else {
 				this.setState({ temp_data: [[], []] }, null);
@@ -229,7 +243,7 @@ class Search extends React.Component {
 		let indices = this.state.stock_market.filter_indices(content);
 		this.setState({ incdices_list: indices });
 		this.setState({ search_keyword: content });
-		this.input_helper(content, null);
+		this.input_helper(content, true, null);
 	};
 
 	graphHandler = (yield_values) => {
@@ -261,20 +275,39 @@ class Search extends React.Component {
 	}
 
 	checkBoxHandleAllChecked = (event) => {
+		let expandable_json = {};
+
 		let options = this.state.search_checkbox;
 		options.forEach((option) => (option.isChecked = event.target.checked));
+		options.forEach((option, i) => {
+			if (option.isChecked) {
+				expandable_json[option.value] = i;
+			}
+		});
+
+		this.setState({ expandable_json });
 		this.setState({ search_checkbox: options });
 		this.setState({ search_all: !this.state.search_all });
 	};
 
 	handleCheckChieldElement = (event) => {
 		let options = this.state.search_checkbox;
-		options.forEach((option) => {
-			if (option.value === event.target.value) option.isChecked = event.target.checked;
+		let expandable_json = {};
+		options.forEach((option, i) => {
+			if (option.value === event.target.value) {
+				option.isChecked = event.target.checked;
+			}
 		});
 
+		options.forEach((option, i) => {
+			if (option.isChecked) {
+				expandable_json[option.value] = i;
+			}
+		});
+
+		this.setState({ expandable_json });
 		this.setState({ search_checkbox: options });
-		this.input_helper(this.state.search_keyword);
+		this.input_helper(this.state.search_keyword, false, null);
 	};
 
 	remove_state_incdices(array_name, array_to_delete_from, indices) {
@@ -339,33 +372,50 @@ class Search extends React.Component {
 					}}
 				>
 					<h4>{this.state.search_message}</h4>
-					{this.state.text_lang.SEARCH.CHOSE_REMOVE_ALL}{' '}
-					<input
-						style={{ display: 'inline-block', textAlign: this.state.text_lang.LANG_DIRECTION }}
-						type="checkbox"
-						checked={this.state.search_all}
-						onClick={this.checkBoxHandleAllChecked}
-						value="checkedall"
-						onChange={(e) => {}}
-					/>
-					<ul
-						style={{
-							textAlign: this.state.text_lang.LANG_DIRECTION,
-							paddingRight: '47%',
-							width: '100%',
-							justifyContent: 'space-between',
-						}}
-					>
-						{this.state.search_checkbox.map((option) => {
-							return (
-								<CheckBox
-									handleCheckChieldElement={this.handleCheckChieldElement}
-									idkey={option.key}
-									{...option}
+					<Accordion>
+						<AccordionSummary
+							expandIcon={<ExpandMoreIcon />}
+							aria-controls="panel1a-content"
+							id="panel1a-header"
+						>
+							<div style={{ margin: 'auto' }}>
+								{this.state.text_lang.SEARCH.CHECKBOX_PREFIX}
+								<History search_history={this.state.expandable_json} />
+							</div>
+						</AccordionSummary>
+						<AccordionDetails>
+							<ul
+								style={{
+									textAlign: this.state.text_lang.LANG_DIRECTION,
+									paddingRight: '47%',
+									width: '100%',
+									justifyContent: 'space-between',
+								}}
+							>
+								{this.state.text_lang.SEARCH.CHOSE_REMOVE_ALL}
+								<input
+									style={{
+										display: 'flow',
+										textAlign: this.state.text_lang.LANG_DIRECTION,
+									}}
+									type="checkbox"
+									checked={this.state.search_all}
+									onClick={this.checkBoxHandleAllChecked}
+									value="checkedall"
+									onChange={(e) => {}}
 								/>
-							);
-						})}
-					</ul>
+								{this.state.search_checkbox.map((option) => {
+									return (
+										<CheckBox
+											handleCheckChieldElement={this.handleCheckChieldElement}
+											idkey={option.key}
+											{...option}
+										/>
+									);
+								})}
+							</ul>
+						</AccordionDetails>
+					</Accordion>
 				</div>
 				<div
 					style={{

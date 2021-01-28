@@ -1,6 +1,8 @@
 export const ENGLISH = {
+	NAME: 'ENGLISH',
 	LANG_DIRECTION: 'left',
 	SEARCH: {
+		CHECKBOX_PREFIX: 'I want to look for:',
 		DEFAULT_SEARCH_KEYWORD: '',
 		DEFAULT_SEARCH_MSG: 'Search',
 		RESULT_SEARCH_MSG: 'Results',
@@ -38,12 +40,19 @@ export const ENGLISH = {
 	SUGGESTIONS: {
 		ALL: 'הראה הכל',
 	},
+	NAV: {
+		SEARCH: 'search',
+		CONTACT: 'contact',
+		FAQ: 'faq',
+	},
 };
 
 export const HEBREW = {
+	NAME: 'HEBREW',
 	LANG_DIRECTION: 'right',
 
 	SEARCH: {
+		CHECKBOX_PREFIX: ':אני רוצה לחפש',
 		DEFAULT_SEARCH_KEYWORD: '',
 		DEFAULT_SEARCH_MSG: 'חפש',
 		RESULT_SEARCH_MSG: 'תוצאות',

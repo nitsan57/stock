@@ -5,11 +5,12 @@ import Badge from 'react-bootstrap/Badge';
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: '100%',
-		maxWidth: 360,
+		// maxWidth: 360,
 		backgroundColor: theme.palette.background.paper,
 		position: 'relative',
 		overflow: 'auto',
 		maxHeight: 300,
+		margin: 'auto',
 	},
 	listSection: {
 		backgroundColor: 'inherit',
@@ -21,9 +22,9 @@ const useStyles = makeStyles((theme) => ({
 
 	horizontal: {
 		display: 'flex',
-		alignItems: 'center',
+		justifyContent: 'center',
 		padding: 3,
-		marginLeft: '50%',
+		margin: 'auto',
 	},
 
 	componnent: {
@@ -43,8 +44,6 @@ export default function History(props) {
 					</Badge>
 				</p>
 			))}
-
-			<div></div>
 		</div>
 	);
 }

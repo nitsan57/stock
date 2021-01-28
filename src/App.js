@@ -12,6 +12,15 @@ class App extends React.Component {
 			lang: Lang.HEBREW, // cahnge to english if button pressed
 			stock_market: StockMarket.TASE_STOCK_FUNCTIONS, // cahnge to other stock if button pressed
 		};
+		this.change_lang = this.change_lang.bind(this);
+	}
+
+	change_lang() {
+		// if (this.state.lang.NAME === 'ENGLISH') {
+		// 	this.setState({ lang: Lang.HEBREW });
+		// } else {
+		// 	this.setState({ lang: Lang.ENGLISH });
+		// }
 	}
 
 	componentDidMount() {}
@@ -19,7 +28,7 @@ class App extends React.Component {
 	render() {
 		return (
 			<Router>
-				<Navbar text_lang={this.state.lang} />
+				<Navbar change_lang={this.change_lang} text_lang={this.state.lang} />
 				<Switch>
 					<Route exact path="/">
 						<Search text_lang={this.state.lang} stock_market={this.state.stock_market} />

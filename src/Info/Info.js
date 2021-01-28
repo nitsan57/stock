@@ -33,7 +33,17 @@ class Info extends React.Component {
 		this.setState({ [array_name]: array });
 	}
 
+	componentDidUpdate(prevProps) {
+		// if (this.props.text_lang.NAME !== prevProps.text_lang.NAME) {
+		// 	this.setState({ text_lang: this.props.text_lang });
+		// }
+	}
+
 	shouldComponentUpdate(nextProps, nextState) {
+		// if (nextProps.text_lang.NAME !== this.state.text_lang.NAME) {
+		// 	return true;
+		// }
+
 		if (
 			nextState.is_data_loaded != !this.state.is_data_loaded ||
 			nextProps.graph_yield_values !== this.props.graph_yield_values

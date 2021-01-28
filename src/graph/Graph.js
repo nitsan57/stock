@@ -166,6 +166,10 @@ class Graph extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+		if (nextState.text_lang !== this.state.text_lang) {
+			return true;
+		}
+
 		if (nextState.slider_values !== this.state.slider_values) {
 			return true;
 		}

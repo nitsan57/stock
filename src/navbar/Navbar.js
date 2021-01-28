@@ -3,6 +3,8 @@ import { AppBar, Toolbar, IconButton, List, ListItem, ListItemText, Container, H
 import { Home } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import SideDrawer from '../side_drawer/SideDrawer';
+import Button from 'react-bootstrap/Button';
+import LanguageIcon from '@material-ui/icons/Language';
 
 const useStyles = makeStyles({
 	navDisplayFlex: {
@@ -33,10 +35,15 @@ const Header = (props) => {
 	return (
 		<AppBar position="static">
 			<Toolbar>
-				<Container maxWidth="md" className={classes.navbarDisplayFlex}>
+				<Container maxWidth="lg" className={classes.navbarDisplayFlex}>
+					<IconButton color="inherit" onClick={() => props.change_lang()}>
+						<LanguageIcon />
+						<h6>English/Hebrew</h6>
+					</IconButton>
 					<IconButton edge="start" color="inherit" aria-label="home">
 						<Home fontSize="large" />
 					</IconButton>
+
 					<Hidden smDown>
 						<List component="nav" aria-labelledby="main navigation" className={classes.navDisplayFlex}>
 							{navLinks.map(({ title, path }) => (
