@@ -4,6 +4,7 @@ import * as Lang from './utils/Lang';
 import * as StockMarket from './stock_getter/StockGetter';
 import Navbar from './navbar/Navbar';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import GoogleAd from './google_ad/GoogleAd';
 
 class App extends React.Component {
 	constructor() {
@@ -32,6 +33,7 @@ class App extends React.Component {
 				<Switch>
 					<Route exact path="/">
 						<Search text_lang={this.state.lang} stock_market={this.state.stock_market} />
+						<GoogleAd slot="394738798" timeout={1000} classNames="page-bottom" />
 					</Route>
 				</Switch>
 			</Router>
