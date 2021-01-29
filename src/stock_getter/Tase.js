@@ -14,7 +14,7 @@ export function filter_indices(search_keyword) {
 	return filteredData;
 }
 
-export async function search(search_keyword, imitating, leveraged, short, normal_stock) {
+export async function search(search_keyword, imitating, leveraged, short, normal_stock, managment_fee_filter) {
 	search_keyword = search_keyword.toLowerCase();
 
 	const filteredData = tase_info.filter(
@@ -26,6 +26,9 @@ export async function search(search_keyword, imitating, leveraged, short, normal
 				let fund_data = item;
 				let type = item['Type'];
 				let subtype = item['SubType'];
+				if (fund_data['ManagementFee'] + fund_data['TrusteeFee'] > managment_fee_filter) {
+					return false;
+				}
 				if (
 					(type === Consts.TYPE_ID.SECURITY && subtype !== Consts.SUB_TYPE_ID.STOCK) ||
 					type === Consts.TYPE_ID.FUND // agah filter && bond_fund !== Consts.MAGNA_TYPE.BOND

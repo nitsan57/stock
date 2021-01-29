@@ -9,6 +9,8 @@ import Suggestions from '../custom_input/Sugesstions';
 import History from '../history/History';
 import * as Consts from '../utils/Consts';
 
+import ScrollFilter from '../check_box/ScrollFilter';
+
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -33,6 +35,7 @@ class Search extends React.Component {
 			info_list: [],
 			incdices_list: [],
 			indices_to_remove: [],
+			managment_fee_filter: 10,
 			search_message: this.props.text_lang.SEARCH.DEFAULT_SEARCH_MSG,
 			today: this.get_today(),
 			stock_market: this.props.stock_market,
@@ -57,6 +60,7 @@ class Search extends React.Component {
 		this.setStateAsync = this.setStateAsync.bind(this);
 		this.finish_loading = this.finish_loading.bind(this);
 		this.RemoveRowFromGraphHandler = this.RemoveRowFromGraphHandler.bind(this);
+		this.managmentScrollFilterHandler = this.managmentScrollFilterHandler.bind(this);
 	}
 	componentDidUpdate(prevProps) {
 		if (this.props.text_lang.NAME !== prevProps.text_lang.NAME) {
@@ -130,6 +134,7 @@ class Search extends React.Component {
 			leveraged,
 			short,
 			normal_stock,
+			this.state.managment_fee_filter,
 			this.state.today
 		);
 
@@ -235,6 +240,20 @@ class Search extends React.Component {
 			to_add_plot,
 			this.state.temp_data[0][clicked_element]['Name']
 		);
+	}
+
+	managmentScrollFilterHandler(managment_fee_filter) {
+		let expandable_json = JSON.parse(JSON.stringify(this.state.expandable_json));
+
+		for (var key in expandable_json)
+			if (key.startsWith(' ' + this.state.text_lang.SEARCH.MANAGMENT_FEE_FILTER)) delete expandable_json[key];
+		if (managment_fee_filter !== 10) {
+			expandable_json[
+				' ' + this.state.text_lang.SEARCH.MANAGMENT_FEE_FILTER + ': ' + String(managment_fee_filter)
+			] = 9999;
+		}
+		this.setState({ expandable_json });
+		this.setState({ managment_fee_filter });
 	}
 
 	input_helper(content, is_focused, callback) {
@@ -407,6 +426,10 @@ class Search extends React.Component {
 									justifyContent: 'space-between',
 								}}
 							>
+								<ScrollFilter
+									managmentScrollFilterHandler={this.managmentScrollFilterHandler}
+									text_lang={this.state.text_lang}
+								></ScrollFilter>
 								{this.state.text_lang.SEARCH.CHOSE_REMOVE_ALL}
 								<input
 									style={{

@@ -18,6 +18,7 @@ export const ENGLISH = {
 		LOADING: 'LOADING...',
 		NEW_SEARCH: 'New search',
 		ADD_TO_GRAPH: 'Add to comparation',
+		MANAGMENT_FEE_FILTER: 'Managment fee smaller then',
 	},
 
 	GRAPH: { WEEK_BUTTON: 'week', MONTH_BUTTON: 'month', YEAR_BUTTON: 'year', ALL_TIME_BUTTON: 'all-time' },
@@ -45,6 +46,9 @@ export const ENGLISH = {
 		CONTACT: 'contact',
 		FAQ: 'faq',
 	},
+	SCROLL_FILTER: {
+		MANAGMENT_FEE_FILTER: 'Show only managment fee smaller than-',
+	},
 };
 
 export const HEBREW = {
@@ -69,6 +73,7 @@ export const HEBREW = {
 		NEW_SEARCH: 'חיפוש חדש',
 		ADD_TO_GRAPH: 'הוסף להשוואה',
 		CHOSE_REMOVE_ALL: 'בחר / הסר הכל',
+		MANAGMENT_FEE_FILTER: 'דמי ניהול קטנים מ',
 	},
 
 	GRAPH: {
@@ -101,5 +106,8 @@ export const HEBREW = {
 		SEARCH: 'חפש',
 		CONTACT: 'צור קשר',
 		FAQ: 'שאלות ותשובות',
+	},
+	SCROLL_FILTER: {
+		MANAGMENT_FEE_FILTER: '-הראה דמי ניהול קטנים מ',
 	},
 };
