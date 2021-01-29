@@ -333,6 +333,7 @@ class Search extends React.Component {
 		for (var key in this.state.expandable_json)
 			if (key.startsWith(' ' + this.state.text_lang.SEARCH.MANAGMENT_FEE_FILTER))
 				expandable_json[key] = this.state.expandable_json[key];
+
 		options.forEach((option, i) => {
 			if (option.value === event.target.value) {
 				option.isChecked = event.target.checked;
