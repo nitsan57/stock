@@ -120,27 +120,25 @@ class Search extends React.Component {
 		}
 	}
 
-	async search(word) {
+	async search(word, managment_fee_filter) {
 		let new_fund_list;
 		let new_info_list;
 		let imitating = this.state.search_checkbox[0]['isChecked'];
 		let leveraged = this.state.search_checkbox[1]['isChecked'];
 		let short = this.state.search_checkbox[2]['isChecked'];
 		let normal_stock = this.state.search_checkbox[3]['isChecked'];
-
 		let search_res = await this.state.stock_market.search(
 			word,
 			imitating,
 			leveraged,
 			short,
 			normal_stock,
-			this.state.managment_fee_filter,
-			this.state.today
+			managment_fee_filter
 		);
 
 		if (search_res === -1) {
 			this.setState({
-				search_message: this.state.text_lang.SEARCH.NO_RESULT_KEY_WORDS,
+				search_message: this.state.text_lang.SEARCH.NO_RESULTS_FOR_FILTERS,
 			});
 			return -1;
 		} else {
@@ -213,9 +211,9 @@ class Search extends React.Component {
 	suggestion_index_search(content, to_add_plot) {
 		this.setState({ search_keyword: content });
 		if (to_add_plot) {
-			this.input_helper(content, true, this.addSearch);
+			this.input_helper(content, true, this.state.managment_fee_filter, this.addSearch);
 		} else {
-			this.input_helper(content, true, this.clearSearch);
+			this.input_helper(content, true, this.state.managment_fee_filter, this.clearSearch);
 		}
 	}
 
@@ -252,12 +250,15 @@ class Search extends React.Component {
 				' ' + this.state.text_lang.SEARCH.MANAGMENT_FEE_FILTER + ': ' + String(managment_fee_filter)
 			] = 9999;
 		}
-		this.setState({ expandable_json });
 		this.setState({ managment_fee_filter });
+		this.setState({ expandable_json });
+		if (this.state.search_keyword != '') {
+			this.input_helper(this.state.search_keyword, false, managment_fee_filter, null);
+		}
 	}
 
-	input_helper(content, is_focused, callback) {
-		let res = this.search(content);
+	input_helper(content, is_focused, managment_fee_filter, callback) {
+		let res = this.search(content, managment_fee_filter);
 		res.then((value) => {
 			if (value !== -1) {
 				if (is_focused) {
@@ -277,7 +278,7 @@ class Search extends React.Component {
 		let indices = this.state.stock_market.filter_indices(content);
 		this.setState({ incdices_list: indices });
 		this.setState({ search_keyword: content });
-		this.input_helper(content, true, null);
+		this.input_helper(content, true, this.state.managment_fee_filter, null);
 	};
 
 	graphHandler = (yield_values) => {
@@ -341,7 +342,7 @@ class Search extends React.Component {
 
 		this.setState({ expandable_json });
 		this.setState({ search_checkbox: options });
-		this.input_helper(this.state.search_keyword, false, null);
+		this.input_helper(this.state.search_keyword, false, this.state.managment_fee_filter, null);
 	};
 
 	remove_state_incdices(array_name, array_to_delete_from, indices) {
