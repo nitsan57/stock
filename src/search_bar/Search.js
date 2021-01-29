@@ -311,7 +311,9 @@ class Search extends React.Component {
 
 	checkBoxHandleAllChecked = (event) => {
 		let expandable_json = {};
-
+		for (var key in this.state.expandable_json)
+			if (key.startsWith(' ' + this.state.text_lang.SEARCH.MANAGMENT_FEE_FILTER))
+				expandable_json[key] = this.state.expandable_json[key];
 		let options = this.state.search_checkbox;
 		options.forEach((option) => (option.isChecked = event.target.checked));
 		options.forEach((option, i) => {
@@ -328,6 +330,9 @@ class Search extends React.Component {
 	handleCheckChieldElement = (event) => {
 		let options = this.state.search_checkbox;
 		let expandable_json = {};
+		for (var key in this.state.expandable_json)
+			if (key.startsWith(' ' + this.state.text_lang.SEARCH.MANAGMENT_FEE_FILTER))
+				expandable_json[key] = this.state.expandable_json[key];
 		options.forEach((option, i) => {
 			if (option.value === event.target.value) {
 				option.isChecked = event.target.checked;
