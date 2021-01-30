@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { IconButton, Drawer, List, ListItem, ListItemText } from '@material-ui/core';
 import { Menu } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
+import SearchIcon from '@material-ui/icons/Search';
 
 const useStyles = makeStyles({
 	list: {
@@ -39,6 +40,9 @@ const SideDrawer = ({ navLinks }) => {
 						<ListItem button>
 							<ListItemText primary={title} />
 						</ListItem>
+						<IconButton color="inherit">
+							<SearchIcon />
+						</IconButton>
 					</a>
 				))}
 			</List>
@@ -55,9 +59,7 @@ const SideDrawer = ({ navLinks }) => {
 				open={state.right}
 				onOpen={toggleDrawer('right', true)}
 				onClose={toggleDrawer('right', false)}
-			>
-				{sideDrawerList('right')}
-			</Drawer>
+			></Drawer>
 		</React.Fragment>
 	);
 };

@@ -35,6 +35,9 @@ class App extends React.Component {
 						<Search text_lang={this.state.lang} stock_market={this.state.stock_market} />
 						<GoogleAd slot="394738798" timeout={1000} classNames="page-bottom" />
 					</Route>
+					<Route exact path="/contact">
+						<h1> HEY </h1>
+					</Route>
 				</Switch>
 			</Router>
 		);

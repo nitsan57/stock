@@ -3,8 +3,9 @@ import { AppBar, Toolbar, IconButton, List, ListItem, ListItemText, Container, H
 import { Home } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import SideDrawer from '../side_drawer/SideDrawer';
-import Button from 'react-bootstrap/Button';
 import LanguageIcon from '@material-ui/icons/Language';
+import SearchIcon from '@material-ui/icons/Search';
+import BookIcon from '@material-ui/icons/MenuBook';
 
 const useStyles = makeStyles({
 	navDisplayFlex: {
@@ -40,19 +41,18 @@ const Header = (props) => {
 						<LanguageIcon />
 						<h6>English/Hebrew</h6>
 					</IconButton>
-					<IconButton edge="start" color="inherit" aria-label="home">
-						<Home fontSize="large" />
-					</IconButton>
-
 					<Hidden smDown>
 						<List component="nav" aria-labelledby="main navigation" className={classes.navDisplayFlex}>
-							{navLinks.map(({ title, path }) => (
-								<a href={path} key={title} className={classes.linkText}>
-									<ListItem button>
-										<ListItemText primary={title} />
-									</ListItem>
-								</a>
-							))}
+							<a href={navLinks[0].path} key={navLinks[0].title} className={classes.linkText}>
+								<ListItem button>
+									<SearchIcon />
+								</ListItem>
+							</a>
+							<a href={navLinks[1].path} key={navLinks[0].title} className={classes.linkText}>
+								<ListItem button>
+									<BookIcon />
+								</ListItem>
+							</a>
 						</List>
 					</Hidden>
 					<Hidden mdUp>
