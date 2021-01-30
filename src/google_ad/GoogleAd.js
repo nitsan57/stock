@@ -28,6 +28,7 @@ class GoogleAd extends Component {
 					data-ad-slot={slot}
 					data-ad-format="auto"
 					data-full-width-responsive="true"
+					data-adtest="on"
 				></ins>
 			</div>
 		);
