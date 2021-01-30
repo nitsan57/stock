@@ -44,12 +44,12 @@ const Header = (props) => {
 					<Hidden smDown>
 						<List component="nav" aria-labelledby="main navigation" className={classes.navDisplayFlex}>
 							<a href={navLinks[0].path} key={navLinks[0].title} className={classes.linkText}>
-								<ListItem button>
+								<ListItem button style={{ color: 'white' }}>
 									<SearchIcon />
 								</ListItem>
 							</a>
 							<a href={navLinks[1].path} key={navLinks[0].title} className={classes.linkText}>
-								<ListItem button>
+								<ListItem button style={{ color: 'white' }}>
 									<BookIcon />
 								</ListItem>
 							</a>
