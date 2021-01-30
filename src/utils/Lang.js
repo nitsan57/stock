@@ -22,7 +22,9 @@ export const ENGLISH = {
 	},
 
 	GRAPH: { WEEK_BUTTON: 'week', MONTH_BUTTON: 'month', YEAR_BUTTON: 'year', ALL_TIME_BUTTON: 'all-time' },
-
+	GENERAL: {
+		OF: 'of',
+	},
 	TABLE: {
 		DIRECTION: 'ltr',
 		STD: 'std',
@@ -40,6 +42,8 @@ export const ENGLISH = {
 	},
 	SUGGESTIONS: {
 		ALL: 'הראה הכל',
+		INDICES: 'all etfs of the index:',
+		ETFS: 'specific etfs:',
 	},
 	NAV: {
 		SEARCH: 'search',
@@ -55,6 +59,9 @@ export const HEBREW = {
 	NAME: 'HEBREW',
 	LANG_DIRECTION: 'right',
 
+	GENERAL: {
+		OF: 'של',
+	},
 	SEARCH: {
 		CHECKBOX_PREFIX: ':אני רוצה לחפש',
 		DEFAULT_SEARCH_KEYWORD: '',
@@ -100,6 +107,8 @@ export const HEBREW = {
 	},
 	SUGGESTIONS: {
 		ALL: 'הראה הכל',
+		INDICES: ':כל קרנות המדד',
+		ETFS: ':קרן מסויימת',
 	},
 
 	NAV: {

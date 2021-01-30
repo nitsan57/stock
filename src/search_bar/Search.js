@@ -428,8 +428,9 @@ class Search extends React.Component {
 						<AccordionDetails>
 							<ul
 								style={{
-									width: '100%',
-									justifyContent: 'center',
+									textAlign: this.state.text_lang.LANG_DIRECTION,
+									paddingRight: '47%',
+									justifyContent: 'space-between',
 								}}
 							>
 								<ScrollFilter
@@ -448,11 +449,7 @@ class Search extends React.Component {
 									value="checkedall"
 									onChange={(e) => {}}
 								/>
-								<div
-									style={{
-										margin: 'auto',
-									}}
-								>
+								<div>
 									{this.state.search_checkbox.map((option) => {
 										return (
 											<CheckBox
