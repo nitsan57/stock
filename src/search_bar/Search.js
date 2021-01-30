@@ -14,7 +14,8 @@ import ScrollFilter from '../check_box/ScrollFilter';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const NUM_LOADING_CHILDREN = 2;
 
@@ -415,7 +416,7 @@ class Search extends React.Component {
 					<h4>{this.state.search_message}</h4>
 					<Accordion>
 						<AccordionSummary
-							expandIcon={<ExpandMoreIcon />}
+							expandIcon={<SettingsIcon />}
 							aria-controls="panel1a-content"
 							id="panel1a-header"
 						>
@@ -427,17 +428,15 @@ class Search extends React.Component {
 						<AccordionDetails>
 							<ul
 								style={{
-									textAlign: this.state.text_lang.LANG_DIRECTION,
-									paddingRight: '47%',
 									width: '100%',
-									justifyContent: 'space-between',
+									justifyContent: 'center',
 								}}
 							>
 								<ScrollFilter
 									managmentScrollFilterHandler={this.managmentScrollFilterHandler}
 									text_lang={this.state.text_lang}
 								></ScrollFilter>
-								{this.state.text_lang.SEARCH.CHOSE_REMOVE_ALL}
+								{this.state.text_lang.SEARCH.CHOSE_REMOVE_ALL}{' '}
 								<input
 									style={{
 										display: 'flow',
@@ -449,15 +448,21 @@ class Search extends React.Component {
 									value="checkedall"
 									onChange={(e) => {}}
 								/>
-								{this.state.search_checkbox.map((option) => {
-									return (
-										<CheckBox
-											handleCheckChieldElement={this.handleCheckChieldElement}
-											idkey={option.key}
-											{...option}
-										/>
-									);
-								})}
+								<div
+									style={{
+										margin: 'auto',
+									}}
+								>
+									{this.state.search_checkbox.map((option) => {
+										return (
+											<CheckBox
+												handleCheckChieldElement={this.handleCheckChieldElement}
+												idkey={option.key}
+												{...option}
+											/>
+										);
+									})}
+								</div>
 							</ul>
 						</AccordionDetails>
 					</Accordion>

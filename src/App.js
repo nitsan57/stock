@@ -33,6 +33,12 @@ class App extends React.Component {
 				<Switch>
 					<Route exact path="/">
 						<Search text_lang={this.state.lang} stock_market={this.state.stock_market} />
+
+						<script>
+							async data-ad-client="ca-pub-1474080744975375"
+							src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js" data-adtest="on"
+						</script>
+
 						<GoogleAd slot="394738798" timeout={1000} classNames="page-bottom" />
 					</Route>
 				</Switch>
