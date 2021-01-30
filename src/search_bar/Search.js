@@ -429,8 +429,9 @@ class Search extends React.Component {
 							<ul
 								style={{
 									textAlign: this.state.text_lang.LANG_DIRECTION,
+									width: '100%',
 									paddingRight: '47%',
-									justifyContent: 'space-between',
+									justifyContent: 'center',
 								}}
 							>
 								<ScrollFilter
@@ -449,7 +450,14 @@ class Search extends React.Component {
 									value="checkedall"
 									onChange={(e) => {}}
 								/>
-								<div>
+								<div
+									style={
+										{
+											// display: 'block',
+											// justifyContent: 'center',
+										}
+									}
+								>
 									{this.state.search_checkbox.map((option) => {
 										return (
 											<CheckBox
