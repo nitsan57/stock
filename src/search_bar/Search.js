@@ -9,6 +9,7 @@ import History from '../history/History';
 import * as Consts from '../utils/Consts';
 import Button from '@material-ui/core/Button';
 import ScrollFilter from '../check_box/ScrollFilter';
+import MainLogo from '../Logo/Logo_b.png';
 
 const NUM_LOADING_CHILDREN = 2;
 
@@ -402,6 +403,7 @@ class Search extends React.Component {
 					width: '100%',
 				}}
 			>
+				<img src={MainLogo} style={{ width: '30%', height: '30%' }} alt="fireSpot" />
 				<div
 					style={{
 						marginLeft: 0,
