@@ -8,7 +8,7 @@ import CustomInput from '../custom_input/CustomInput';
 import Suggestions from '../custom_input/Sugesstions';
 import History from '../history/History';
 import * as Consts from '../utils/Consts';
-
+import Button from '@material-ui/core/Button';
 import ScrollFilter from '../check_box/ScrollFilter';
 
 import Accordion from '@material-ui/core/Accordion';
@@ -386,6 +386,12 @@ class Search extends React.Component {
 		this.remove_state_incdices('info_list', this.state.fund_list, indices_to_remove);
 	}
 
+	changeFilter = (ix) => {
+		let oldFilters = this.state.search_checkbox;
+		oldFilters[ix].isChecked = !oldFilters[ix].isChecked;
+		this.setState({ search_checkbox: oldFilters });
+	};
+
 	render() {
 		let loading = (
 			<div>
@@ -414,63 +420,73 @@ class Search extends React.Component {
 					}}
 				>
 					<h4>{this.state.search_message}</h4>
-					<Accordion>
-						<AccordionSummary
-							expandIcon={<SettingsIcon />}
-							aria-controls="panel1a-content"
-							id="panel1a-header"
+					<ul
+						style={{
+							textAlign: this.state.text_lang.LANG_DIRECTION,
+							width: '100%',
+							paddingRight: '47%',
+							justifyContent: 'center',
+						}}
+					>
+						<div
+							style={{
+								marginLeft: 0,
+								marginRight: 0,
+								marginTop: 10,
+								marginBottom: 10,
+								paddingLeft: 0,
+								paddingRight: 0,
+							}}
 						>
-							<div style={{ margin: 'auto' }}>
-								{this.state.text_lang.SEARCH.CHECKBOX_PREFIX}
-								<History search_history={this.state.expandable_json} />
-							</div>
-						</AccordionSummary>
-						<AccordionDetails>
-							<ul
-								style={{
-									textAlign: this.state.text_lang.LANG_DIRECTION,
-									width: '100%',
-									paddingRight: '47%',
-									justifyContent: 'center',
-								}}
+							<Button
+								type="button"
+								color="primary"
+								variant={this.state.search_checkbox[0].isChecked ? 'contained' : 'outlined'}
+								onClick={() => this.changeFilter(0)}
 							>
-								<ScrollFilter
-									managmentScrollFilterHandler={this.managmentScrollFilterHandler}
-									text_lang={this.state.text_lang}
-								></ScrollFilter>
-								{this.state.text_lang.SEARCH.CHOSE_REMOVE_ALL}{' '}
-								<input
-									style={{
-										display: 'flow',
-										textAlign: this.state.text_lang.LANG_DIRECTION,
-									}}
-									type="checkbox"
-									checked={this.state.search_all}
-									onClick={this.checkBoxHandleAllChecked}
-									value="checkedall"
-									onChange={(e) => {}}
-								/>
-								<div
-									style={
-										{
-											// display: 'block',
-											// justifyContent: 'center',
-										}
-									}
-								>
-									{this.state.search_checkbox.map((option) => {
-										return (
-											<CheckBox
-												handleCheckChieldElement={this.handleCheckChieldElement}
-												idkey={option.key}
-												{...option}
-											/>
-										);
-									})}
-								</div>
-							</ul>
-						</AccordionDetails>
-					</Accordion>
+								{this.props.text_lang.SEARCH.IMITATING}
+							</Button>
+							&nbsp;&nbsp;&nbsp;
+							<Button
+								type="button"
+								color="primary"
+								variant={this.state.search_checkbox[1].isChecked ? 'contained' : 'outlined'}
+								onClick={() => this.changeFilter(1)}
+							>
+								{this.props.text_lang.SEARCH.LEVERAGED}
+							</Button>
+							&nbsp;&nbsp;&nbsp;
+							<Button
+								type="button"
+								color="primary"
+								variant={this.state.search_checkbox[2].isChecked ? 'contained' : 'outlined'}
+								onClick={() => this.changeFilter(2)}
+							>
+								{this.props.text_lang.SEARCH.SHORT}
+							</Button>
+							&nbsp;&nbsp;&nbsp;
+							<Button
+								type="button"
+								color="primary"
+								variant={this.state.search_checkbox[3].isChecked ? 'contained' : 'outlined'}
+								onClick={() => this.changeFilter(3)}
+							>
+								{this.props.text_lang.SEARCH.STOCKS}
+							</Button>
+						</div>
+						<ScrollFilter
+							managmentScrollFilterHandler={this.managmentScrollFilterHandler}
+							text_lang={this.state.text_lang}
+						></ScrollFilter>
+						<div
+							style={
+								{
+									// display: 'block',
+									// justifyContent: 'center',
+								}
+							}
+						></div>
+					</ul>
 				</div>
 				<div
 					style={{

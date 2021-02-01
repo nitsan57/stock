@@ -39,7 +39,13 @@ export default function History(props) {
 		<div className={classes.horizontal}>
 			{Object.keys(vals).map((key, index) => (
 				<p key={index} className={classes.componnent}>
-					<Badge pill variant="primary">
+					<Badge
+						pill
+						variant="primary"
+						onClick={() => {
+							console.log('!!!!');
+						}}
+					>
 						{key}
 					</Badge>
 				</p>
