@@ -293,7 +293,7 @@ class Graph extends React.Component {
 								hovermode: 'closest',
 								margin: { t: 0, b: 30, l: 0, r: 0 },
 								autosize: true,
-								showlegend: false,
+								showlegend: true,
 								yaxis: {
 									tickformat: ',.0%',
 									automargin: true,
