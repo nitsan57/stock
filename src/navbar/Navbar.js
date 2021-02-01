@@ -48,7 +48,7 @@ const Header = (props) => {
 									<SearchIcon />
 								</ListItem>
 							</a>
-							<a href={navLinks[1].path} key={navLinks[0].title} className={classes.linkText}>
+							<a href={navLinks[1].path} key={navLinks[1].title} className={classes.linkText}>
 								<ListItem button style={{ color: 'white' }}>
 									<BookIcon />
 								</ListItem>

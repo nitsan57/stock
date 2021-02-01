@@ -7,8 +7,6 @@ import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles((theme) => ({
 	button: {
-		// justifyContent: 'center',
-		// margin: 'auto',
 		display: 'block',
 		marginTop: theme.spacing(2),
 	},
@@ -21,38 +19,30 @@ const useStyles = makeStyles((theme) => ({
 export default function ControlledOpenSelect(props) {
 	const classes = useStyles();
 	const [filterManagment, setfilterManagment] = React.useState('');
-	const [open, setOpen] = React.useState(false);
 
 	const handleChange = (event) => {
 		setfilterManagment(event.target.value);
 		props.managmentScrollFilterHandler(event.target.value);
 	};
 
-	const handleClose = () => {
-		setOpen(false);
-	};
-
-	const handleOpen = () => {
-		setOpen(true);
-	};
-
 	return (
-		<div>
-			<InputLabel style={{ margin: 'auto' }} id="demo-controlled-open-select-label">
-				{props.text_lang.SCROLL_FILTER.MANAGMENT_FEE_FILTER}
-			</InputLabel>
-			<FormControl className={classes.formControl}>
-				{/* <InputLabel style={{ margin: 'auto' }} id="demo-controlled-open-select-label">
+		<div style={{ maring: 'auto', justifyContent: 'center', display: 'flow' }}>
+			<FormControl variant="outlined" className={classes.formControl}>
+				<InputLabel
+					style={{ color: 'blue', backgroundColor: 'white' }}
+					variant="filled"
+					id="demo-simple-select-outlined-label"
+				>
 					{props.text_lang.SCROLL_FILTER.MANAGMENT_FEE_FILTER}
-				</InputLabel> */}
+				</InputLabel>
 				<Select
-					labelId="demo-controlled-open-select-label"
-					id="demo-controlled-open-select"
-					open={open}
-					onClose={handleClose}
-					onOpen={handleOpen}
+					style={{ color: 'blue', backgroundColor: 'white' }}
+					variant="standard"
+					labelId="demo-simple"
+					id="demo-simple-select-outlined"
 					value={filterManagment}
 					onChange={handleChange}
+					label={props.text_lang.SCROLL_FILTER.MANAGMENT_FEE_FILTER}
 				>
 					<MenuItem value={10}>no filter</MenuItem>
 					<MenuItem value={0.01}>0.01%</MenuItem>

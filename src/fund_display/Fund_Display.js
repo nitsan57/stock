@@ -90,6 +90,7 @@ class FundDisplay extends React.Component {
 					sortable: true,
 					selector: 'overall',
 					name: this.props.text_lang.TABLE.OVERALL_MANAGMENT_FEE_HEADER,
+
 					cell: (row) => (
 						<div>
 							<div style={{ fontWeight: 100 }}>{row.overall}</div>

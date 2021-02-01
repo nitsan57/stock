@@ -219,6 +219,7 @@ def main():
         info.append(fund_data)
 
     indices = sorted(indices, key=indices.get, reverse=True)
+    info = sorted(info, key=lambda k: k['ManagementFee'], reverse=True)
 
     filterd_indices = []
 

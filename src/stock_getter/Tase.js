@@ -58,7 +58,6 @@ export async function search(search_keyword, imitating, leveraged, short, normal
 
 	var temp_fund = null;
 	if (filteredData.length === 0) {
-		console.log('why', search_keyword);
 		return -1;
 	}
 	let fund_l = [];

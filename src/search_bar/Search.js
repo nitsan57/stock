@@ -3,19 +3,12 @@ import Graph from '../graph/Graph';
 import Info from '../Info/Info';
 import Loader from 'react-loader-spinner';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import CheckBox from '../check_box/Check_Box';
 import CustomInput from '../custom_input/CustomInput';
 import Suggestions from '../custom_input/Sugesstions';
 import History from '../history/History';
 import * as Consts from '../utils/Consts';
 import Button from '@material-ui/core/Button';
 import ScrollFilter from '../check_box/ScrollFilter';
-
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import SettingsIcon from '@material-ui/icons/Settings';
 
 const NUM_LOADING_CHILDREN = 2;
 
@@ -424,69 +417,65 @@ class Search extends React.Component {
 						style={{
 							textAlign: this.state.text_lang.LANG_DIRECTION,
 							width: '100%',
-							paddingRight: '47%',
+							margin: 'auto',
+							display: 'flex',
+							paddingRight: '5%',
 							justifyContent: 'center',
 						}}
 					>
-						<div
+						<Button
 							style={{
-								marginLeft: 0,
-								marginRight: 0,
-								marginTop: 10,
-								marginBottom: 10,
-								paddingLeft: 0,
-								paddingRight: 0,
+								margin: '5px',
 							}}
+							size="small"
+							type="button"
+							color="primary"
+							variant={this.state.search_checkbox[0].isChecked ? 'contained' : 'outlined'}
+							onClick={() => this.changeFilter(0)}
 						>
-							<Button
-								type="button"
-								color="primary"
-								variant={this.state.search_checkbox[0].isChecked ? 'contained' : 'outlined'}
-								onClick={() => this.changeFilter(0)}
-							>
-								{this.props.text_lang.SEARCH.IMITATING}
-							</Button>
-							&nbsp;&nbsp;&nbsp;
-							<Button
-								type="button"
-								color="primary"
-								variant={this.state.search_checkbox[1].isChecked ? 'contained' : 'outlined'}
-								onClick={() => this.changeFilter(1)}
-							>
-								{this.props.text_lang.SEARCH.LEVERAGED}
-							</Button>
-							&nbsp;&nbsp;&nbsp;
-							<Button
-								type="button"
-								color="primary"
-								variant={this.state.search_checkbox[2].isChecked ? 'contained' : 'outlined'}
-								onClick={() => this.changeFilter(2)}
-							>
-								{this.props.text_lang.SEARCH.SHORT}
-							</Button>
-							&nbsp;&nbsp;&nbsp;
-							<Button
-								type="button"
-								color="primary"
-								variant={this.state.search_checkbox[3].isChecked ? 'contained' : 'outlined'}
-								onClick={() => this.changeFilter(3)}
-							>
-								{this.props.text_lang.SEARCH.STOCKS}
-							</Button>
-						</div>
-						<ScrollFilter
-							managmentScrollFilterHandler={this.managmentScrollFilterHandler}
-							text_lang={this.state.text_lang}
-						></ScrollFilter>
-						<div
-							style={
-								{
-									// display: 'block',
-									// justifyContent: 'center',
-								}
-							}
-						></div>
+							{this.props.text_lang.SEARCH.IMITATING}
+						</Button>
+						<Button
+							style={{
+								margin: '5px',
+							}}
+							size="small"
+							type="button"
+							color="primary"
+							variant={this.state.search_checkbox[1].isChecked ? 'contained' : 'outlined'}
+							onClick={() => this.changeFilter(1)}
+						>
+							{this.props.text_lang.SEARCH.LEVERAGED}
+						</Button>
+						<Button
+							style={{
+								margin: '5px',
+							}}
+							size="small"
+							type="button"
+							color="primary"
+							variant={this.state.search_checkbox[2].isChecked ? 'contained' : 'outlined'}
+							onClick={() => this.changeFilter(2)}
+						>
+							{this.props.text_lang.SEARCH.SHORT}
+						</Button>
+						<Button
+							style={{
+								margin: '5px',
+							}}
+							size="small"
+							type="button"
+							color="primary"
+							variant={this.state.search_checkbox[3].isChecked ? 'contained' : 'outlined'}
+							onClick={() => this.changeFilter(3)}
+						>
+							{this.props.text_lang.SEARCH.STOCKS}
+						</Button>
 					</ul>
+					<ScrollFilter
+						managmentScrollFilterHandler={this.managmentScrollFilterHandler}
+						text_lang={this.state.text_lang}
+					></ScrollFilter>
 				</div>
 				<div
 					style={{
