@@ -453,7 +453,7 @@ class Search extends React.Component {
 							style={{
 								margin: '5px',
 							}}
-							size="small"
+							size="big"
 							type="button"
 							color="primary"
 							variant={this.state.search_checkbox[0].isChecked ? 'contained' : 'outlined'}
@@ -465,7 +465,7 @@ class Search extends React.Component {
 							style={{
 								margin: '5px',
 							}}
-							size="small"
+							size="big"
 							type="button"
 							color="primary"
 							variant={this.state.search_checkbox[1].isChecked ? 'contained' : 'outlined'}
@@ -477,7 +477,7 @@ class Search extends React.Component {
 							style={{
 								margin: '5px',
 							}}
-							size="small"
+							size="big"
 							type="button"
 							color="primary"
 							variant={this.state.search_checkbox[2].isChecked ? 'contained' : 'outlined'}
