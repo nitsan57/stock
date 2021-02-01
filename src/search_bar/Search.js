@@ -404,6 +404,31 @@ class Search extends React.Component {
 				}}
 			>
 				<img src={MainLogo} style={{ width: '30%', height: '30%' }} alt="fireSpot" />
+
+				<div
+					style={{
+						marginBottom: 20,
+					}}
+					onFocus={this.show_suggestions}
+					onBlur={this.hide_suggestions}
+				>
+					<CustomInput
+						onNewSearch={this.clearSearch}
+						onAddToGraphClick={this.addSearch}
+						text_lang={this.state.text_lang}
+						value={this.state.search_keyword}
+						onChange={this.handleInputChange}
+					/>
+					<Suggestions
+						specific_search={this.suggestionHandler}
+						index_search={this.suggestion_index_search}
+						results={this.state.suggeestion_list}
+						text_lang={this.state.text_lang}
+						stock_market={this.state.stock_market}
+						indices={this.state.incdices_list}
+					/>
+				</div>
+				<History search_history={this.state.search_history} />
 				<div
 					style={{
 						marginLeft: 0,
@@ -414,7 +439,6 @@ class Search extends React.Component {
 						paddingRight: 0,
 					}}
 				>
-					<h4>{this.state.search_message}</h4>
 					<ul
 						style={{
 							textAlign: this.state.text_lang.LANG_DIRECTION,
@@ -465,7 +489,7 @@ class Search extends React.Component {
 							style={{
 								margin: '5px',
 							}}
-							size="small"
+							size="big"
 							type="button"
 							color="primary"
 							variant={this.state.search_checkbox[3].isChecked ? 'contained' : 'outlined'}
@@ -479,30 +503,6 @@ class Search extends React.Component {
 						text_lang={this.state.text_lang}
 					></ScrollFilter>
 				</div>
-				<div
-					style={{
-						marginBottom: 20,
-					}}
-					onFocus={this.show_suggestions}
-					onBlur={this.hide_suggestions}
-				>
-					<CustomInput
-						onNewSearch={this.clearSearch}
-						onAddToGraphClick={this.addSearch}
-						text_lang={this.state.text_lang}
-						value={this.state.search_keyword}
-						onChange={this.handleInputChange}
-					/>
-					<Suggestions
-						specific_search={this.suggestionHandler}
-						index_search={this.suggestion_index_search}
-						results={this.state.suggeestion_list}
-						text_lang={this.state.text_lang}
-						stock_market={this.state.stock_market}
-						indices={this.state.incdices_list}
-					/>
-				</div>
-				<History search_history={this.state.search_history} />
 				{loading}
 				<div
 					style={{
