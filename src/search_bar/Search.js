@@ -403,7 +403,6 @@ class Search extends React.Component {
 					width: '100%',
 				}}
 			>
-				<History search_history={this.state.search_history} />
 				<img src={MainLogo} style={{ width: '30%', height: '30%' }} alt="fireSpot" />
 				<div
 					style={{
@@ -501,6 +500,7 @@ class Search extends React.Component {
 						stock_market={this.state.stock_market}
 						indices={this.state.incdices_list}
 					/>
+					<History search_history={this.state.search_history} />
 				</div>
 				{loading}
 				<div
