@@ -404,7 +404,80 @@ class Search extends React.Component {
 				}}
 			>
 				<img src={MainLogo} style={{ width: '30%', height: '30%' }} alt="fireSpot" />
-
+				<div
+					style={{
+						marginLeft: 0,
+						marginRight: 0,
+						marginTop: 10,
+						marginBottom: 10,
+						paddingLeft: 0,
+						paddingRight: 0,
+					}}
+				>
+					<ul
+						style={{
+							textAlign: this.state.text_lang.LANG_DIRECTION,
+							width: '100%',
+							margin: 'auto',
+							display: 'flex',
+							paddingRight: '5%',
+							justifyContent: 'center',
+						}}
+					>
+						<ScrollFilter
+							managmentScrollFilterHandler={this.managmentScrollFilterHandler}
+							text_lang={this.state.text_lang}
+						></ScrollFilter>
+						<Button
+							style={{
+								margin: '5px',
+							}}
+							size="small"
+							type="button"
+							color="primary"
+							variant={this.state.search_checkbox[0].isChecked ? 'contained' : 'outlined'}
+							onClick={() => this.changeFilter(0)}
+						>
+							{this.props.text_lang.SEARCH.IMITATING}
+						</Button>
+						<Button
+							style={{
+								margin: '5px',
+							}}
+							size="small"
+							type="button"
+							color="primary"
+							variant={this.state.search_checkbox[1].isChecked ? 'contained' : 'outlined'}
+							onClick={() => this.changeFilter(1)}
+						>
+							{this.props.text_lang.SEARCH.LEVERAGED}
+						</Button>
+						<Button
+							style={{
+								margin: '5px',
+							}}
+							size="small"
+							type="button"
+							color="primary"
+							variant={this.state.search_checkbox[2].isChecked ? 'contained' : 'outlined'}
+							onClick={() => this.changeFilter(2)}
+						>
+							{this.props.text_lang.SEARCH.SHORT}
+						</Button>
+						<Button
+							style={{
+								margin: '5px',
+							}}
+							size="small"
+							type="button"
+							color="primary"
+							variant={this.state.search_checkbox[3].isChecked ? 'contained' : 'outlined'}
+							onClick={() => this.changeFilter(3)}
+						>
+							{this.props.text_lang.SEARCH.STOCKS}
+						</Button>
+					</ul>
+				</div>
 				<div
 					style={{
 						marginBottom: 20,
@@ -427,81 +500,7 @@ class Search extends React.Component {
 						stock_market={this.state.stock_market}
 						indices={this.state.incdices_list}
 					/>
-				</div>
-				<History search_history={this.state.search_history} />
-				<div
-					style={{
-						marginLeft: 0,
-						marginRight: 0,
-						marginTop: 10,
-						marginBottom: 10,
-						paddingLeft: 0,
-						paddingRight: 0,
-					}}
-				>
-					<ul
-						style={{
-							textAlign: this.state.text_lang.LANG_DIRECTION,
-							width: '100%',
-							margin: 'auto',
-							display: 'flex',
-							paddingRight: '5%',
-							justifyContent: 'center',
-						}}
-					>
-						<Button
-							style={{
-								margin: '5px',
-							}}
-							size="big"
-							type="button"
-							color="primary"
-							variant={this.state.search_checkbox[0].isChecked ? 'contained' : 'outlined'}
-							onClick={() => this.changeFilter(0)}
-						>
-							{this.props.text_lang.SEARCH.IMITATING}
-						</Button>
-						<Button
-							style={{
-								margin: '5px',
-							}}
-							size="big"
-							type="button"
-							color="primary"
-							variant={this.state.search_checkbox[1].isChecked ? 'contained' : 'outlined'}
-							onClick={() => this.changeFilter(1)}
-						>
-							{this.props.text_lang.SEARCH.LEVERAGED}
-						</Button>
-						<Button
-							style={{
-								margin: '5px',
-							}}
-							size="big"
-							type="button"
-							color="primary"
-							variant={this.state.search_checkbox[2].isChecked ? 'contained' : 'outlined'}
-							onClick={() => this.changeFilter(2)}
-						>
-							{this.props.text_lang.SEARCH.SHORT}
-						</Button>
-						<Button
-							style={{
-								margin: '5px',
-							}}
-							size="big"
-							type="button"
-							color="primary"
-							variant={this.state.search_checkbox[3].isChecked ? 'contained' : 'outlined'}
-							onClick={() => this.changeFilter(3)}
-						>
-							{this.props.text_lang.SEARCH.STOCKS}
-						</Button>
-					</ul>
-					<ScrollFilter
-						managmentScrollFilterHandler={this.managmentScrollFilterHandler}
-						text_lang={this.state.text_lang}
-					></ScrollFilter>
+					<History search_history={this.state.search_history} />
 				</div>
 				{loading}
 				<div
