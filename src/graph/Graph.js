@@ -34,7 +34,7 @@ class Graph extends React.Component {
 			y: y,
 			type: 'scatter',
 			mode: 'lines',
-			name: name,
+			name: name.substring(0, 20),
 			hovertemplate: '%{y}%' + '<br>%{x}<br>',
 			opacity: 1,
 		};
@@ -271,7 +271,7 @@ class Graph extends React.Component {
 						margin: 'auto',
 					}}
 				>
-					<Ratio ratio={3 / 1}>
+					<Ratio ratio={5 / 2}>
 						<Plot
 							style={{ width: '100%', height: '100%' }}
 							data={this.state.data}
@@ -294,6 +294,12 @@ class Graph extends React.Component {
 								margin: { t: 0, b: 30, l: 0, r: 0 },
 								autosize: true,
 								showlegend: true,
+								// legend: {
+								// 	x: 0.4,
+								// 	// xanchor: 'right',
+								// 	y: 0.5,
+								// },
+								legend: { orientation: 'h' },
 								yaxis: {
 									tickformat: ',.0%',
 									automargin: true,
