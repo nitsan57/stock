@@ -19,6 +19,7 @@ class Graph extends React.Component {
 			xticks: [],
 			dates: [],
 			min_data_length: 0,
+			graph_y_ticks_denominator: 10,
 			slider_values: [0, 0],
 			is_data_loaded: false,
 			stock_market: this.props.stock_market,
@@ -122,9 +123,11 @@ class Graph extends React.Component {
 				start_date = max_data_length - date_range[1];
 				max_data_length = max_data_length - date_range[0];
 			}
+			let max_y_val = -300;
+			let graph_y_ticks_denominator = -300;
 
 			indices.forEach((i, object_index) => {
-				[x, y, name] = this.state.stock_market.extract_chart_point(
+				[x, y, name, max_y_val] = this.state.stock_market.extract_chart_point(
 					x,
 					y,
 					instruments,
@@ -134,11 +137,17 @@ class Graph extends React.Component {
 					i,
 					object_index === 0
 				);
+				if (max_y_val > graph_y_ticks_denominator) {
+					graph_y_ticks_denominator = max_y_val;
+				}
 
 				var temp_data = this.create_graph_data(x.slice(x.length - y.length, x.length - 1), y, name);
 				res.push(temp_data);
 				graph_yield_values.push(y[y.length - 1]);
 			});
+
+			graph_y_ticks_denominator = graph_y_ticks_denominator / 10;
+			this.setState({ graph_y_ticks_denominator });
 
 			let xticks = [];
 			let mark_jump_const = Math.max(parseInt(x.length / 5), 1);
@@ -157,6 +166,7 @@ class Graph extends React.Component {
 				this.setState({ slider_values: [0, x.length - 1] });
 			}
 		});
+
 		this.setState({ graph_yield_values: graph_yield_values });
 		this.props.graphHandler(graph_yield_values);
 	}
@@ -323,7 +333,7 @@ class Graph extends React.Component {
 									tickformat: ',.0%',
 									automargin: true,
 									tick0: 0,
-									dtick: 0.05,
+									dtick: this.state.graph_y_ticks_denominator,
 									ticklen: 4,
 									tickwidth: 2,
 									tickcolor: '#000',

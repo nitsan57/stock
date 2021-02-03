@@ -146,6 +146,7 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 	y = [];
 	var rate;
 	min_data_length = Math.min(data.length, min_data_length);
+	let max = -200;
 	for (j = min_data_length - 1; j >= start_date; j--) {
 		data_y_point = data[j]['ClosingRate'];
 		rate = 'ClosingRate';
@@ -155,6 +156,9 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 		}
 		y_0 = data[min_data_length - 1][rate];
 		my_data = data_y_point / y_0;
+		if (my_data > max) {
+			max = my_data;
+		}
 		y.push(my_data - 1);
 		if (fill_x) {
 			date = data[j]['TradeDate'].substring(0, 10).split('-');
@@ -168,7 +172,7 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 			}
 		}
 	}
-	return [x, y, name];
+	return [x, y, name, max];
 }
 
 export function extract_table_info(keep_info, all_results) {
