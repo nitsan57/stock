@@ -420,6 +420,7 @@ class Search extends React.Component {
 							width: '100%',
 							margin: 'auto',
 							display: 'flex',
+							flexWrap: 'wrap',
 							paddingRight: '5%',
 							justifyContent: 'center',
 						}}
