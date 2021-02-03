@@ -40,9 +40,6 @@ const SideDrawer = ({ navLinks }) => {
 						<ListItem button>
 							<ListItemText primary={title} />
 						</ListItem>
-						<IconButton color="inherit">
-							<SearchIcon />
-						</IconButton>
 					</a>
 				))}
 			</List>
@@ -59,7 +56,9 @@ const SideDrawer = ({ navLinks }) => {
 				open={state.right}
 				onOpen={toggleDrawer('right', true)}
 				onClose={toggleDrawer('right', false)}
-			></Drawer>
+			>
+				{sideDrawerList('right')}
+			</Drawer>
 		</React.Fragment>
 	);
 };
