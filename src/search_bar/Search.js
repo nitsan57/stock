@@ -501,7 +501,9 @@ class Search extends React.Component {
 						indices={this.state.incdices_list}
 					/>
 					<History search_history={this.state.search_history} />
-					<div style={{ color: 'red' }}>{this.state.search_message}</div>
+					<div style={{ color: this.state.temp_data[0].length === 0 ? 'red' : 'black' }}>
+						{this.state.search_message}
+					</div>
 				</div>
 				{loading}
 				<div
