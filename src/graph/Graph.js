@@ -89,16 +89,23 @@ class Graph extends React.Component {
 			let data_array;
 			[len_array, data_array] = await this.prepare_data(raw_data);
 
-			var min_data_length = 100000;
+			var max_data_length = 0;
 			var i;
+			let indices = [];
+			let max_index;
 			let curr_len;
 			for (i = 0; i < len_array.length; i++) {
 				curr_len = len_array[i];
 
-				if (min_data_length > curr_len) {
-					min_data_length = curr_len;
+				if (max_data_length < curr_len) {
+					max_data_length = curr_len;
+					max_index = i;
 				}
+				indices.push(i);
 			}
+			indices.splice(max_index, 1);
+			indices.unshift(max_index);
+
 			var name;
 			var x = [];
 			var y = [];
@@ -106,23 +113,26 @@ class Graph extends React.Component {
 
 			let start_date = 0;
 			if (date_range[1] !== 0) {
-				start_date = min_data_length - date_range[1];
-				min_data_length = min_data_length - date_range[0];
+				start_date = max_data_length - date_range[1];
+				max_data_length = max_data_length - date_range[0];
 			}
-			for (i = 0; i < data_array.length; i++) {
+
+			indices.forEach((i, object_index) => {
 				[x, y, name] = this.state.stock_market.extract_chart_point(
 					x,
 					y,
 					instruments,
 					data_array,
-					min_data_length,
+					max_data_length,
 					start_date,
-					i
+					i,
+					object_index === 0
 				);
-				var temp_data = this.create_graph_data(x, y, name);
+
+				var temp_data = this.create_graph_data(x.slice(x.length - y.length, x.length - 1), y, name);
 				res.push(temp_data);
 				graph_yield_values.push(y[y.length - 1]);
-			}
+			});
 
 			let xticks = [];
 			let mark_jump_const = Math.max(parseInt(x.length / 5), 1);

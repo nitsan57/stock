@@ -125,7 +125,7 @@ export function extract_chart_length(instrument_data) {
 	return data.length;
 }
 
-export function extract_chart_point(x, y, instruments, data_array, min_data_length, start_date, i) {
+export function extract_chart_point(x, y, instruments, data_array, min_data_length, start_date, i, fill_x) {
 	let value;
 	let name;
 	let j;
@@ -145,6 +145,7 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 	name = instruments[i]['name'];
 	y = [];
 	var rate;
+	min_data_length = data.length;
 	for (j = min_data_length - 1; j >= start_date; j--) {
 		data_y_point = data[j]['ClosingRate'];
 		rate = 'ClosingRate';
@@ -155,7 +156,7 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 		y_0 = data[min_data_length - 1][rate];
 		my_data = data_y_point / y_0;
 		y.push(my_data - 1);
-		if (i === 0) {
+		if (fill_x) {
 			date = data[j]['TradeDate'].substring(0, 10).split('-');
 			if (date.length === 1) {
 				x.push(date[0]);
