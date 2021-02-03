@@ -31,7 +31,7 @@ export default function SuggestionSingleLine(props) {
 				}}
 				orientation="vertical"
 			/>
-			<Tooltip title={props.text_lang.SEARCH.NEW_SEARCH}>
+			<Tooltip title={props.text_lang.SEARCH.NEW_SEARCH + props.tooltip_extra}>
 				<Button
 					style={{
 						// color: props.color,
