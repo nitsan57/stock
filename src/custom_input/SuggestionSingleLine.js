@@ -34,6 +34,7 @@ export default function SuggestionSingleLine(props) {
 			<Tooltip title={props.text_lang.SEARCH.NEW_SEARCH}>
 				<Button
 					style={{
+						// color: props.color,
 						margin: '0',
 						// padding: '2px 4px',
 						display: 'flex',

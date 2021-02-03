@@ -250,7 +250,7 @@ class Graph extends React.Component {
 			value = [0, date_range_len];
 			this.slider_change_val(value);
 		} else if (value === 'min_length') {
-			value = [0, this.state.min_data_length];
+			value = [Math.max(date_range_len - this.state.min_data_length, 0), date_range_len];
 			this.slider_change_val(value);
 		}
 		let raw_data = this.state.raw_data;

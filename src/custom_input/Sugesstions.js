@@ -18,10 +18,11 @@ const Suggestions = (props) => {
 				variant="outline-secondary"
 				search={props.index_search}
 				text_lang={props.text_lang}
-				name={r}
+				name={r + ' [' + props.text_lang.SUGGESTIONS.INDICES + ']'}
 				id={index}
 				index={r}
 				key={index}
+				// color={'outline-secondary'}
 			/>
 		))
 	);
@@ -37,6 +38,7 @@ const Suggestions = (props) => {
 				index={index}
 				variant="outline-primary"
 				key={r.id}
+				// color={'outline-primary'}
 			/>
 		))
 	);

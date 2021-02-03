@@ -43,8 +43,8 @@ export const ENGLISH = {
 	},
 	SUGGESTIONS: {
 		ALL: 'הראה הכל',
-		INDICES: 'all etfs of the index:',
-		ETFS: 'specific etfs:',
+		INDICES: 'all etfs of the index',
+		ETFS: 'specific etfs',
 	},
 	NAV: {
 		SEARCH: 'search',
@@ -110,8 +110,8 @@ export const HEBREW = {
 	},
 	SUGGESTIONS: {
 		ALL: 'הראה הכל',
-		INDICES: ':כל קרנות המדד',
-		ETFS: ':קרן מסויימת',
+		INDICES: 'כל קרנות המדד',
+		ETFS: 'קרן מסויימת',
 	},
 
 	NAV: {
