@@ -44,7 +44,7 @@ export default function ControlledOpenSelect(props) {
 					onChange={handleChange}
 					label={props.text_lang.SCROLL_FILTER.MANAGMENT_FEE_FILTER}
 				>
-					<MenuItem value={10}>no filter</MenuItem>
+					<MenuItem value={10}>{props.text_lang.SCROLL_FILTER.NO_FILTER}</MenuItem>
 					<MenuItem value={0.01}>0.01%</MenuItem>
 					<MenuItem value={0.05}>0.05%</MenuItem>
 					<MenuItem value={0.1}>0.1%</MenuItem>

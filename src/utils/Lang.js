@@ -4,7 +4,7 @@ export const ENGLISH = {
 	SEARCH: {
 		CHECKBOX_PREFIX: 'I want to look for:',
 		DEFAULT_SEARCH_KEYWORD: '',
-		DEFAULT_SEARCH_MSG: 'Search',
+		DEFAULT_SEARCH_MSG: '',
 		RESULT_SEARCH_MSG: 'Results',
 		IMITATING: 'Imitating',
 		LEVERAGED: 'leveraged',
@@ -52,6 +52,7 @@ export const ENGLISH = {
 	},
 	SCROLL_FILTER: {
 		MANAGMENT_FEE_FILTER: 'Managment fee',
+		NO_FILTER: 'dont limit',
 	},
 };
 
@@ -65,7 +66,7 @@ export const HEBREW = {
 	SEARCH: {
 		CHECKBOX_PREFIX: ':אני רוצה לחפש',
 		DEFAULT_SEARCH_KEYWORD: '',
-		DEFAULT_SEARCH_MSG: 'חפש',
+		DEFAULT_SEARCH_MSG: '',
 		RESULT_SEARCH_MSG: 'תוצאות',
 		IMITATING: 'קרן מחקה',
 		LEVERAGED: 'קרן ממונפת',
@@ -118,5 +119,6 @@ export const HEBREW = {
 	},
 	SCROLL_FILTER: {
 		MANAGMENT_FEE_FILTER: 'דמי ניהול עד',
+		NO_FILTER: 'בלי הגבלה',
 	},
 };
