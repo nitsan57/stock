@@ -36,12 +36,15 @@ class App extends React.Component {
 						<GoogleAd slot="394738798" timeout={1000} classNames="page-bottom" />
 					</Route>
 					<Route exact path="/contact">
-						<h1 style={{ textAlign: 'right', alignSelf: 'stretch' }}>fortunae </h1>
-						<h2 style={{ textAlign: 'right', alignSelf: 'stretch' }}>
-							{' '}
-							הוקם ב2020 כדי לתת מענה להשוואת קרנות הסל וקרנות הנאמנות בישראל. פיתחנו כלי פשוט ונוח
-							להשוואת דמי ניהול, ותשואה לתקופת זמן נבחרת. צוות ההנהלה: אוראל כאליהו וניצן לוי{' '}
-						</h2>
+						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{',fortunae'}</div>
+						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>
+							{
+								'.הוקם ב2020 כדי לתת מענה מהיר ונוח להשוואת מחירי ניהול ותשואות  של קרנות סל וקרנות נאמנות'
+							}
+						</div>
+						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{':מקימים'}</div>
+						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{'אוראל כאליהו'}</div>
+						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{'ניצן שלוטרבק לוי'}</div>
 					</Route>
 				</Switch>
 			</Router>
