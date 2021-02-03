@@ -18,6 +18,7 @@ class Graph extends React.Component {
 			data: [],
 			xticks: [],
 			dates: [],
+			min_data_length: 0,
 			slider_values: [0, 0],
 			is_data_loaded: false,
 			stock_market: this.props.stock_market,
@@ -90,6 +91,7 @@ class Graph extends React.Component {
 			[len_array, data_array] = await this.prepare_data(raw_data);
 
 			var max_data_length = 0;
+			var min_data_length = 100000;
 			var i;
 			let indices = [];
 			let max_index;
@@ -101,10 +103,14 @@ class Graph extends React.Component {
 					max_data_length = curr_len;
 					max_index = i;
 				}
+				if (min_data_length > curr_len) {
+					min_data_length = curr_len;
+				}
 				indices.push(i);
 			}
 			indices.splice(max_index, 1);
 			indices.unshift(max_index);
+			this.setState({ min_data_length });
 
 			var name;
 			var x = [];
@@ -243,6 +249,9 @@ class Graph extends React.Component {
 		} else if (value === 'all-time') {
 			value = [0, date_range_len];
 			this.slider_change_val(value);
+		} else if (value === 'min_length') {
+			value = [0, this.state.min_data_length];
+			this.slider_change_val(value);
 		}
 		let raw_data = this.state.raw_data;
 		this.get_graph_data(raw_data, this.state.instruments, value);
@@ -347,6 +356,16 @@ class Graph extends React.Component {
 						value={this.state.slider_values}
 						onAfterChange={this.range_change}
 					/>
+					<Button
+						style={{
+							marginRight: 10,
+						}}
+						variant="primary"
+						size="sm"
+						onClick={() => this.range_change('min_length')}
+					>
+						{this.state.text_lang.GRAPH.MINIMAL_TIME}
+					</Button>
 					<Button
 						style={{
 							marginRight: 10,

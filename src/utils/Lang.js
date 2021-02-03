@@ -19,6 +19,7 @@ export const ENGLISH = {
 		NEW_SEARCH: 'Search',
 		ADD_TO_GRAPH: 'Add to comparation',
 		MANAGMENT_FEE_FILTER: 'Managment fee',
+		MINIMAL_TIME: 'maximal joint starting point',
 	},
 
 	GRAPH: { WEEK_BUTTON: 'week', MONTH_BUTTON: 'month', YEAR_BUTTON: 'year', ALL_TIME_BUTTON: 'all-time' },
@@ -89,6 +90,7 @@ export const HEBREW = {
 		MONTH_BUTTON: 'חודש',
 		YEAR_BUTTON: 'שנה',
 		ALL_TIME_BUTTON: 'הכל',
+		MINIMAL_TIME: 'זמן התחלה משותף',
 	},
 
 	TABLE: {
