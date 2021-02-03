@@ -145,7 +145,7 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 	name = instruments[i]['name'];
 	y = [];
 	var rate;
-	min_data_length = data.length;
+	min_data_length = Math.min(data.length, min_data_length);
 	for (j = min_data_length - 1; j >= start_date; j--) {
 		data_y_point = data[j]['ClosingRate'];
 		rate = 'ClosingRate';
