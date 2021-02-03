@@ -194,7 +194,7 @@ export function extract_table_info(keep_info, all_results) {
 	let type;
 	let subtype;
 	let k = 0;
-	for (k = 0; k < all_results.length; k++) {
+	for (k = 0; k < keep_info.length; k++) {
 		let relevant_info = {};
 		type = keep_info[k]['type'];
 		subtype = keep_info[k]['subtype'];
