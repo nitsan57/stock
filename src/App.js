@@ -33,7 +33,16 @@ class App extends React.Component {
 				<Switch>
 					<Route exact path="/">
 						<Search text_lang={this.state.lang} stock_market={this.state.stock_market} />
+
 						<GoogleAd slot="394738798" timeout={1000} classNames="page-bottom" />
+
+						<script type="text/javascript">var infolinks_pid = 3309938; var infolinks_wsid = 0;</script>
+						<script
+							type="text/javascript"
+							src="http://resources.infolinks.com/js/infolinks_main.js"
+						></script>
+
+						<script type="text/javascript" src="//resources.infolinks.com/js/infolinks_main.js"></script>
 					</Route>
 					<Route exact path="/contact">
 						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{',fortunae'}</div>
