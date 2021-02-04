@@ -14,8 +14,8 @@ class Info extends React.Component {
 
 	get_table_data() {
 		let all_results = this.props.funds;
-		let keep_info = this.props.info;
-		let table_data = this.state.stock_market.extract_table_info(keep_info, all_results);
+		// let keep_info = this.props.info;
+		let table_data = this.state.stock_market.extract_table_info(all_results);
 
 		this.setState({ info: table_data });
 		this.setState({ is_data_loaded: true });

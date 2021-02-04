@@ -23,11 +23,9 @@ class Search extends React.Component {
 			is_button_pressed: false,
 			to_add_plot: false,
 			fund_set: new Set(),
-			info_set: new Set(),
 			fund_list: [],
-			temp_data: [[], []],
+			temp_data: [],
 			suggeestion_list: [],
-			info_list: [],
 			incdices_list: [],
 			indices_to_remove: [],
 			managment_fee_filter: 10,
@@ -73,31 +71,24 @@ class Search extends React.Component {
 		return today;
 	}
 
-	search_button_clicked(temp_fund_list, temp_info_list, to_add_plot, history_keyword) {
+	search_button_clicked(temp_fund_list, to_add_plot, history_keyword) {
 		if (temp_fund_list.length !== 0) {
-			let new_info_list = [];
 			let new_fund_list = [];
-			let prev_size = this.state.info_set.size;
-
-			temp_info_list.forEach((item) => {
-				this.state.info_set.add(JSON.stringify(item));
-			});
+			let prev_size = this.state.fund_set.size;
 
 			temp_fund_list.forEach((item) => {
 				this.state.fund_set.add(JSON.stringify(item));
 			});
 
-			if (this.state.info_set.size === prev_size && to_add_plot) {
+			if (this.state.fund_set.size === prev_size && to_add_plot) {
 				this.setState({
 					search_message: this.state.text_lang.SEARCH.NO_NEW_FUND_TO_ADD,
 				});
 				return -1;
 			}
 			let item;
-			for (var it = this.state.info_set.values(), val = null; (val = it.next().value); ) {
-				item = JSON.parse(val);
-				new_info_list.push(item);
-			}
+			let it;
+			let val;
 
 			for (it = this.state.fund_set.values(), val = null; (val = it.next().value); ) {
 				item = JSON.parse(val);
@@ -107,7 +98,6 @@ class Search extends React.Component {
 			this.setState({ search_message: this.state.text_lang.SEARCH.IN_PROGRESS });
 			this.setState({ num_child_loaded: 0 });
 			this.setState({ is_button_pressed: true });
-			this.setState({ info_list: new_info_list });
 			this.setState({ fund_list: new_fund_list });
 			let old_history = this.state.search_history;
 			old_history[history_keyword] = 0;
@@ -117,7 +107,6 @@ class Search extends React.Component {
 
 	async search(word, managment_fee_filter) {
 		let new_fund_list;
-		let new_info_list;
 		let imitating = this.state.search_checkbox[0]['isChecked'];
 		let leveraged = this.state.search_checkbox[1]['isChecked'];
 		let short = this.state.search_checkbox[2]['isChecked'];
@@ -137,27 +126,26 @@ class Search extends React.Component {
 			});
 			return -1;
 		} else {
-			new_fund_list = search_res[0];
-			new_info_list = search_res[1];
+			new_fund_list = search_res;
 
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.DEFAULT_SEARCH_MSG,
 			});
 		}
 
-		if (new_info_list.length === 0) {
+		if (new_fund_list.length === 0) {
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.NO_RESULTS_FOR_FILTERS,
 			});
 			return -1;
 		}
-		if (new_info_list.length > Consts.NUM_SEARCH_ELEMENTS_LIMIT) {
+		if (new_fund_list.length > Consts.NUM_SEARCH_ELEMENTS_LIMIT) {
 			this.setState({
 				search_message: this.state.text_lang.SEARCH.TO_MANY_RESULTS,
 			});
 			return -1;
 		}
-		return [new_fund_list, new_info_list];
+		return new_fund_list;
 	}
 
 	setStateAsync(state) {
@@ -167,13 +155,10 @@ class Search extends React.Component {
 	}
 
 	async clearState() {
-		await this.setStateAsync({ info_set: new Set() });
 		await this.setStateAsync({ fund_set: new Set() });
 		this.setState({ graph_yield_values: [] });
 		// this.state.fund_list.splice(0, this.state.fund_list.length);
-		// this.state.info_list.splice(0, this.state.info_list.length);
 		this.setState({ fund_list: [] });
-		this.setState({ info_list: [] });
 		this.setState({ to_add_plot: false });
 		this.setState({ search_history: {} });
 	}
@@ -181,12 +166,7 @@ class Search extends React.Component {
 	async clearSearch() {
 		let to_add_plot = false;
 		await this.clearState();
-		this.search_button_clicked(
-			this.state.temp_data[0],
-			this.state.temp_data[1],
-			to_add_plot,
-			this.state.search_keyword
-		);
+		this.search_button_clicked(this.state.temp_data, to_add_plot, this.state.search_keyword);
 		this.hide_suggestions();
 	}
 
@@ -194,12 +174,7 @@ class Search extends React.Component {
 		let to_add_plot = true;
 		this.setState({ to_add_plot: to_add_plot });
 		// this.setState({ search_keyword: '' });
-		this.search_button_clicked(
-			this.state.temp_data[0],
-			this.state.temp_data[1],
-			to_add_plot,
-			this.state.search_keyword
-		);
+		this.search_button_clicked(this.state.temp_data, to_add_plot, this.state.search_keyword);
 		this.hide_suggestions();
 	};
 
@@ -218,20 +193,14 @@ class Search extends React.Component {
 		}
 
 		if (clicked_element === 9999) {
-			this.search_button_clicked(
-				this.state.temp_data[0],
-				this.state.temp_data[1],
-				to_add_plot,
-				this.state.search_keyword
-			);
+			this.search_button_clicked(this.state.temp_data, to_add_plot, this.state.search_keyword);
 			return;
 		}
 
 		this.search_button_clicked(
-			[this.state.temp_data[0][clicked_element]],
-			[this.state.temp_data[1][clicked_element]],
+			[this.state.temp_data[clicked_element]],
 			to_add_plot,
-			this.state.temp_data[0][clicked_element]['Name']
+			this.state.temp_data[clicked_element]['Name']
 		);
 	}
 
@@ -257,13 +226,12 @@ class Search extends React.Component {
 		return res.then((value) => {
 			if (value !== -1) {
 				if (is_focused) {
-					this.setState({ suggeestion_list: value[1] });
+					this.setState({ suggeestion_list: value });
 				}
-
 				this.setState({ temp_data: value }, callback);
-				return value[1];
+				return value;
 			} else {
-				this.setState({ temp_data: [[], []] }, null);
+				this.setState({ temp_data: [] }, null);
 				this.setState({ suggeestion_list: [] });
 				return [];
 			}
@@ -274,11 +242,8 @@ class Search extends React.Component {
 		const content = e.target.value;
 		this.setState({ search_keyword: content });
 		let filterd_res = this.input_helper(content, true, this.state.managment_fee_filter, null);
-		console.log(filterd_res);
 		filterd_res.then((res) => {
-			console.log(res);
 			let indices = this.state.stock_market.filter_indices(content, res);
-			console.log(indices);
 			this.setState({ incdices_list: indices });
 		});
 	};
@@ -297,7 +262,7 @@ class Search extends React.Component {
 	};
 
 	show_suggestions() {
-		this.setState({ suggeestion_list: this.state.temp_data[1] });
+		this.setState({ suggeestion_list: this.state.temp_data });
 	}
 
 	hide_suggestions() {
@@ -367,16 +332,11 @@ class Search extends React.Component {
 
 	async RemoveRowFromGraphHandler(ids_to_remove, indices_to_remove) {
 		let p_json;
-		this.state.info_set.forEach((point) => {
-			p_json = JSON.parse(point);
-			if (ids_to_remove.includes(p_json.id)) {
-				this.state.info_set.delete(point);
-			}
-		});
 
 		this.state.fund_set.forEach((point) => {
 			p_json = JSON.parse(point);
-			if (ids_to_remove.includes(p_json.id)) {
+			if (ids_to_remove.includes(p_json.Id)) {
+				/// ONLY REFER THAT EXPLICITS USES TASE ID NOTATION NEED TO FIX
 				this.state.fund_set.delete(point);
 			}
 		});
@@ -384,7 +344,6 @@ class Search extends React.Component {
 		this.setStateAsync({ indices_to_remove: indices_to_remove });
 
 		this.remove_state_incdices('fund_list', this.state.fund_list, indices_to_remove);
-		this.remove_state_incdices('info_list', this.state.fund_list, indices_to_remove);
 	}
 
 	changeFilter = (ix) => {
@@ -512,7 +471,7 @@ class Search extends React.Component {
 						indices={this.state.incdices_list}
 					/>
 					<History search_history={this.state.search_history} />
-					<div style={{ color: this.state.temp_data[0].length === 0 ? 'red' : 'black' }}>
+					<div style={{ color: this.state.temp_data.length === 0 ? 'red' : 'black' }}>
 						{this.state.search_message}
 					</div>
 				</div>
@@ -524,7 +483,7 @@ class Search extends React.Component {
 				>
 					<Graph
 						today={this.state.today}
-						funds={this.state.info_list}
+						funds={this.state.fund_list}
 						graphHandler={this.graphHandler}
 						to_add_plot={this.state.to_add_plot}
 						stock_market={this.state.stock_market}
@@ -535,7 +494,6 @@ class Search extends React.Component {
 				</div>
 				<Info
 					funds={this.state.fund_list}
-					info={this.state.info_list}
 					tableHandler={this.tableHandler}
 					to_add_plot={this.state.to_add_plot}
 					stock_market={this.state.stock_market}

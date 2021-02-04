@@ -34,7 +34,7 @@ const Suggestions = (props) => {
 			<SuggestionSingleLine
 				search={props.specific_search}
 				text_lang={props.text_lang}
-				name={r.name}
+				name={r.Name}
 				id={r.id}
 				index={index}
 				variant="outline-primary"

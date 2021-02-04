@@ -14,7 +14,7 @@ export function filter_indices(search_keyword, filterd_res) {
 	let res = [];
 	let temp_res;
 	filteredData.forEach((item) => {
-		temp_res = filterd_res.filter((z) => z['name'].toLowerCase().includes(item.toLowerCase()));
+		temp_res = filterd_res.filter((z) => z['Name'].toLowerCase().includes(item.toLowerCase()));
 		if (temp_res.length != 0) {
 			res.push(item);
 		}
@@ -64,25 +64,25 @@ export async function search(search_keyword, imitating, leveraged, short, normal
 		{ count: 0 }
 	);
 
-	var temp_fund = null;
+	// var temp_fund = null;
 	if (filteredData.length === 0) {
 		return -1;
 	}
 	let fund_l = [];
-	let keep_info = [];
+	// let keep_info = [];
 	filteredData.forEach((item) => {
-		temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
+		// temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
 		fund_l.push(item);
-		keep_info.push(temp_fund);
+		// keep_info.push(temp_fund);
 	});
 
-	return [fund_l, keep_info];
+	return fund_l;
 }
 
 function fetch_fund(today, instrument, raw_data) {
 	let year = today.split('-')[0];
 	let before_5 = today.replace(year, year - 5);
-	var instrument_id = instrument['id'];
+	var instrument_id = instrument['Id'];
 	var url = 'https://mayaapi.tase.co.il/api/download/fundhistory';
 	var data = 'DateFrom=' + before_5 + '&DateTo=' + today + '&FundId=' + instrument_id;
 	let res = fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
@@ -92,7 +92,7 @@ function fetch_fund(today, instrument, raw_data) {
 function fetch_security(today, instrument, raw_data) {
 	let year = today.split('-')[0];
 	let before_5 = today.replace(year, year - 5);
-	var instrument_id = instrument['id'];
+	var instrument_id = instrument['Id'];
 	var url = 'https://api.tase.co.il/api/ChartData/ChartData/';
 
 	let data =
@@ -116,8 +116,8 @@ export function get_instrument_chart_data(today, instruments, raw_data) {
 
 	for (i = add_len; i < instruments.length; i++) {
 		instrument = instruments[i];
-		var instrument_id = instrument['id'];
-		if (String(instrument_id)[0] === '1' || (instrument['type'] === '1' && instrument['subtype'] === '1')) {
+		var instrument_id = instrument['Id'];
+		if (String(instrument_id)[0] === '1' || (instrument['Type'] === '1' && instrument['SubType'] === '1')) {
 			fetch_security(today, instrument, raw_data);
 		} else {
 			fetch_fund(today, instrument, raw_data);
@@ -144,13 +144,12 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 	let year;
 	var month;
 	var day;
-
 	value = data_array[i];
 	let data = value['Data'];
 	if (data === undefined) {
 		data = value['PointsForHistoryChart'];
 	}
-	name = instruments[i]['name'];
+	name = instruments[i]['Name'];
 	y = [];
 	var rate;
 	min_data_length = Math.min(data.length, min_data_length);
@@ -183,7 +182,7 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 	return [x, y, name, max];
 }
 
-export function extract_table_info(keep_info, all_results) {
+export function extract_table_info(all_results) {
 	let table_data = [];
 
 	let fund_data;
@@ -202,10 +201,10 @@ export function extract_table_info(keep_info, all_results) {
 	let type;
 	let subtype;
 	let k = 0;
-	for (k = 0; k < keep_info.length; k++) {
+	for (k = 0; k < all_results.length; k++) {
 		let relevant_info = {};
-		type = keep_info[k]['type'];
-		subtype = keep_info[k]['subtype'];
+		type = all_results[k]['Type'];
+		subtype = all_results[k]['Subtype'];
 
 		fund_data = all_results[k];
 		mutual_data = fund_data;
@@ -227,8 +226,8 @@ export function extract_table_info(keep_info, all_results) {
 		}
 
 		relevant_info = {
-			name: keep_info[k]['name'],
-			id: keep_info[k]['id'],
+			name: all_results[k]['Name'],
+			id: all_results[k]['Id'],
 			managment_fee: managment_fee,
 			var_fee: var_fee,
 			truste_fee: truste_fee,
