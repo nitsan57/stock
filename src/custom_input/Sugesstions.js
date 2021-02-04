@@ -35,10 +35,10 @@ const Suggestions = (props) => {
 				search={props.specific_search}
 				text_lang={props.text_lang}
 				name={r.Name}
-				id={r.id}
+				id={r.Id} // remove specicif to TASE
 				index={index}
 				variant="outline-primary"
-				key={r.id}
+				key={r.Id}
 				tooltip_extra={''}
 
 				// color={'outline-primary'}
