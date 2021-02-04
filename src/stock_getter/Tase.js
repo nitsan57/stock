@@ -9,9 +9,17 @@ import { Indices } from '../new';
 const tase_info = Information;
 const tase_indices = Indices;
 
-export function filter_indices(search_keyword) {
+export function filter_indices(search_keyword, filterd_res) {
 	const filteredData = tase_indices.filter((word) => word.toLowerCase().includes(search_keyword.toLowerCase()));
-	return filteredData;
+	let res = [];
+	let temp_res;
+	filteredData.forEach((item) => {
+		temp_res = filterd_res.filter((z) => z['name'].toLowerCase().includes(item.toLowerCase()));
+		if (temp_res.length != 0) {
+			res.push(item);
+		}
+	});
+	return res;
 }
 
 export async function search(search_keyword, imitating, leveraged, short, normal_stock, managment_fee_filter) {

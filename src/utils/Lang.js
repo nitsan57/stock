@@ -90,7 +90,7 @@ export const HEBREW = {
 		MONTH_BUTTON: 'חודש',
 		YEAR_BUTTON: 'שנה',
 		ALL_TIME_BUTTON: 'הכל',
-		MINIMAL_TIME: 'זמן התחלה משותף',
+		MINIMAL_TIME: 'נקודת פתיחה חופפת',
 	},
 
 	TABLE: {

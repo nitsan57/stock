@@ -254,26 +254,33 @@ class Search extends React.Component {
 
 	input_helper(content, is_focused, managment_fee_filter, callback) {
 		let res = this.search(content, managment_fee_filter);
-		res.then((value) => {
+		return res.then((value) => {
 			if (value !== -1) {
 				if (is_focused) {
 					this.setState({ suggeestion_list: value[1] });
 				}
 
 				this.setState({ temp_data: value }, callback);
+				return value[1];
 			} else {
 				this.setState({ temp_data: [[], []] }, null);
 				this.setState({ suggeestion_list: [] });
+				return [];
 			}
 		});
 	}
 
 	handleInputChange = (e) => {
 		const content = e.target.value;
-		let indices = this.state.stock_market.filter_indices(content);
-		this.setState({ incdices_list: indices });
 		this.setState({ search_keyword: content });
-		this.input_helper(content, true, this.state.managment_fee_filter, null);
+		let filterd_res = this.input_helper(content, true, this.state.managment_fee_filter, null);
+		console.log(filterd_res);
+		filterd_res.then((res) => {
+			console.log(res);
+			let indices = this.state.stock_market.filter_indices(content, res);
+			console.log(indices);
+			this.setState({ incdices_list: indices });
+		});
 	};
 
 	graphHandler = (yield_values) => {
@@ -384,6 +391,9 @@ class Search extends React.Component {
 		let oldFilters = this.state.search_checkbox;
 		oldFilters[ix].isChecked = !oldFilters[ix].isChecked;
 		this.setState({ search_checkbox: oldFilters });
+		if (this.state.search_keyword != '') {
+			this.input_helper(this.state.search_keyword, false, this.state.managment_fee_filter, null);
+		}
 	};
 
 	render() {
