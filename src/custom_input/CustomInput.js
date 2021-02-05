@@ -22,6 +22,7 @@ export default function CustomInput(props) {
 			flex: 1,
 			padding: 10,
 			textAlign: props.text_lang.LANG_DIRECTION,
+			direction: props.text_lang.LANG_DIRECTION,
 			align: props.text_lang.LANG_DIRECTION,
 			'& input': {
 				textAlign: props.text_lang.LANG_DIRECTION,
