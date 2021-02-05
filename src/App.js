@@ -34,7 +34,7 @@ class App extends React.Component {
 					<Route exact path="/">
 						<Search text_lang={this.state.lang} stock_market={this.state.stock_market} />
 
-						<GoogleAd slot="394738798" timeout={1000} classNames="page-bottom" />
+						{/* <GoogleAd slot="394738798" timeout={1000} classNames="page-bottom" /> */}
 
 						<script type="text/javascript">var infolinks_pid = 3309938; var infolinks_wsid = 0;</script>
 						<script

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { AppBar, Toolbar, IconButton, List, ListItem, ListItemText, Container, Hidden } from '@material-ui/core';
-import { Home } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import SideDrawer from '../side_drawer/SideDrawer';
 import LanguageIcon from '@material-ui/icons/Language';
@@ -37,10 +36,10 @@ const Header = (props) => {
 		<AppBar position="static">
 			<Toolbar>
 				<Container maxWidth="lg" className={classes.navbarDisplayFlex}>
-					<IconButton color="inherit" onClick={() => props.change_lang()}>
+					{/* <IconButton color="inherit" onClick={() => props.change_lang()}>
 						<LanguageIcon />
 						<h6>English/Hebrew</h6>
-					</IconButton>
+					</IconButton> */}
 					<Hidden smDown>
 						<List component="nav" aria-labelledby="main navigation" className={classes.navDisplayFlex}>
 							<a href={navLinks[0].path} key={navLinks[0].title} className={classes.linkText}>
