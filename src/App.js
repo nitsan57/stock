@@ -5,6 +5,7 @@ import * as StockMarket from './stock_getter/StockGetter';
 import Navbar from './navbar/Navbar';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import GoogleAd from './google_ad/GoogleAd';
+import MainLogo from './Logo/Logo_b.png';
 
 class App extends React.Component {
 	constructor() {
@@ -45,15 +46,20 @@ class App extends React.Component {
 						<script type="text/javascript" src="//resources.infolinks.com/js/infolinks_main.js"></script>
 					</Route>
 					<Route exact path="/contact">
-						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{',fortunae'}</div>
+						{/* <div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{',fortunae'}</div> */}
 						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>
 							{
-								'.הוקם ב2020 כדי לתת מענה מהיר ונוח להשוואת מחירי ניהול ותשואות  של קרנות סל וקרנות נאמנות'
+								'.האתר הוקם ב2020 כדי לתת מענה מהיר ונוח להשוואת מחירי ניהול ותשואות  של קרנות סל וקרנות נאמנות'
 							}
 						</div>
 						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{':מקימים'}</div>
 						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{'אוראל כאליהו'}</div>
 						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{'ניצן שלוטרבק לוי'}</div>
+						<img
+							src={MainLogo}
+							style={{ display: 'flex', margin: 'auto', width: '30%', height: '30%' }}
+							alt="fireSpot"
+						/>
 					</Route>
 				</Switch>
 			</Router>
