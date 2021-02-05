@@ -52,6 +52,8 @@ class App extends React.Component {
 								'.האתר הוקם ב2020 כדי לתת מענה מהיר ונוח להשוואת מחירי ניהול ותשואות  של קרנות סל וקרנות נאמנות'
 							}
 						</div>
+						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{':ליצירת קשר'}</div>
+						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{'fortunae@gmail.com'}</div>
 						{/* <div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{':מקימים'}</div>
 						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{'אוראל כאליהו'}</div>
 						<div style={{ textAlign: 'right', alignSelf: 'stretch' }}>{'ניצן שלוטרבק לוי'}</div> */}
