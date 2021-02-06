@@ -21,6 +21,7 @@
     "react-data-table-component": "^6.11.6",
     "react-dom": "^17.0.1",
     "react-ga": "^3.3.0",
+    "react-gtm-module": "^2.0.11",
     "react-loader-spinner": "^3.1.14",
     "react-plotly.js": "^2.5.0",
     "react-ratio": "^0.1.5",
