@@ -4,8 +4,18 @@ import * as Lang from './utils/Lang';
 import * as StockMarket from './stock_getter/StockGetter';
 import Navbar from './navbar/Navbar';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import GoogleAd from './google_ad/GoogleAd';
+// import GoogleAd from './google_ad/GoogleAd';
 import MainLogo from './Logo/Logo_b.png';
+// import TagManager from 'react-gtm-module';
+
+// const tagManagerArgs = {
+// 	gtmId: 'GTM-N7FHLQB',
+// };
+// TagManager.initialize(tagManagerArgs);
+
+import ReactGA from 'react-ga';
+ReactGA.initialize('G-DX0J8SR315');
+ReactGA.pageview(window.location.pathname + window.location.search);
 
 class App extends React.Component {
 	constructor() {
