@@ -1,6 +1,7 @@
 export const ENGLISH = {
 	NAME: 'ENGLISH',
 	LANG_DIRECTION: 'left',
+	DIRECTION: 'ltr',
 	SEARCH: {
 		CHECKBOX_PREFIX: 'I want to look for:',
 		DEFAULT_SEARCH_KEYWORD: '',
@@ -60,6 +61,7 @@ export const ENGLISH = {
 export const HEBREW = {
 	NAME: 'HEBREW',
 	LANG_DIRECTION: 'right',
+	DIRECTION: 'rtl',
 
 	GENERAL: {
 		OF: 'של',
