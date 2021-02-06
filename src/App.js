@@ -6,16 +6,13 @@ import Navbar from './navbar/Navbar';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 // import GoogleAd from './google_ad/GoogleAd';
 import MainLogo from './Logo/Logo_b.png';
-// import TagManager from 'react-gtm-module';
+import TagManager from 'react-gtm-module';
 
-// const tagManagerArgs = {
-// 	gtmId: 'GTM-N7FHLQB',
-// };
-// TagManager.initialize(tagManagerArgs);
+const tagManagerArgs = {
+	gtmId: 'GTM-KJCWX4F',
+};
 
-import ReactGA from 'react-ga';
-ReactGA.initialize('G-RGZMSZRWLS');
-ReactGA.pageview(window.location.pathname + window.location.search);
+TagManager.initialize(tagManagerArgs);
 
 class App extends React.Component {
 	constructor() {
