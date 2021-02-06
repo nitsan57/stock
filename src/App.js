@@ -14,7 +14,7 @@ import MainLogo from './Logo/Logo_b.png';
 // TagManager.initialize(tagManagerArgs);
 
 import ReactGA from 'react-ga';
-ReactGA.initialize('G-DX0J8SR315');
+ReactGA.initialize('G-RGZMSZRWLS');
 ReactGA.pageview(window.location.pathname + window.location.search);
 
 class App extends React.Component {
