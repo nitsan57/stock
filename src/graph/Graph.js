@@ -143,7 +143,6 @@ class Graph extends React.Component {
 
 				var temp_data = this.create_graph_data(x.slice(x.length - y.length, x.length - 1), y, name);
 				res.push(temp_data);
-				console.log(temp_data);
 				graph_yield_values.push(y[y.length - 1]);
 			});
 			let tmp = graph_yield_values[max_index];

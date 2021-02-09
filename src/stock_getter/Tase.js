@@ -64,16 +64,12 @@ export async function search(search_keyword, imitating, leveraged, short, normal
 		{ count: 0 }
 	);
 
-	// var temp_fund = null;
 	if (filteredData.length === 0) {
 		return -1;
 	}
 	let fund_l = [];
-	// let keep_info = [];
 	filteredData.forEach((item) => {
-		// temp_fund = { name: item['Name'], id: item['Id'], type: item['Type'], subtype: item['SubType'] };
 		fund_l.push(item);
-		// keep_info.push(temp_fund);
 	});
 
 	return fund_l;
@@ -81,7 +77,7 @@ export async function search(search_keyword, imitating, leveraged, short, normal
 
 function fetch_fund(today, instrument, raw_data) {
 	let year = today.split('-')[0];
-	let before_5 = today.replace(year, year - 5);
+	let before_5 = today.replace(year, year - 10);
 	var instrument_id = instrument['Id'];
 	var url = 'https://mayaapi.tase.co.il/api/download/fundhistory';
 	var data = 'DateFrom=' + before_5 + '&DateTo=' + today + '&FundId=' + instrument_id;
@@ -91,7 +87,7 @@ function fetch_fund(today, instrument, raw_data) {
 
 function fetch_security(today, instrument, raw_data) {
 	let year = today.split('-')[0];
-	let before_5 = today.replace(year, year - 5);
+	let before_5 = today.replace(year, year - 10);
 	var instrument_id = instrument['Id'];
 	var url = 'https://api.tase.co.il/api/ChartData/ChartData/';
 
@@ -170,13 +166,18 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 		if (fill_x) {
 			date = data[j]['TradeDate'].substring(0, 10).split('-');
 			if (date.length === 1) {
-				x.push(date[0]);
+				date = date.split('/');
+				year = date[0];
+				month = date[1];
+				day = date[2];
 			} else {
 				year = date[0];
 				month = date[1];
 				day = date[2];
-				x.push(day + '/' + month + '/' + year);
 			}
+			console.log(year - 2000);
+			year = year - 2000;
+			x.push(day + '/' + month + '/' + year);
 		}
 	}
 	return [x, y, name, max];
