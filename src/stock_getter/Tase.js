@@ -166,16 +166,15 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 		if (fill_x) {
 			date = data[j]['TradeDate'].substring(0, 10).split('-');
 			if (date.length === 1) {
-				date = date.split('/');
-				year = date[0];
+				date = date[0].split('/');
+				year = date[2];
 				month = date[1];
-				day = date[2];
+				day = date[0];
 			} else {
 				year = date[0];
 				month = date[1];
 				day = date[2];
 			}
-			console.log(year - 2000);
 			year = year - 2000;
 			x.push(day + '/' + month + '/' + year);
 		}

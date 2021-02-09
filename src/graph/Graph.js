@@ -327,12 +327,8 @@ class Graph extends React.Component {
 								margin: { t: 0, b: 30, l: 0, r: 0 },
 								autosize: true,
 								showlegend: true,
-								// legend: {
-								// 	x: 0.4,
-								// 	// xanchor: 'right',
-								// 	y: 0.5,
-								// },
-								legend: { orientation: 'h' },
+
+								legend: { orientation: 'h', y: -0.35 },
 								yaxis: {
 									tickformat: ',.0%',
 									automargin: true,
