@@ -304,7 +304,7 @@ class Graph extends React.Component {
 						margin: 'auto',
 					}}
 				>
-					<Ratio ratio={5 / 2}>
+					<Ratio ratio={5 / 3}>
 						<Plot
 							style={{ width: '100%', height: '100%' }}
 							data={this.state.data}
