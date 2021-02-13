@@ -12,6 +12,7 @@ class Graph extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			is_portrait: window.innerWidth < window.innerHeight,
 			raw_data: [],
 			instruments: [],
 			graph_yield_values: [],
@@ -28,6 +29,7 @@ class Graph extends React.Component {
 		this.create_graph_data = this.create_graph_data.bind(this);
 		this.setStateAsync = this.setStateAsync.bind(this);
 		this.range_change = this.range_change.bind(this);
+		this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
 	}
 
 	create_graph_data(x, y, name) {
@@ -42,7 +44,17 @@ class Graph extends React.Component {
 		};
 	}
 
-	componentDidMount() {}
+	componentDidMount() {
+		this.updateWindowDimensions();
+		window.addEventListener('resize', this.updateWindowDimensions);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener('resize', this.updateWindowDimensions);
+	}
+	updateWindowDimensions() {
+		this.setState({ is_portrait: window.innerWidth < window.innerHeight });
+	}
 
 	async get_intrument_list(today, instrument_list, to_add_plot) {
 		var raw_data = this.state.raw_data;
@@ -196,6 +208,9 @@ class Graph extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
+		if (nextState.is_portrait !== this.state.is_portrait) {
+			return true;
+		}
 		if (nextState.text_lang !== this.state.text_lang) {
 			return true;
 		}
@@ -297,6 +312,10 @@ class Graph extends React.Component {
 
 		if (this.state.is_data_loaded) {
 			let range_params = this.range_params(this.state.dates); //for div , width: '80%'
+
+			if (this.state.is_portrait) {
+				return <div>{this.state.text_lang.SEARCH.PHONE_ROTATION_MESSAGE}</div>;
+			}
 			return (
 				<div
 					style={{
@@ -304,7 +323,7 @@ class Graph extends React.Component {
 						margin: 'auto',
 					}}
 				>
-					<Ratio ratio={5 / 3}>
+					<Ratio ratio={5 / 2}>
 						<Plot
 							style={{ width: '100%', height: '100%' }}
 							data={this.state.data}
@@ -328,7 +347,7 @@ class Graph extends React.Component {
 								autosize: true,
 								showlegend: true,
 
-								legend: { orientation: 'h', y: 1.5 },
+								legend: { orientation: 'h', y: 1 },
 								yaxis: {
 									tickformat: ',.0%',
 									automargin: true,

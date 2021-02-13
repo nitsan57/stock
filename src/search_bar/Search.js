@@ -10,6 +10,7 @@ import * as Consts from '../utils/Consts';
 import Button from '@material-ui/core/Button';
 import ScrollFilter from '../check_box/ScrollFilter';
 import MainLogo from '../Logo/Logo_b.png';
+// import { Dimensions } from 'react-native';
 
 const NUM_LOADING_CHILDREN = 2;
 

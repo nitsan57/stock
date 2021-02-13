@@ -21,6 +21,7 @@ export const ENGLISH = {
 		ADD_TO_GRAPH: 'Add to comparation',
 		MANAGMENT_FEE_FILTER: 'Managment fee',
 		MINIMAL_TIME: 'maximal joint starting point',
+		PHONE_ROTATION_MESSAGE: 'please rotate the device to watch comparing graph',
 	},
 
 	GRAPH: { WEEK_BUTTON: 'week', MONTH_BUTTON: 'month', YEAR_BUTTON: 'year', ALL_TIME_BUTTON: 'all-time' },
@@ -85,6 +86,7 @@ export const HEBREW = {
 		ADD_TO_GRAPH: 'הוסף להשוואה',
 		CHOSE_REMOVE_ALL: 'בחר / הסר הכל',
 		MANAGMENT_FEE_FILTER: 'דמי ניהול עד',
+		PHONE_ROTATION_MESSAGE: 'אנא סובב את מסך המכשיר לצפייה בגרף',
 	},
 
 	GRAPH: {
