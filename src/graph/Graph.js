@@ -314,7 +314,66 @@ class Graph extends React.Component {
 			let range_params = this.range_params(this.state.dates); //for div , width: '80%'
 
 			if (this.state.is_portrait) {
-				return <div>{this.state.text_lang.SEARCH.PHONE_ROTATION_MESSAGE}</div>;
+				return (
+					<div>
+						<div>{this.state.text_lang.SEARCH.PHONE_ROTATION_MESSAGE}</div>
+						<Range
+							style={{
+								marginTop: 10,
+								marginBottom: 30,
+							}}
+							min={range_params.min}
+							max={range_params.max}
+							marks={range_params.marks}
+							onChange={this.slider_change_val}
+							value={this.state.slider_values}
+							onAfterChange={this.range_change}
+						/>
+						<Button
+							style={{
+								marginRight: 10,
+							}}
+							variant="primary"
+							size="sm"
+							onClick={() => this.range_change('min_length')}
+						>
+							{this.state.text_lang.GRAPH.MINIMAL_TIME}
+						</Button>
+						<Button
+							style={{
+								marginRight: 10,
+							}}
+							variant="primary"
+							size="sm"
+							onClick={() => this.range_change('week')}
+						>
+							{this.state.text_lang.GRAPH.WEEK_BUTTON}
+						</Button>
+						<Button
+							style={{
+								marginRight: 10,
+							}}
+							variant="primary"
+							size="sm"
+							onClick={() => this.range_change('month')}
+						>
+							{this.state.text_lang.GRAPH.MONTH_BUTTON}
+						</Button>
+						<Button
+							style={{
+								marginRight: 10,
+							}}
+							variant="primary"
+							size="sm"
+							onClick={() => this.range_change('year')}
+						>
+							{this.state.text_lang.GRAPH.YEAR_BUTTON}
+						</Button>
+						<Button variant="primary" size="sm" onClick={() => this.range_change('all-time')}>
+							{this.state.text_lang.GRAPH.ALL_TIME_BUTTON}
+						</Button>
+					</div>
+				);
 			}
 			return (
 				<div
