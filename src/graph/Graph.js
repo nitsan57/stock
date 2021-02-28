@@ -246,14 +246,17 @@ class Graph extends React.Component {
 					this.state.raw_data,
 					this.props.indices_to_remove
 				);
-				this.remove_state_incdices('instruments', this.state.instruments, this.props.indices_to_remove);
+				let instruments = this.remove_state_incdices(
+					'instruments',
+					this.state.instruments,
+					this.props.indices_to_remove
+				);
 				let res = this.remove_state_incdices(
 					'graph_yield_values',
 					this.state.graph_yield_values,
 					this.props.indices_to_remove
 				);
-				this.get_graph_data(raw_data, this.state.instruments, [0, 0]);
-
+				this.get_graph_data(raw_data, instruments, [0, 0]);
 				this.props.graphHandler(res);
 				return;
 			}
