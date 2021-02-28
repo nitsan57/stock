@@ -38,7 +38,7 @@ class Graph extends React.Component {
 			y: y,
 			type: 'scatter',
 			mode: 'lines',
-			name: name.substring(0, 20),
+			name: name,
 			hovertemplate: '%{y}%' + '<br>%{x}<br>',
 			opacity: 1,
 		};
