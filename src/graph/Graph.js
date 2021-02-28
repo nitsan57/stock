@@ -248,6 +248,8 @@ class Graph extends React.Component {
 					this.state.graph_yield_values,
 					this.props.indices_to_remove
 				);
+				let raw_data = this.state.raw_data;
+				this.get_graph_data(raw_data, this.state.instruments, [0, 0]);
 
 				this.props.graphHandler(res);
 				return;
