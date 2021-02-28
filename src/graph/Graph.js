@@ -211,6 +211,9 @@ class Graph extends React.Component {
 		if (nextState.is_portrait !== this.state.is_portrait) {
 			return true;
 		}
+		if (nextState.min_data_length !== this.state.min_data_length) {
+			return true;
+		}
 		if (nextState.text_lang !== this.state.text_lang) {
 			return true;
 		}
