@@ -96,6 +96,7 @@ def fix_index_names(name):
 
 def prepare_data(fund_data, f_id, f_type, f_subtype, f_sub_id):
     # agah filter and bond_fund != = Consts.MAGNA_TYPE.BOND
+
     mutual_data = fund_data
     if ((f_type == TYPE_SECURITY and f_subtype != SUB_TYPE_STOCK) or f_type == TYPE_FUND):
         etf_data = fund_data.get('ETFDetails', None)
@@ -152,7 +153,6 @@ def prepare_data(fund_data, f_id, f_type, f_subtype, f_sub_id):
 
     name = name.replace("-", " ")
     name = re.sub(' +', ' ', name)
-    # print(mutual_data)
     if mutual_data.get('FundIndicators', None) != None and type(mutual_data.get('FundIndicators', None)) == list:
         mutual_data['FundIndicators'] = {
             'IMITATING': mutual_data['FundIndicators'][IMITATING]['Value'],
@@ -160,15 +160,13 @@ def prepare_data(fund_data, f_id, f_type, f_subtype, f_sub_id):
             'LEVERAGED': mutual_data['FundIndicators'][LEVERAGED]['Value']}
 
     index = "תא 35"
-    # if f_id.find("1150416") != -1:
-    #     print(mutual_data)
-    #     print(mutual_data['AssetRisk'])
+    if f_id.find("1159706") != -1:
+        print(mutual_data)
+        print(mutual_data['AssetRisk'])
 
     try:
         index = mutual_data['AssetRisk'][0]['AssetName']
-        index = fix_index_names(index)
-        print(index)
-
+        # print(index)
     except:
         pass
 
@@ -209,6 +207,9 @@ def main():
             continue
 
         x = req(f_id, f_type, f_subtype, f_sub_id)
+        if x is None:
+            print("BUG:", f_id, f_type, f_subtype, f_sub_id)
+            continue
         fund_data, index = prepare_data(x, f_id, f_type, f_subtype, f_sub_id)
 
         if index in indices:

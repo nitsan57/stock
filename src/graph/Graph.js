@@ -137,7 +137,6 @@ class Graph extends React.Component {
 			}
 			let max_y_val = -300;
 			let graph_y_ticks_denominator = -300;
-
 			indices.forEach((i, object_index) => {
 				[x, y, name, max_y_val] = this.state.stock_market.extract_chart_point(
 					x,
@@ -233,7 +232,6 @@ class Graph extends React.Component {
 		} else {
 			return false;
 		}
-		// }
 	}
 
 	async componentDidUpdate(prevProps) {
@@ -417,7 +415,7 @@ class Graph extends React.Component {
 								autosize: true,
 								showlegend: true,
 
-								legend: { orientation: 'h' },
+								legend: { orientation: 'h', y: -0.1 },
 								yaxis: {
 									tickformat: ',.0%',
 									automargin: true,

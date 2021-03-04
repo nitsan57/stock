@@ -74,14 +74,29 @@ export async function search(search_keyword, imitating, leveraged, short, normal
 
 	return fund_l;
 }
+//var url = 'https://mayaapi.tase.co.il/api/download/fundhistory';
+//var data = 'DateFrom=' + before_5 + '&DateTo=' + today + '&FundId=' + instrument_id;
+//POST
 
 function fetch_fund(today, instrument, raw_data) {
 	let year = today.split('-')[0];
 	let before_5 = today.replace(year, year - 10);
 	var instrument_id = instrument['Id'];
-	var url = 'https://mayaapi.tase.co.il/api/download/fundhistory';
-	var data = 'DateFrom=' + before_5 + '&DateTo=' + today + '&FundId=' + instrument_id;
-	let res = fetch_data('POST', url, data, 'application/x-www-form-urlencoded');
+	//var url = 'https://api.tase.co.il/api/ChartData/ChartData/';
+	let url = 'http://externalapi.bizportal.co.il/Mobile/m/GetHistoricalMobile?';
+	let data = 'paperID=' + instrument_id + '&period=5';
+	// let data =
+	// 	'?ct=1&ot=1&lang=1&cf=0&cp=5&cv=0&cl=0&cgt=1&' +
+	// 	'dFrom=' +
+	// 	before_5 +
+	// 	'&dTo=' +
+	// 	today +
+	// 	'&oid=' +
+	// 	instrument_id;
+
+	url = url + data;
+
+	let res = fetch_data('GET', url, data, 'application/x-www-form-urlencoded');
 	raw_data.push(res);
 }
 
@@ -89,16 +104,19 @@ function fetch_security(today, instrument, raw_data) {
 	let year = today.split('-')[0];
 	let before_5 = today.replace(year, year - 10);
 	var instrument_id = instrument['Id'];
-	var url = 'https://api.tase.co.il/api/ChartData/ChartData/';
+	//var url = 'https://api.tase.co.il/api/ChartData/ChartData/';
+	let url = 'http://externalapi.bizportal.co.il/Mobile/m/GetHistoricalMobile?';
+	let data = 'paperID=' + instrument_id + '&period=5';
 
-	let data =
-		'?ct=1&ot=1&lang=1&cf=0&cp=5&cv=0&cl=0&cgt=1&' +
-		'dFrom=' +
-		before_5 +
-		'&dTo=' +
-		today +
-		'&oid=' +
-		instrument_id;
+	// let data =
+	// 	'?ct=1&ot=1&lang=1&cf=0&cp=5&cv=0&cl=0&cgt=1&' +
+	// 	'dFrom=' +
+	// 	before_5 +
+	// 	'&dTo=' +
+	// 	today +
+	// 	'&oid=' +
+	// 	instrument_id;
+
 	url = url + data;
 
 	let res = fetch_data('GET', url, data, 'application/x-www-form-urlencoded');
@@ -122,10 +140,11 @@ export function get_instrument_chart_data(today, instruments, raw_data) {
 }
 
 export function extract_chart_length(instrument_data) {
-	let data = instrument_data['Data'];
+	let data = instrument_data[0];
 	if (data === undefined) {
-		data = instrument_data['PointsForHistoryChart'];
+		data = instrument_data;
 	}
+	data = data['HistoricData'];
 	return data.length;
 }
 
@@ -141,18 +160,19 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 	var month;
 	var day;
 	value = data_array[i];
-	let data = value['Data'];
+	let data = value[0];
 	if (data === undefined) {
-		data = value['PointsForHistoryChart'];
+		data = value;
 	}
+	data = data['HistoricData'];
 	name = instruments[i]['Name'];
 	y = [];
 	var rate;
 	min_data_length = Math.min(data.length, min_data_length);
 	let max = -200;
 	for (j = min_data_length - 1; j >= start_date; j--) {
-		data_y_point = data[j]['ClosingRate'];
-		rate = 'ClosingRate';
+		data_y_point = data[j]['P'];
+		rate = 'P';
 		if (data_y_point === undefined) {
 			data_y_point = data[j]['PurchasePrice'];
 			rate = 'PurchasePrice';
@@ -164,7 +184,7 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 		}
 		y.push(my_data - 1);
 		if (fill_x) {
-			date = data[j]['TradeDate'].substring(0, 10).split('-');
+			date = data[j]['D'].substring(0, 10).split('-');
 			if (date.length === 1) {
 				date = date[0].split('/');
 				year = date[2];
