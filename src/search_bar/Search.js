@@ -40,6 +40,8 @@ class Search extends React.Component {
 				{ key: 2, value: this.props.text_lang.SEARCH.LEVERAGED, isChecked: false },
 				{ key: 3, value: this.props.text_lang.SEARCH.SHORT, isChecked: false },
 				{ key: 4, value: this.props.text_lang.SEARCH.STOCKS, isChecked: false },
+				{ key: 5, value: this.props.text_lang.SEARCH.KOSHER, isChecked: false },
+				{ key: 6, value: this.props.text_lang.SEARCH.MM, isChecked: false },
 			],
 			expandable_json: { [this.props.text_lang.SEARCH.IMITATING]: 0 },
 			search_all: false,
@@ -112,12 +114,17 @@ class Search extends React.Component {
 		let leveraged = this.state.search_checkbox[1]['isChecked'];
 		let short = this.state.search_checkbox[2]['isChecked'];
 		let normal_stock = this.state.search_checkbox[3]['isChecked'];
+		let kosher_stock = this.state.search_checkbox[4]['isChecked'];
+		let mm = this.state.search_checkbox[5]['isChecked'];
+
 		let search_res = await this.state.stock_market.search(
 			word,
 			imitating,
 			leveraged,
 			short,
 			normal_stock,
+			kosher_stock,
+			mm,
 			managment_fee_filter
 		);
 
@@ -434,6 +441,30 @@ class Search extends React.Component {
 							onClick={() => this.changeFilter(2)}
 						>
 							{this.props.text_lang.SEARCH.SHORT}
+						</Button>
+						<Button
+							style={{
+								margin: '5px',
+							}}
+							size="small"
+							type="button"
+							color="primary"
+							variant={this.state.search_checkbox[4].isChecked ? 'contained' : 'outlined'}
+							onClick={() => this.changeFilter(4)}
+						>
+							{this.props.text_lang.SEARCH.KOSHER}
+						</Button>
+						<Button
+							style={{
+								margin: '5px',
+							}}
+							size="small"
+							type="button"
+							color="primary"
+							variant={this.state.search_checkbox[5].isChecked ? 'contained' : 'outlined'}
+							onClick={() => this.changeFilter(5)}
+						>
+							{this.props.text_lang.SEARCH.MM}
 						</Button>
 						<Button
 							style={{

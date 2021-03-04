@@ -22,7 +22,16 @@ export function filter_indices(search_keyword, filterd_res) {
 	return res;
 }
 
-export async function search(search_keyword, imitating, leveraged, short, normal_stock, managment_fee_filter) {
+export async function search(
+	search_keyword,
+	imitating,
+	leveraged,
+	short,
+	normal_stock,
+	kosher_stock,
+	mm,
+	managment_fee_filter
+) {
 	search_keyword = search_keyword.toLowerCase();
 
 	const filteredData = tase_info.filter(
@@ -37,6 +46,13 @@ export async function search(search_keyword, imitating, leveraged, short, normal
 				if (fund_data['ManagementFee'] + fund_data['TrusteeFee'] > managment_fee_filter) {
 					return false;
 				}
+				if (!kosher_stock && item['Name'].includes('כשרה')) {
+					return false;
+				}
+				if (!mm && item['Name'].includes('4A')) {
+					return false;
+				}
+
 				if (
 					(type === Consts.TYPE_ID.SECURITY && subtype !== Consts.SUB_TYPE_ID.STOCK) ||
 					type === Consts.TYPE_ID.FUND // agah filter && bond_fund !== Consts.MAGNA_TYPE.BOND
