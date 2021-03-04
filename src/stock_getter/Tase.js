@@ -49,7 +49,7 @@ export async function search(
 				if (!kosher_stock && item['Name'].includes('כשרה')) {
 					return false;
 				}
-				if (!mm && item['Name'].includes('4A')) {
+				if (!mm && item['Name'].includes('מנוטרלת מטח')) {
 					return false;
 				}
 
