@@ -83,7 +83,7 @@ function fetch_fund(today, instrument, raw_data) {
 	let before_5 = today.replace(year, year - 10);
 	var instrument_id = instrument['Id'];
 	//var url = 'https://api.tase.co.il/api/ChartData/ChartData/';
-	let url = 'http://externalapi.bizportal.co.il/Mobile/m/GetHistoricalMobile?';
+	let url = 'https://externalapi.bizportal.co.il/Mobile/m/GetHistoricalMobile?';
 	let data = 'paperID=' + instrument_id + '&period=5';
 	// let data =
 	// 	'?ct=1&ot=1&lang=1&cf=0&cp=5&cv=0&cl=0&cgt=1&' +
@@ -105,7 +105,7 @@ function fetch_security(today, instrument, raw_data) {
 	let before_5 = today.replace(year, year - 10);
 	var instrument_id = instrument['Id'];
 	//var url = 'https://api.tase.co.il/api/ChartData/ChartData/';
-	let url = 'http://externalapi.bizportal.co.il/Mobile/m/GetHistoricalMobile?';
+	let url = 'https://externalapi.bizportal.co.il/Mobile/m/GetHistoricalMobile?';
 	let data = 'paperID=' + instrument_id + '&period=5';
 
 	// let data =
