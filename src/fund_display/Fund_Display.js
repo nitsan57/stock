@@ -6,11 +6,10 @@ import SortIcon from '@material-ui/icons/ArrowDownward';
 function ExpandableComponent({ data }) {
 	let lang = data['lang'];
 	return (
-		<div>
-			{' '}
-			<h1> פרטי הקרן</h1>
+		<div style={{ marginRight: '10%' }}>
 			<div>
 				{' '}
+				<h4> פרטי הקרן</h4>{' '}
 				<h4 style={{ textAlign: 'right', fontSize: 12 }}>
 					{' '}
 					{lang.TABLE.NAME_HEADER}: {data.name}{' '}
