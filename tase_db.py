@@ -42,6 +42,7 @@ def req(f_id, f_type, f_subtype, f_sub_id):
     fund_url = 'https://mayaapi.tase.co.il/api/fund/details?fundId='
     etf_url = 'https://mayaapi.tase.co.il/api/etf/details?fundId='
     securty_url = 'https://api.tase.co.il/api/company/securitydata?securityId='
+    symbol_api = "https://api.tase.co.il/api/company/securitydata?securityId="
 
     headers = CaseInsensitiveDict()
     headers["Cache-Control"] = "no-cache"
@@ -68,15 +69,23 @@ def req(f_id, f_type, f_subtype, f_sub_id):
         url = fund_url + f_id
     else:
         url = etf_url + f_id
-
+    api_url = symbol_api + f_id
     resp = requests.get(url, headers=headers)
+    resp_sym = requests.get(api_url, headers=headers)
 
+    x = None
+    symbol = None
     try:
-        resp.json()
+        x = resp.json()
     except:
         print(f_id, f_type, f_subtype, f_sub_id)
 
-    return resp.json()
+    try:
+        symbol = resp_sym.json()["Symbol"]
+    except:
+        pass
+
+    return x, symbol
 
 
 def fix_index_names(name):
@@ -160,9 +169,9 @@ def prepare_data(fund_data, f_id, f_type, f_subtype, f_sub_id):
             'LEVERAGED': mutual_data['FundIndicators'][LEVERAGED]['Value']}
 
     index = "תא 35"
-    if f_id.find("1159706") != -1:
-        print(mutual_data)
-        print(mutual_data['AssetRisk'])
+    # if f_id.find("1159706") != -1:
+    #     print(mutual_data)
+    #     print(mutual_data['AssetRisk'])
 
     try:
         index = mutual_data['AssetRisk'][0]['AssetName']
@@ -206,11 +215,12 @@ def main():
         if (f_type == TYPE_OPTIONS or f_subtype == SUB_TYPE_LOAN or f_subtype == SUB_TYPE_BUY_OPTIONS or f_subtype == SUB_TYPE_UNKNOWN or f_subtype == SUB_TYPE_BOND_GOV or f_subtype == SUB_TYPE_OPTIONS or f_subtype == SUB_TYPE_BOND_TRADE or f_subtype == SUB_TYPE_INCLUDE or f_type == TYPE_INDEX or f_type == TYPE_COMP_PAGE or f_type == TYPE_MANAGER or f_subtype == SUB_TYPE_NON_EXISTS or f_subtype == SUB_TYPE_BOND):
             continue
 
-        x = req(f_id, f_type, f_subtype, f_sub_id)
+        x, sym = req(f_id, f_type, f_subtype, f_sub_id)
         if x is None:
             print("BUG:", f_id, f_type, f_subtype, f_sub_id)
             continue
         fund_data, index = prepare_data(x, f_id, f_type, f_subtype, f_sub_id)
+        fund_data["Symbol"] = sym
 
         if index in indices:
             indices[index] = indices[index] + 1
@@ -227,9 +237,14 @@ def main():
 
     for index in indices:  # filter indices with etfs
         for info_data in info:
-            if info_data["Name"].find(index) != -1:
-                filterd_indices.append(index)
-                break
+            try:
+                if info_data["Name"].find(index) != -1:
+                    filterd_indices.append(index)
+                    break
+            except:
+                print(info_data["Name"])
+                print(type(info_data["Name"]))
+                print("excpetion", info_data)
 
     with open('new.js', 'w', encoding='utf-8') as fout:
         fout.write("export const Information = ")

@@ -84,15 +84,39 @@ class Graph extends React.Component {
 
 		let all_instruments_array = [];
 		let len;
+		let day_diff;
 		let len_array = [];
+		let first_day_array = [];
 
 		for (k = 0; k < raw_data.length; k++) {
 			instrument_array_promise_val = JSON.parse(raw_data[k]['value']);
 			all_instruments_array.push(instrument_array_promise_val);
-			len = this.state.stock_market.extract_chart_length(instrument_array_promise_val);
+			[len, day_diff] = this.state.stock_market.extract_chart_length(instrument_array_promise_val);
 			len_array.push(len);
+			first_day_array.push(day_diff);
 		}
-		return [len_array, all_instruments_array];
+		return [len_array, first_day_array, all_instruments_array];
+	}
+
+	get_date(origin, diff) {
+		let date = origin;
+		let last = new Date(date.getTime() - diff * 24 * 60 * 60 * 1000);
+		let day = last.getDate();
+		let month = last.getMonth() + 1;
+		let year = last.getFullYear();
+		return new Date(month + '/' + day + '/' + year);
+	}
+
+	str_to_date(str_date) {
+		let s_date = str_date.split('/');
+		return new Date(s_date[1] + '/' + s_date[0] + '/' + s_date[2]);
+	}
+
+	get_dates_diff(date1, date2) {
+		let Difference_In_Time = date1.getTime() - date2.getTime();
+
+		// To calculate the no. of days between two dates
+		return parseInt(Difference_In_Time / (1000 * 3600 * 24));
 	}
 
 	async get_graph_data(raw_data_input, instruments, date_range) {
@@ -100,29 +124,37 @@ class Graph extends React.Component {
 
 		await Promise.allSettled(raw_data_input).then(async (raw_data) => {
 			let len_array;
+			let first_day_array;
 			let data_array;
-			[len_array, data_array] = await this.prepare_data(raw_data);
+			[len_array, first_day_array, data_array] = await this.prepare_data(raw_data);
 
-			var max_data_length = 0;
+			let start_date = new Date(Date.now() - 36500 * 24 * 60 * 60 * 1000);
+
 			var min_data_length = 100000;
-			var i;
-			let indices = [];
-			let max_index;
-			let curr_len;
-			for (i = 0; i < len_array.length; i++) {
-				curr_len = len_array[i];
+			let today = new Date(Date.now());
+			var oldest_date = today;
 
-				if (max_data_length < curr_len) {
-					max_data_length = curr_len;
-					max_index = i;
-				}
+			let i;
+			let indices = [];
+			let oldest_date_index;
+			let curr_len;
+			let curr_day;
+			for (i = 0; i < len_array.length; i++) {
+				curr_day = this.str_to_date(first_day_array[i]);
+				curr_len = this.get_dates_diff(today, curr_day);
+
 				if (min_data_length > curr_len) {
 					min_data_length = curr_len;
 				}
+				if (oldest_date > curr_day) {
+					oldest_date = curr_day;
+					oldest_date_index = i;
+				}
 				indices.push(i);
 			}
-			indices.splice(max_index, 1);
-			indices.unshift(max_index);
+			start_date = oldest_date;
+			indices.splice(oldest_date_index, 1);
+			indices.unshift(oldest_date_index);
 			this.setState({ min_data_length });
 
 			var name;
@@ -130,11 +162,14 @@ class Graph extends React.Component {
 			var y = [];
 			var res = [];
 
-			let start_date = 0;
-			if (date_range[1] !== 0) {
-				start_date = max_data_length - date_range[1];
-				max_data_length = max_data_length - date_range[0];
+			let end_date = new Date(Date.now());
+
+			let max_range = this.get_dates_diff(end_date, oldest_date);
+			if (date_range[0] !== 0 || date_range[1] !== 0) {
+				start_date = this.get_date(end_date, max_range - date_range[0]);
+				end_date = this.get_date(end_date, max_range - date_range[1]);
 			}
+
 			let max_y_val = -300;
 			let graph_y_ticks_denominator = -300;
 			indices.forEach((i, object_index) => {
@@ -143,8 +178,8 @@ class Graph extends React.Component {
 					y,
 					instruments,
 					data_array,
-					max_data_length,
-					start_date,
+					start_date, //common
+					end_date, //end
 					i,
 					object_index === 0
 				);
@@ -156,11 +191,10 @@ class Graph extends React.Component {
 				res.push(temp_data);
 				graph_yield_values.push(y[y.length - 1]);
 			});
-			let tmp = graph_yield_values[max_index];
+			let tmp = graph_yield_values[oldest_date_index];
 			let to_switch = graph_yield_values[0];
 			graph_yield_values[0] = tmp;
-			graph_yield_values[max_index] = to_switch;
-
+			graph_yield_values[oldest_date_index] = to_switch;
 			graph_y_ticks_denominator = graph_y_ticks_denominator / 10;
 			this.setState({ graph_y_ticks_denominator });
 
@@ -276,19 +310,19 @@ class Graph extends React.Component {
 	range_change(value) {
 		let date_range_len = this.state.dates.length;
 		if (value === 'week') {
-			value = [Math.max(date_range_len - 5, 0), date_range_len];
+			value = [Math.max(0, date_range_len - 7), date_range_len];
 			this.slider_change_val(value);
 		} else if (value === 'month') {
-			value = [Math.max(date_range_len - 22, 0), date_range_len];
+			value = [Math.max(0, date_range_len - 30), date_range_len];
 			this.slider_change_val(value);
 		} else if (value === 'year') {
-			value = [Math.max(date_range_len - 250, 0), date_range_len]; //working days
+			value = [Math.max(0, date_range_len - 365), date_range_len]; //working days
 			this.slider_change_val(value);
 		} else if (value === 'all-time') {
 			value = [0, date_range_len];
 			this.slider_change_val(value);
 		} else if (value === 'min_length') {
-			value = [Math.max(date_range_len - this.state.min_data_length, 0), date_range_len];
+			value = [Math.max(0, date_range_len - this.state.min_data_length), date_range_len];
 			this.slider_change_val(value);
 		}
 		let raw_data = this.state.raw_data;

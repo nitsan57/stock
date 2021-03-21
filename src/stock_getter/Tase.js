@@ -160,11 +160,49 @@ export function extract_chart_length(instrument_data) {
 	if (data === undefined) {
 		data = instrument_data;
 	}
+
+	let s = data['HistoricData'][data['HistoricData'].length - 1]['D'];
+
 	data = data['HistoricData'];
-	return data.length;
+	return [data.length, s];
 }
 
-export function extract_chart_point(x, y, instruments, data_array, min_data_length, start_date, i, fill_x) {
+function str_to_date(str_date) {
+	let s_date = str_date.split('/');
+	return new Date(s_date[1] + '/' + s_date[0] + '/' + s_date[2]);
+}
+
+function date_to_str(date, sub) {
+	let day = date.getDate();
+	let month = date.getMonth() + 1;
+	let year = date.getFullYear();
+	if (sub) {
+		year = year - 2000;
+	}
+	return day + '/' + month + '/' + year;
+}
+
+function fill_holes(j, last_known_data, array_dates_to_push, array_data_to_push, curr_date, next_date, fill_x) {
+	let i = 1;
+	let temp_str_date;
+	let splited_date;
+	let next_day_time = curr_date.getTime() + i * 26 * 60 * 60 * 1000;
+
+	while (str_to_date(next_date).getTime() > next_day_time) {
+		temp_str_date = date_to_str(new Date(next_day_time), false);
+		splited_date = temp_str_date.split('/');
+		splited_date[2] = splited_date[2] - 2000;
+
+		if (fill_x) {
+			array_dates_to_push.push(splited_date[0] + '/' + splited_date[1] + '/' + splited_date[2]);
+		}
+		array_data_to_push.push(last_known_data);
+		i = i + 1;
+		next_day_time = curr_date.getTime() + i * 26 * 60 * 60 * 1000;
+	}
+}
+
+export function extract_chart_point(x, y, instruments, data_array, common_date, end_date, i, fill_x) {
 	let value;
 	let name;
 	let j;
@@ -172,49 +210,76 @@ export function extract_chart_point(x, y, instruments, data_array, min_data_leng
 	let y_0;
 	let my_data;
 	let date;
-	let year;
-	var month;
-	var day;
 	value = data_array[i];
 	let data = value[0];
+	let last_loop_date;
 	if (data === undefined) {
 		data = value;
 	}
 	data = data['HistoricData'];
 	name = instruments[i]['Name'];
 	y = [];
-	var rate;
-	min_data_length = Math.min(data.length, min_data_length);
 	let max = -200;
-	for (j = min_data_length - 1; j >= start_date; j--) {
+
+	let has_common_date = false;
+	if (str_to_date(data[data.length - 1]['D']).getTime() > end_date.getTime()) {
+		return [x, y, name, 0];
+	}
+
+	for (j = data.length - 1; j >= 0; j--) {
 		data_y_point = data[j]['P'];
-		rate = 'P';
-		if (data_y_point === undefined) {
-			data_y_point = data[j]['PurchasePrice'];
-			rate = 'PurchasePrice';
+		date = data[j]['D'];
+		let date_in_loop = str_to_date(date);
+		if (date_in_loop.getTime() < common_date.getTime()) {
+			continue;
 		}
-		y_0 = data[min_data_length - 1][rate];
+
+		if (date_in_loop.getTime() === common_date.getTime()) {
+			has_common_date = true;
+			y_0 = data[j]['P'];
+		} else if (!has_common_date && date_in_loop.getTime() > common_date.getTime() && j + 1 < data.length) {
+			if (fill_x) {
+				x.push(date_to_str(common_date, true));
+			}
+			y.push(0);
+			fill_holes(j, 0, x, y, common_date, date_to_str(date_in_loop, false), fill_x);
+			has_common_date = true;
+			y_0 = data[j + 1]['P'];
+		} else if (!has_common_date && date_in_loop.getTime() > common_date.getTime() && j + 1 >= data.length) {
+			has_common_date = true;
+			y_0 = data[j]['P'];
+		}
+
+		if (date_in_loop > end_date) {
+			break;
+		}
+		// if (y_0 == null) {
+		// 	console.log('!!!!!! NULL', j, common_date, end_date, data);
+		// }
 		my_data = data_y_point / y_0;
+
 		if (my_data > max) {
 			max = my_data;
 		}
-		y.push(my_data - 1);
+		my_data = my_data - 1;
+
+		y.push(my_data);
+
 		if (fill_x) {
-			date = data[j]['D'].substring(0, 10).split('-');
-			if (date.length === 1) {
-				date = date[0].split('/');
-				year = date[2];
-				month = date[1];
-				day = date[0];
-			} else {
-				year = date[0];
-				month = date[1];
-				day = date[2];
-			}
-			year = year - 2000;
-			x.push(day + '/' + month + '/' + year);
+			x.push(date_to_str(date_in_loop, true)); ///-2000
 		}
+
+		if (j - 1 >= 0) {
+			let next_date = data[j - 1]['D'];
+			if (next_date > end_date) {
+				next_date = end_date;
+			}
+			fill_holes(j, my_data, x, y, date_in_loop, next_date, fill_x);
+		}
+		last_loop_date = date_in_loop;
 	}
+	fill_holes(j, my_data, x, y, last_loop_date, date_to_str(end_date), fill_x);
+
 	return [x, y, name, max];
 }
 
