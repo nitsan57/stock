@@ -165,8 +165,11 @@ class Graph extends React.Component {
 			let end_date = new Date(Date.now());
 
 			let max_range = this.get_dates_diff(end_date, oldest_date);
+			let weeks = Math.floor(max_range / 7);
+			max_range = max_range - weeks * 2;
+
 			if (date_range[0] !== 0 || date_range[1] !== 0) {
-				start_date = this.get_date(end_date, max_range - date_range[0]);
+				start_date = this.get_date(end_date, max_range - date_range[0] + 1);
 				end_date = this.get_date(end_date, max_range - date_range[1]);
 			}
 
@@ -208,7 +211,6 @@ class Graph extends React.Component {
 			}
 			xticks.push(x[x.length - 1]);
 			this.setState({ xticks: xticks });
-
 			this.setState({ data: res });
 			if (date_range[1] === 0) {
 				this.setState({ dates: x });

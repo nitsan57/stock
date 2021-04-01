@@ -187,16 +187,20 @@ function fill_holes(j, last_known_data, array_dates_to_push, array_data_to_push,
 	let temp_str_date;
 	let splited_date;
 	let next_day_time = curr_date.getTime() + i * 26 * 60 * 60 * 1000;
-
+	let temp_date;
 	while (str_to_date(next_date).getTime() > next_day_time) {
-		temp_str_date = date_to_str(new Date(next_day_time), false);
+		temp_date = new Date(next_day_time);
+		temp_str_date = date_to_str(temp_date, false);
 		splited_date = temp_str_date.split('/');
 		splited_date[2] = splited_date[2] - 2000;
-
-		if (fill_x) {
-			array_dates_to_push.push(splited_date[0] + '/' + splited_date[1] + '/' + splited_date[2]);
+		if (temp_date.getDay() < 5) {
+			if (fill_x) {
+				array_dates_to_push.push(splited_date[0] + '/' + splited_date[1] + '/' + splited_date[2]);
+			}
+			if (fill_x || array_dates_to_push.length > array_data_to_push.length) {
+				array_data_to_push.push(last_known_data);
+			}
 		}
-		array_data_to_push.push(last_known_data);
 		i = i + 1;
 		next_day_time = curr_date.getTime() + i * 26 * 60 * 60 * 1000;
 	}
@@ -278,8 +282,8 @@ export function extract_chart_point(x, y, instruments, data_array, common_date, 
 		}
 		last_loop_date = date_in_loop;
 	}
-	fill_holes(j, my_data, x, y, last_loop_date, date_to_str(end_date), fill_x);
 
+	fill_holes(j, my_data, x, y, last_loop_date, date_to_str(end_date), fill_x);
 	return [x, y, name, max];
 }
 
