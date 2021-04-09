@@ -90,12 +90,13 @@ def req(f_id, f_type, f_subtype, f_sub_id):
 
 def fix_index_names(name):
     bad_vars = ["AlphaBeta", "NTR", "RT", "GTR",
-                "Value", "INDEX", "Select", "Sector", "ENTREPRISES"]
+                "Value", "INDEX", "Select", "Sector", "ENTREPRISES", "INDEX", "אינדקס"]
 
     index = name.replace("\"", "")
     index = index.replace("-", " ")
     for bad in bad_vars:
-        index = index.replace(" "+bad, " ")
+        index = index.replace(bad, " ")
+        # index = index.replace(" "+bad, " ")
 
     index = re.sub(' +', ' ', index)
     if index[-1] == " ":
@@ -175,6 +176,7 @@ def prepare_data(fund_data, f_id, f_type, f_subtype, f_sub_id):
 
     try:
         index = mutual_data['AssetRisk'][0]['AssetName']
+        index = fix_index_names(index)
         # print(index)
     except:
         pass
@@ -220,7 +222,7 @@ def main():
             print("BUG:", f_id, f_type, f_subtype, f_sub_id)
             continue
         fund_data, index = prepare_data(x, f_id, f_type, f_subtype, f_sub_id)
-        fund_data["Symbol"] = sym
+        # fund_data["Symbol"] = sym
 
         if index in indices:
             indices[index] = indices[index] + 1
@@ -235,6 +237,7 @@ def main():
 
     filterd_indices = []
 
+    print(indices)
     for index in indices:  # filter indices with etfs
         for info_data in info:
             try:
@@ -242,6 +245,7 @@ def main():
                     filterd_indices.append(index)
                     break
             except:
+                print("EXCEPTION:")
                 print(info_data["Name"])
                 print(type(info_data["Name"]))
                 print("excpetion", info_data)
